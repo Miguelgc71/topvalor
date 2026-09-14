@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TopValor — Panel de administración</title>
+<link rel="stylesheet" href="css/style.css">
+<style>
+  body{background:#0f1115}
+  .admin-wrap{max-width:720px;margin:0 auto;padding:24px 20px}
+  .admin-title{font-size:22px;font-weight:800;margin-bottom:6px}
+  .admin-sub{font-size:13px;color:var(--muted);margin-bottom:24px}
+  .login-box{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:28px;text-align:center}
+  .login-box h2{margin-bottom:16px;font-size:18px}
+  .login-box input{background:var(--bg2);border:1px solid var(--line);color:var(--text);border-radius:10px;padding:10px 14px;width:220px;font-size:14px;outline:none;text-align:center}
+  .login-box input:focus{border-color:var(--accent)}
+  .login-box .btn{margin-top:12px;width:220px}
+  .form-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:22px;margin-bottom:18px}
+  .form-card h3{font-size:16px;margin-bottom:14px}
+  .field{margin-bottom:14px}
+  .field label{display:block;font-size:12px;color:var(--muted);margin-bottom:5px;font-weight:600}
+  .field input,.field select,.field textarea{width:100%;background:var(--bg2);border:1px solid var(--line);color:var(--text);border-radius:8px;padding:9px 12px;font-size:13px;outline:none}
+  .field input:focus,.field select:focus,.field textarea:focus{border-color:var(--accent)}
+  .field textarea{resize:vertical;min-height:60px}
+  .field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .field-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+  .calc-box{background:#0b0e13;border-radius:10px;padding:14px;margin:14px 0;font-size:13px}
+  .calc-box .calc-line{display:flex;justify-content:space-between;padding:4px 0}
+  .calc-box .calc-total{border-top:1px solid var(--line);padding-top:8px;margin-top:6px;font-weight:800;color:var(--accent);font-size:15px}
+  .size-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+  .size-tag{background:var(--bg2);border:1px solid var(--line);border-radius:8px;padding:4px 10px;font-size:12px;display:flex;align-items:center;gap:4px}
+  .size-tag button{background:none;border:none;color:var(--accent2);cursor:pointer;font-size:14px;line-height:1}
+  .img-preview{width:100%;max-height:200px;object-fit:cover;border-radius:10px;border:1px solid var(--line);margin-top:8px;display:none}
+  .img-row{display:flex;gap:10px;align-items:flex-end}
+  .img-row .field{flex:1}
+  .prod-list{margin-top:20px}
+  .prod-item{display:flex;gap:12px;align-items:center;background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:12px;margin-bottom:8px}
+  .prod-item .pi-img{width:50px;height:50px;border-radius:8px;object-fit:cover;background:var(--card2);flex-shrink:0}
+  .prod-item .pi-info{flex:1;font-size:13px}
+  .prod-item .pi-info b{display:block;margin-bottom:2px}
+  .prod-item .pi-actions{display:flex;gap:6px}
+  .prod-item .pi-actions button{background:none;border:1px solid var(--line);color:var(--muted);border-radius:8px;padding:5px 10px;font-size:12px;cursor:pointer}
+  .prod-item .pi-actions button:hover{border-color:var(--accent);color:var(--text)}
+  .prod-item .pi-actions .del{border-color:var(--accent2);color:var(--accent2)}
+  .action-bar{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+  .action-bar .btn{flex:1;min-width:140px}
+  .hidden{display:none!important}
+  .status{font-size:12px;color:var(--green);margin-top:8px}
+  .sup-chip{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:999px;border:1px solid var(--line);font-size:12px;cursor:pointer;background:var(--bg2);color:var(--muted)}
+  .sup-chip.active{background:var(--accent);color:#0f1115;border-color:var(--accent);font-weight:600}
+</style>
+</head>
+<body>
+<div class="admin-wrap" id="app">
+
+  <!-- LOGIN -->
+  <div id="loginView">
+    <div class="login-box">
+      <div class="brand" style="justify-content:center;margin-bottom:18px"><span class="brand-mark">TV</span><span class="brand-name">TopValor Admin</span></div>
+      <h2>Panel de administración</h2>
+      <input id="pwInput" type="password" placeholder="Contraseña">
+      <br><button class="btn btn-primary" id="loginBtn">Entrar</button>
+      <p id="loginErr" style="color:var(--accent2);font-size:12px;margin-top:8px"></p>
+    </div>
+  </div>
+
+  <!-- ADMIN PANEL -->
+  <div id="adminView" class="hidden">
+    <div class="admin-title">Panel de administración</div>
+    <div class="admin-sub">Añade, edita o quita productos de tu app. Se guardan en tu navegador.</div>
+
+    <!-- NEW PRODUCT FORM -->
+    <div class="form-card" id="formCard">
+      <h3 id="formTitle">Nuevo producto</h3>
+
+      <div class="field">
+        <label>Nombre del producto</label>
+        <input id="fName" placeholder="ej. Nike Dunk Low Panda">
+      </div>
+
+      <div class="field-row">
+        <div class="field"><label>Marca</label><input id="fBrand" placeholder="ej. Nike"></div>
+        <div class="field"><label>Categoría</label>
+          <select id="fCat">
+            <option value="shoes">Zapatillas</option>
+            <option value="top">Camisetas y sudaderas</option>
+            <option value="bottom">Pantalones</option>
+            <option value="outer">Chaquetas</option>
+            <option value="acc">Accesorios y relojes</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Proveedor</label>
+        <div id="fSupChips"></div>
+      </div>
+
+      <div class="field">
+        <label>Descripción</label>
+        <textarea id="fNote" placeholder="Detalles del producto..."></textarea>
+      </div>
+
+      <!-- IMAGE -->
+      <div class="field">
+        <label>Imagen del producto</label>
+        <div class="img-row">
+          <div class="field" style="margin:0"><input id="fImgUrl" placeholder="URL de la imagen del agente"></div>
+          <button class="btn btn-green" id="dlImgBtn" style="flex:0;min-width:auto;padding:9px 14px">Descargar</button>
+        </div>
+        <p style="font-size:11px;color:var(--muted);margin:6px 0">O sube un archivo de imagen directo (foto guardada, captura, imagen recibida por WhatsApp):</p>
+        <input type="file" id="fImgFile" accept="image/*" style="color:var(--muted);font-size:12px;width:100%">
+        <img id="fImgPreview" class="img-preview">
+        <p style="font-size:11px;color:var(--muted);margin-top:4px">Consigue la imagen: en la web del agente, clic derecho sobre la foto → "Copiar dirección de la imagen" y pégala (botón Descargar), o guárdala y súbela aquí.</p>
+      </div>
+
+      <!-- PRICING -->
+      <div class="field-row-3">
+        <div class="field"><label>Precio de compra (€)</label><input id="fCost" type="number" step="0.01" placeholder="29.50"></div>
+        <div class="field"><label>Margen (%)</label><input id="fMargin" type="number" step="1" value="15" placeholder="15"></div>
+        <div class="field"><label>Envío (€)</label><input id="fShip" type="number" step="0.01" placeholder="11.25"></div>
+      </div>
+
+      <div class="calc-box" id="calcBox">
+        <div class="calc-line"><span>Coste compra</span><span id="calcCost">0,00 €</span></div>
+        <div class="calc-line"><span>Margen (15%)</span><span id="calcMargin">0,00 €</span></div>
+        <div class="calc-line"><span>Subtotal + margen</span><span id="calcSub">0,00 €</span></div>
+        <div class="calc-line"><span>IVA (21%)</span><span id="calcIva">0,00 €</span></div>
+        <div class="calc-line calc-total"><span>Precio al cliente (IVA incl.)</span><span id="calcTotal">0,00 €</span></div>
+        <div class="calc-line"><span>+ Envío</span><span id="calcShip">0,00 €</span></div>
+        <div class="calc-line calc-total" style="color:var(--green)"><span>Total que paga el cliente</span><span id="calcGrand">0,00 €</span></div>
+      </div>
+
+      <!-- SIZES -->
+      <div class="field">
+        <label>Tallas</label>
+        <div class="field-row" style="margin-bottom:8px">
+          <label class="sup-chip" style="cursor:pointer;padding:8px 12px">
+            <input type="radio" name="sizeMode" value="auto" checked style="margin-right:6px;accent-color:var(--accent)">
+            Estándar de la categoría (todas)
+          </label>
+          <label class="sup-chip" style="cursor:pointer;padding:8px 12px">
+            <input type="radio" name="sizeMode" value="manual" style="margin-right:6px;accent-color:var(--accent)">
+            Elijo yo las tallas
+          </label>
+        </div>
+        <div id="manualSizes">
+          <div class="field-row">
+            <div class="field" style="margin:0"><input id="fSizeInput" placeholder="ej. 42 (EU) o M o 27,5cm"></div>
+            <button class="btn btn-ghost" id="addSizeBtn" style="flex:0;min-width:auto;padding:9px 14px">+ Añadir</button>
+          </div>
+          <div class="size-tags" id="sizeTags"></div>
+        </div>
+        <p style="font-size:11px;color:var(--muted);margin-top:6px">Recomendado: "Estándar". Zapatillas → EU 39-46, camisetas/sudaderas → S-XXL, pantalones → cintura 72-92. El cliente elige con el asistente en cm.</p>
+      </div>
+
+      <!-- DEAL TYPE -->
+      <div class="field-row">
+        <div class="field"><label>Mecánica de venta</label>
+          <select id="fDeal">
+            <option value="none">Normal</option>
+            <option value="flash">Flash (cuenta atrás)</option>
+            <option value="pool">Pool (interés agrupado)</option>
+            <option value="pricedrop">Precio bajando</option>
+            <option value="earlybird">Early bird</option>
+            <option value="fastpay">Bono rápido</option>
+          </select>
+        </div>
+        <div class="field" id="flashFields" style="display:none">
+          <label>Unidades flash / Tiempo (min)</label>
+          <div class="field-row" style="gap:6px">
+            <input id="fFlashQty" type="number" value="3" min="1" placeholder="3">
+            <input id="fFlashMin" type="number" value="5" min="1" placeholder="5">
+          </div>
+        </div>
+        <div class="field" id="poolFields" style="display:none">
+          <label>Pool: objetivo / Descuento (%)</label>
+          <div class="field-row" style="gap:6px">
+            <input id="fPoolTarget" type="number" value="5" min="2" placeholder="5">
+            <input id="fPoolDisc" type="number" value="8" min="1" placeholder="8">
+          </div>
+        </div>
+      </div>
+
+      <div class="action-bar">
+        <button class="btn btn-primary" id="saveBtn">Publicar producto</button>
+        <button class="btn btn-ghost" id="cancelBtn">Cancelar</button>
+      </div>
+      <div id="formStatus" class="status"></div>
+    </div>
+
+    <!-- PRODUCT LIST -->
+    <div class="form-card">
+      <h3>Productos publicados (<span id="prodCount">0</span>)</h3>
+      <div id="prodList" class="prod-list"><p style="color:var(--muted);font-size:13px">Aún no hay productos personalizados.</p></div>
+    </div>
+
+    <!-- EXPORT / IMPORT -->
+    <div class="form-card">
+      <h3>Exportar / Importar</h3>
+      <p style="font-size:12px;color:var(--muted);margin-bottom:12px">Exporta tus productos para publicarlos en la web (GitHub Pages). Guarda el archivo descargado como <code>productos.json</code> dentro de la carpeta <code>data/</code> de tu proyecto.</p>
+      <div class="action-bar">
+        <button class="btn btn-green" id="exportBtn">Exportar JSON → data/productos.json</button>
+        <button class="btn btn-ghost" id="importBtn">Importar JSON</button>
+        <input type="file" id="importFile" accept=".json" class="hidden">
+      </div>
+      <div id="exportStatus" class="status" style="margin-top:6px"></div>
+    </div>
+
+    <!-- QUICK STATS -->
+    <div class="form-card">
+      <h3>Resumen</h3>
+      <div id="statsBox" style="font-size:13px;color:var(--muted)">Cargando...</div>
+    </div>
+
+    <p style="text-align:center;margin-top:20px"><a href="index.html" style="color:var(--accent);font-size:13px">Ver la tienda →</a></p>
+  </div>
+</div>
+
+<script src="js/data.js"></script>
+<script src="js/admin.js"></script>
+</body>
+</html>

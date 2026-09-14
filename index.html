@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TopValor — Solo productos con valoración máxima</title>
+<meta name="theme-color" content="#e8b33b">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="img/icon-192.svg" type="image/svg+xml">
+<link rel="stylesheet" href="css/style.css">
+<script>
+  if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
+    navigator.serviceWorker.register("sw.js").catch(function () {});
+  }
+</script>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container header-inner">
+    <a class="brand" href="#"><span class="brand-mark">TV</span><span class="brand-name">TopValor</span></a>
+    <nav class="main-nav">
+      <a href="#catalogo">Catálogo</a>
+      <a href="#ofertas">Ofertas</a>
+      <a href="#grupos">Grupos</a>
+      <a href="#proveedores">Proveedores</a>
+      <button class="link-btn" data-open="how">Cómo funciona</button>
+      <a href="admin.html" style="color:var(--green)">+ Admin</a>
+    </nav>
+    <div class="header-tools">
+      <input id="searchBox" class="search-box" type="search" placeholder="Buscar zapatillas, hoodie, talla 42...">
+      <button class="cart-btn" data-open="cart">Mi selección <span id="cartCount" class="cart-count">0</span></button>
+    </div>
+  </div>
+</header>
+
+<section id="ofertas" class="section">
+  <div class="container">
+    <h2 class="section-title">Mecánicas activas ahora</h2>
+    <div class="deal-grid" id="dealGrid"></div>
+  </div>
+</section>
+
+<section id="catalogo" class="section">
+  <div class="container">
+    <h2 class="section-title">Curaduría — valoración máxima
+      <span class="section-sub">Solo rating &#8805; 4,8 · QC verificado · retirados si acumulan quejas</span>
+    </h2>
+
+    <div class="banner" id="retiredBanner" hidden>
+      <strong>&#9888; Artículo retirado:</strong> "Puffer Jacket FN" eliminado por 4 quejas de talla y calidad en 30 días, vía APIB del sistema anti-quejas.
+    </div>
+
+    <div class="filter-bar">
+      <div class="filter-group" id="supplierFilters"></div>
+      <div class="filter-group" id="categoryFilters"></div>
+      <select id="brandSelect" class="select filter-select" style="margin-left:0">
+        <option value="">Todas las marcas</option>
+      </select>
+      <input id="sizeCmInput" class="filter-size" type="number" step="0.5" min="20" max="31" placeholder="Pie en cm (27,5)">
+      <select id="sortSelect" class="select" style="margin-left:auto">
+        <option value="rating">Mejor valorado</option>
+        <option value="price-asc">Precio: menor a mayor</option>
+        <option value="price-desc">Precio: mayor a menor</option>
+        <option value="reviews">Más reseñado</option>
+      </select>
+    </div>
+
+    <div class="product-grid" id="productGrid"></div>
+    <div class="grid-empty" id="gridEmpty" hidden>No hay productos con esos filtros.</div>
+  </div>
+</section>
+
+<section id="grupos" class="section section-alt">
+  <div class="container">
+    <h2 class="section-title">Compra en grupo con amigos
+      <span class="section-sub">Con 2, 3 o 5 personas hay descuento — a más gente, más rebaja. El grupo lo cierra el líder "con los que haya". Todo o nada: si no se llega al mínimo, no paga nadie.</span>
+    </h2>
+    <div class="group-layout">
+      <div class="group-col box">
+        <h3 class="group-title">Crea un grupo</h3>
+        <label class="group-label">Elige el artículo del grupo</label>
+        <select id="groupProduct" class="select group-select"></select>
+        <button class="btn btn-primary" id="createGroupBtn">Crear grupo · mínimo 2, máximo 5</button>
+        <p class="group-note">Te genera un código (ej. GR-7K2M) que pasas a tus amigos. Cada uno elige su talla. Eres el líder: cierras el grupo cuando queráis (con 2, 3 o 5) y cada uno paga lo suyo.</p>
+        <div class="cart-flow">
+          <div class="step"><span class="n">1</span><span>Creas el grupo y lo pasas a amigos (o a gente con el enlace).</span></div>
+          <div class="step"><span class="n">2</span><span>Cada uno elige artículo y talla.</span></div>
+          <div class="step"><span class="n">3</span><span>El líder cierra con 2, 3 o 5 · descuento según cuántos seáis.</span></div>
+          <div class="step"><span class="n">4</span><span>Cuando me paguéis por Bizum, hago el pedido al proveedor con las tallas, direcciones, nombres y correos de los miembros.</span></div>
+        </div>
+      </div>
+      <div class="group-col box">
+        <h3 class="group-title">Grupos abiertos</h3>
+        <div id="groupList"><p style="color:var(--muted);font-size:13px">Cargando grupos...</p></div>
+      </div>
+      <div class="group-col box">
+        <h3 class="group-title">Simulador de margen</h3>
+        <label class="group-label">Artículo de ejemplo</label>
+        <select id="simProduct" class="select group-select"></select>
+        <label class="group-label">Personas del grupo
+          <span style="float:right">
+            <button class="chip seg" data-n="2">2</button>
+            <button class="chip seg" data-n="3">3</button>
+            <button class="chip seg active" data-n="5">5</button>
+          </span>
+        </label>
+        <label class="group-label">% del ahorro que pasas al grupo
+          <span id="simPassVal" style="float:right;color:var(--accent);font-weight:700">60%</span>
+          <input type="range" id="simPass" class="group-range" min="30" max="100" value="60" step="5">
+        </label>
+        <div id="simOut" style="font-size:13px"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="proveedores" class="section">
+  <div class="container">
+    <h2 class="section-title">Proveedores que nos sirven</h2>
+    <table class="sup-table" id="supplierTable"></table>
+    <p class="table-note">Tarifa de envío propia por proveedor: <code>base + €/kg</code>. El envío del artículo se muestra siempre en su tarjeta.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <h2 class="section-title">Cómo se gestiona una incidencia</h2>
+    <ol class="how-grid">
+      <li><strong>Pedido:</strong> me pagas por Bizum y yo encargo al proveedor.</li>
+      <li><strong>Envío:</strong> el proveedor manda directamente a tu casa (o te lo traigo yo).</li>
+      <li><strong>Problema</strong> (no llega, talla, descripción): lo gestiono yo con el proveedor por ti.</li>
+      <li><strong>Quejas:</strong> si un artículo acumula 3+ quejas en 30 días, lo quito de la web.</li>
+    </ol>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="container">
+    <p>TopValor — catálogo de curaduría + venta dinámica. Pago por Bizum. Los precios mostrados llevan el IVA incluido (21%). Datos de ejemplo para validar UX.</p>
+  </div>
+</footer>
+
+<div class="modal-backdrop" id="modalBackdrop" hidden>
+  <div class="modal" id="productModal" role="dialog" aria-modal="true"></div>
+</div>
+
+<div class="modal-backdrop" id="cartBackdrop" hidden>
+  <div class="drawer" id="cartDrawer" role="dialog" aria-modal="true"></div>
+</div>
+
+<div class="modal-backdrop" id="howBackdrop" hidden>
+  <div class="modal how-modal">
+    <button class="modal-close" data-close="howBackdrop">&times;</button>
+    <h3>Cómo funciona TopValor</h3>
+    <ol>
+      <li>Recorro agencias de compra (Hipobuy, ACBuy, Kakobuy...) y marketplaces y <strong>solo guardo productos con valoración máxima</strong> y QC verificado.</li>
+      <li>Esos productos se agrupan por <strong>proveedor</strong> y <strong>categoría</strong>, con talla real en cm y <strong>precio final con IVA</strong>.</li>
+      <li>Tú eliges producto y talla: te sale un <strong>resumen con el precio total</strong> y mi Bizum.</li>
+      <li>Me pagas por <strong>Bizum (o en mano)</strong> y yo hago el pedido al proveedor con tu talla y dirección.</li>
+      <li>El proveedor envía <strong>directo a tu casa</strong> (o te lo traigo yo mismo si eres de mi zona).</li>
+      <li>Si algo no llega o no es tu talla, lo arreglamos <strong>juntos</strong> con el proveedor.</li>
+    </ol>
+  </div>
+</div>
+
+<div id="toast" class="toast" hidden></div>
+
+<script src="js/data.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
