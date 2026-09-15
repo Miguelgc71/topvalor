@@ -297,7 +297,7 @@
     $$("[data-del]", wrap).forEach(b => b.onclick = () => removeProduct(b.dataset.del));
   }
 
-  const sup = id => SUPPLIERS.find(s => s.id === id);
+  function sup(id) { return SUPPLIERS.find(s => s.id === id); }
 
   // ---------- STATS ----------
   function renderStats() {
