@@ -312,15 +312,54 @@
       <div>Proveedores: <b>${SUPPLIERS.length}</b></div>`;
   }
 
-  // ---------- EXPORT / IMPORT ----------
+  // ---------- EXPORT / IMPORT / PUBLISH ----------
+  const GH_KEY = "tv_gh_pub";
+  function ghLoad() {
+    try { return JSON.parse(localStorage.getItem(GH_KEY) || "{}"); } catch (e) { return {}; }
+  }
+  function ghSave() {
+    localStorage.setItem(GH_KEY, JSON.stringify({ token: $("#ghToken").value.trim(), user: $("#ghUser").value.trim(), repo: $("#ghRepo").value.trim() }));
+  }
+  (() => { const g = ghLoad(); if (g.token) $("#ghToken").value = g.token; if (g.user) $("#ghUser").value = g.user; if (g.repo) $("#ghRepo").value = g.repo; })();
+
+  function currentJson() { return JSON.stringify(custom, null, 2); }
+
   $("#exportBtn").onclick = () => {
-    const blob = new Blob([localStorage.getItem(PRODUCTS_KEY) || "[]"], { type: "application/json" });
+    const blob = new Blob([currentJson()], { type: "application/json" });
     const a = document.createElement("a");
     a.href = URL.createObjectURL(blob);
     a.download = "productos.json";
     a.click();
     URL.revokeObjectURL(a.href);
-    $("#exportStatus").textContent = "Descargado: productos.json. Guárdalo como data/productos.json (reemplaza el que hay) y ejecuta subir.bat para publicar.";
+    $("#exportStatus").textContent = "Descargado: productos.json. Guárdalo como data/productos.json o usa «Publicar en GitHub ahora».";
+  };
+
+  $("#publishBtn").onclick = async () => {
+    ghSave();
+    const token = $("#ghToken").value.trim(), user = $("#ghUser").value.trim(), repo = $("#ghRepo").value.trim();
+    if (!token || !user || !repo) { $("#exportStatus").textContent = "Faltan token, usuario o repo."; return; }
+    const st = $("#exportStatus");
+    st.textContent = "Publicando " + custom.length + " producto(s)...";
+    const api = `https://api.github.com/repos/${encodeURIComponent(user)}/${encodeURIComponent(repo)}/contents/data/productos.json`;
+    const hdr = { "Authorization": "token " + token, "Accept": "application/vnd.github.v3+json" };
+    try {
+      let sha = null;
+      try {
+        const r = await fetch(api, { headers: hdr });
+        if (r.ok) sha = (await r.json()).sha;
+      } catch (e) { /* 404 o sin archivo: se crea */ }
+      const body = {
+        message: "Publicar catalogo desde panel admin",
+        content: btoa(unescape(encodeURIComponent(currentJson()))),
+        branch: "main"
+      };
+      if (sha) body.sha = sha;
+      const res = await fetch(api, { method: "PUT", headers: hdr, body: JSON.stringify(body) });
+      if (!res.ok) { st.textContent = "Error " + res.status + ": comprueba token (permiso repo) o red. " + (await res.text()); return; }
+      st.textContent = "Publicado. Espera ~30 s y recarga la web: la tienda ya tiene " + custom.length + " producto(s).";
+    } catch (err) {
+      st.textContent = "Fallo de red: " + err.message;
+    }
   };
 
   $("#importBtn").onclick = () => $("#importFile").click();

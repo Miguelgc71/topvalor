@@ -260,6 +260,12 @@
     const g = $("#productGrid");
     const list = visibleProducts();
     $("#gridEmpty").hidden = list.length > 0;
+    if (PRODUCTS.length === 0) {
+      $("#gridEmpty").hidden = false;
+      $("#gridEmpty").innerHTML = `<b style="display:block;font-size:16px;">Tienda en preparación</b><span style="font-size:13px;">Aún no hay artículos publicados. Vuelve pronto o contacta con el vendedor.</span>`;
+    } else {
+      $("#gridEmpty").innerHTML = "No hay productos con esos filtros.";
+    }
     g.innerHTML = list.map(productCard).join("");
     $$("[data-view]", g).forEach(b => b.onclick = () => openModal(b.dataset.view));
     $$(".product-card", g).forEach(c => c.onclick = e => {
@@ -790,17 +796,26 @@
     renderGrid();
   });
 
-  $("#retiredBanner").hidden = false;
+  $("#retiredBanner").hidden = true;
 
   function renderGroups() {
     const sel = $("#groupProduct"), sim = $("#simProduct");
+    if (PRODUCTS.length === 0) {
+      sel.innerHTML = `<option value="">(sin productos - añade alguno en el admin)</option>`;
+      sim.innerHTML = ``;
+      $("#createGroupBtn").disabled = true;
+      $("#groupList").innerHTML = `<p style="color:var(--muted);font-size:13px">Primero añade un producto desde el panel de administración (link + Admin).</p>`;
+      return;
+    }
+    $("#createGroupBtn").disabled = false;
     const opts = PRODUCTS.map(p => `<option value="${p.id}">${p.title} (${fmt(p.price)})</option>`).join("");
     if (!sel._init) { sel.innerHTML = opts; sim.innerHTML = opts; sel._init = 1; }
 
     const pass = groupPassShare();
     const wrap = $("#groupList");
-    if (groups.length === 0) { wrap.innerHTML = `<p style="color:var(--muted);font-size:13px">Aún no hay grupos. Crea el primero a la izquierda.</p>`; return; }
-    wrap.innerHTML = groups.map(g => {
+    const valid = groups.filter(g => PRODUCTS.some(x => x.id === g.productId));
+    if (valid.length === 0) { wrap.innerHTML = `<p style="color:var(--muted);font-size:13px">Aún no hay grupos. Crea el primero a la izquierda.</p>`; return; }
+    wrap.innerHTML = valid.map(g => {
       const p = PRODUCTS.find(x => x.id === g.productId);
       const st = groupStatus(g);
       const joined = g.members.includes("tú");
@@ -870,6 +885,7 @@
 
   function renderSim() {
     const p = PRODUCTS.find(x => x.id === $("#simProduct").value);
+    if (!p) { $("#simOut").innerHTML = `<p style="font-size:12px;color:var(--muted)">Elige un producto para ver la tabla de grupo.</p>`; return; }
     const pass = Number($("#simPass").value) / 100;
     const m = groupMath(p, pass, simN);
     $("#simPassVal").textContent = Math.round(pass * 100) + "%";

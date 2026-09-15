@@ -195,14 +195,24 @@
       <div id="prodList" class="prod-list"><p style="color:var(--muted);font-size:13px">Aún no hay productos personalizados.</p></div>
     </div>
 
-    <!-- EXPORT / IMPORT -->
+    <!-- EXPORT / IMPORT / PUBLISH -->
     <div class="form-card">
-      <h3>Exportar / Importar</h3>
-      <p style="font-size:12px;color:var(--muted);margin-bottom:12px">Exporta tus productos para publicarlos en la web (GitHub Pages). Guarda el archivo descargado como <code>productos.json</code> dentro de la carpeta <code>data/</code> de tu proyecto.</p>
-      <div class="action-bar">
-        <button class="btn btn-green" id="exportBtn">Exportar JSON → data/productos.json</button>
+      <h3>Publicar en la web (GitHub Pages)</h3>
+      <p style="font-size:12px;color:var(--muted);margin-bottom:12px">Con un solo clic sube tus productos a <code>data/productos.json</code> del repositorio y la web queda actualizada en segundos (sin necesidad de <code>subir.bat</code>).</p>
+      <div class="action-bar" style="flex-wrap:wrap">
+        <button class="btn btn-green" id="publishBtn">Publicar en GitHub ahora</button>
+        <button class="btn btn-ghost" id="exportBtn">Exportar JSON → data/productos.json</button>
         <button class="btn btn-ghost" id="importBtn">Importar JSON</button>
         <input type="file" id="importFile" accept=".json" class="hidden">
+      </div>
+      <div style="margin-top:10px;display:grid;gap:6px">
+        <div style="font-size:12px;color:var(--muted)">Token GitHub (gratis <a style="color:var(--accent)" href="https://github.com/settings/tokens" target="_blank">aquí</a>) · Usuario · Repo</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <input id="ghToken" type="password" placeholder="ghp_..." style="flex:2 1 180px">
+          <input id="ghUser" placeholder="tu-usuario" style="flex:1 1 110px">
+          <input id="ghRepo" placeholder="topvalor" style="flex:1 1 110px">
+        </div>
+        <p style="font-size:11px;color:var(--muted)">Se guardan en tu navegador (no en el repositorio). El token necesita el permiso <b>repo</b>.</p>
       </div>
       <div id="exportStatus" class="status" style="margin-top:6px"></div>
     </div>
