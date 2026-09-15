@@ -355,7 +355,13 @@
       };
       if (sha) body.sha = sha;
       const res = await fetch(api, { method: "PUT", headers: hdr, body: JSON.stringify(body) });
-      if (!res.ok) { st.textContent = "Error " + res.status + ": comprueba token (permiso repo) o red. " + (await res.text()); return; }
+      if (!res.ok) {
+        const txt = await res.text();
+        st.textContent = (res.status === 404)
+          ? "Error 404: el usuario/repo no existe o el token no tiene acceso. Comprueba que Usuario sea Miguelgc71 y Repo topvalor (los he puesto por defecto), y pega el token ghp_... con permiso repo."
+          : `Error ${res.status}: comprueba token (permiso repo) o red. ` + txt;
+        return;
+      }
       st.textContent = "Publicado. Espera ~30 s y recarga la web: la tienda ya tiene " + custom.length + " producto(s).";
     } catch (err) {
       st.textContent = "Fallo de red: " + err.message;
