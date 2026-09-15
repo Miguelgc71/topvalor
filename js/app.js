@@ -808,6 +808,16 @@
       return;
     }
     $("#createGroupBtn").disabled = false;
+    $("#createGroupBtn").onclick = () => {
+      const pid = sel.value;
+      const p = PRODUCTS.find(x => x.id === pid);
+      if (!p) { toast("Primero elige un artículo para el grupo.", false); return; }
+      const code = "GR-" + Math.random().toString(36).slice(2, 6).toUpperCase();
+      groups.push({ code, productId: pid, max: GROUP_MAX, min: GROUP_MIN, leader: "tú", members: ["tú"], deadline: Date.now() + 30 * MIN, closedAt: null });
+      saveGroups();
+      toast("Grupo " + code + " creado para " + p.title + ". Mínimo 2, máximo 5. Pásalo a amigos.", true);
+      renderGroups();
+    };
     const opts = PRODUCTS.map(p => `<option value="${p.id}">${p.title} (${fmt(p.price)})</option>`).join("");
     if (!sel._init) { sel.innerHTML = opts; sim.innerHTML = opts; sel._init = 1; }
 
@@ -871,16 +881,6 @@
       renderGroups();
       renderGrid(); renderDeals();
     });
-
-    $("#createGroupBtn").onclick = () => {
-      const pid = sel.value;
-      const p = PRODUCTS.find(x => x.id === pid);
-      const code = "GR-" + Math.random().toString(36).slice(2, 6).toUpperCase();
-      groups.push({ code, productId: pid, max: GROUP_MAX, min: GROUP_MIN, leader: "tú", members: ["tú"], deadline: Date.now() + 30 * MIN, closedAt: null });
-      saveGroups();
-      toast("Grupo " + code + " creado para " + p.title + ". Mínimo 2, máximo 5. Pásalo a amigos.", true);
-      renderGroups();
-    };
   }
 
   function renderSim() {
