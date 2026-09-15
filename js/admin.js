@@ -9,7 +9,7 @@
   let custom = [];
   try { custom = JSON.parse(localStorage.getItem(PRODUCTS_KEY) || "[]"); } catch (e) { custom = []; }
   let editingId = null;
-  let selectedSup = SUPPLIERS[0].id;
+  let selectedSup = localStorage.getItem("tv_last_sup") || SUPPLIERS[0].id;
   let sizes = [];
 
   // ---------- LOGIN ----------
@@ -64,6 +64,7 @@
     ).join("");
     $$(".sup-chip", wrap).forEach(c => c.onclick = () => {
       selectedSup = c.dataset.sup;
+      localStorage.setItem("tv_last_sup", selectedSup);
       renderSups();
     });
   }
