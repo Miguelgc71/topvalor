@@ -714,7 +714,7 @@
       <button class="btn btn-primary" id="payBtn" style="width:100%;margin-top:12px">Pedir por Bizum · ${fmt(total)}</button>
       <p class="table-note" style="margin-top:8px">Preparo el pedido cuando me pagas por <b>Bizum ${BIZUM}</b>. Precio final con 21% IVA.</p>
       <div class="cart-flow">
-        <div class="step"><span class="n">1</span><span>Me pagas por <b>Bizum</b> con tu talla y dirección.</span></div>
+        <div class="step"><span class="n">1</span><span>Me pagas por <b>Bizum</b> y rellenas tus <b>datos de envío</b> (te los pido al pedir, incluido el correo para el tracking).</span></div>
         <div class="step"><span class="n">2</span><span>Hago el pedido al <b>proveedor</b> (${sup(items[0].supplier).name}...).</span></div>
         <div class="step"><span class="n">3</span><span>El proveedor envía <b>directo a tu casa</b> y te paso el tracking.</span></div>
         <div class="step"><span class="n">4</span><span>Incidencias: las hablo <b>yo con el proveedor</b> por ti.</span></div>
@@ -737,35 +737,66 @@
     }).join("\n");
   }
 
-  function doPay() {
+function doPay() {
     const sub = STORE.cart.reduce((a, i) => a + i.unit, 0);
     const ship = groupedShip();
     const total = sub + ship;
     const supNames = [...new Set(STORE.cart.map(i => i.supplier))];
     const items = STORE.cart;
     const lines = items.map((i, idx) => `${idx + 1}. ${i.title} · ${sup(i.supplier).name}${i.size ? " · talla " + i.size : ""} · ${fmt(i.unit)}`).join("\n");
-    const summary = `TOP VALOR - PEDIDO\n\n${lines}\n\nSubtotal: ${fmt(sub)}\nEnv\u00edo: ${fmt(ship)}\nTOTAL (IVA incl.): ${fmt(total)}\n\nMe pagas por Bizum ${BIZUM}\nGracias!`;
+
+    function buildSummary() {
+      const g = v => document.getElementById(v).value.trim();
+      const shipBlock = [
+        "ENVÍO A:",
+        "  Nombre: " + (g("fName") || "(escribe tu nombre)"),
+        "  Dirección: " + (g("fStreet") || "(escribe tu calle y numero)"),
+        "  CP y ciudad: " + (g("fCp") || "(CP y ciudad)"),
+        "  Teléfono: " + (g("fPhone") || "(tu móvil)"),
+        "  Correo (para el tracking): " + (g("fEmail") || "(tu email)")
+      ].join("\n");
+      return `TOP VALOR - PEDIDO\n\n${lines}\n\nSubtotal: ${fmt(sub)}\nEnv\u00edo: ${fmt(ship)}\nTOTAL (IVA incl.): ${fmt(total)}\n\n${shipBlock}\n\nMe pagas por Bizum ${BIZUM}\nGracias!`;
+    }
 
     $("#cartDrawer").innerHTML = `<h2 style="font-size:20px;margin-bottom:12px">Pedido listo · págame por Bizum</h2>
       <div class="cart-flow" id="flow">
-        <div class="step"><span class="n">1</span><span>Mándame por Bizum <b>${fmt(total)}</b> a <b>${BIZUM}</b></span></div>
-        <div class="step"><span class="n">2</span><span>En el mensaje escribe tu <b>dirección</b> y <b>talla</b> (${items.map(i => i.size).filter(Boolean).join(", ") || "seg\u00fan selecci\u00f3n"})</span></div>
-        <div class="step"><span class="n">3</span><span>Hago el pedido a <b>${supNames.map(s => sup(s).name).join(", ")}</b> y te paso el <b>tracking</b></span></div>
+        <div class="step"><span class="n">1</span><span>Rellena tus <b>datos de envío</b> abajo (nombre, dirección, CP, ciudad, teléfono y correo)</span></div>
+        <div class="step"><span class="n">2</span><span>Mándame por Bizum <b>${fmt(total)}</b> a <b>${BIZUM}</b></span></div>
+        <div class="step"><span class="n">3</span><span>Hago el pedido a <b>${supNames.map(s => sup(s).name).join(", ")}</b> y te paso el <b>tracking a tu correo</b></span></div>
         <div class="step"><span class="n">4</span><span>Envío directo a tu casa · si algo falla, lo arreglo <b>yo</b></span></div>
       </div>
-      <textarea readonly onclick="this.select()" class="order-note" rows="6">${summary}</textarea>
-      <p class="table-note">El resumen se copia solo al tocarlo. Pásalo a un amigo con Bizum y listo.</p>
+      <div class="ship-form">
+        <h4>Datos de envío</h4>
+        <div class="ship-grid">
+          <input id="fName" class="full" placeholder="Nombre y apellidos" autocomplete="name">
+          <input id="fStreet" class="full" placeholder="Dirección (calle y número)" autocomplete="street-address">
+          <input id="fCp" placeholder="CP" autocomplete="postal-code">
+          <input id="fCity" placeholder="Ciudad" autocomplete="address-level2">
+          <input id="fPhone" placeholder="Teléfono" autocomplete="tel">
+          <input id="fEmail" placeholder="Correo (para el tracking)" autocomplete="email">
+        </div>
+        <p class="ship-hint">El proveedor necesita estos datos para enviar directo a tu casa. También van incluidos en el resumen que copias.</p>
+      </div>
+      <textarea readonly onclick="this.select()" class="order-note" rows="8" id="orderNote">${buildSummary()}</textarea>
+      <p class="table-note" style="margin-top:8px">El resumen se actualiza solo al rellenar tus datos.</p>
       <button class="btn btn-green" id="copyBtn" style="width:100%;margin-top:10px">Copiar resumen</button>
       <button class="btn btn-ghost" id="doneBtn" style="width:100%;margin-top:8px">Cerrar</button>`;
 
-    STORE.cart = [];
+    $("#cartBackdrop").hidden = false;
     updateCart();
     renderGrid(); renderDeals();
+
+    ["fName", "fStreet", "fCp", "fCity", "fPhone", "fEmail"].forEach(id => {
+      document.getElementById(id).addEventListener("input", () => {
+        document.getElementById("orderNote").value = buildSummary();
+      });
+    });
+
     $("#copyBtn").onclick = () => {
-      const t = $("#cartDrawer textarea");
+      const t = document.getElementById("orderNote");
       t.select();
       try { document.execCommand("copy"); } catch (e) { }
-      toast("Resumen copiado: p\u00e9gaselo a tu amigo.", true);
+      toast("Resumen con tus datos copiado: pégalo en WhatsApp para mandármelo.", true);
     };
     $("#doneBtn").onclick = () => { $("#cartBackdrop").hidden = true; };
   }

@@ -162,6 +162,13 @@ code{background:#0b0e13;padding:2px 6px;border-radius:6px;color:var(--accent)}
 
 .bid-form{display:flex;gap:10px;margin-top:10px}
 .bid-form input{background:var(--card);border:1px solid var(--line);color:var(--text);border-radius:8px;padding:8px 10px;width:120px;outline:none}
+.ship-form{margin-top:16px;background:#0b0e13;border:1px solid var(--line);border-radius:10px;padding:14px}
+.ship-form h4{margin:0 0 10px;font-size:13px;color:var(--accent);text-transform:uppercase;letter-spacing:1px}
+.ship-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.ship-grid .full{grid-column:1/-1}
+.ship-grid input{background:var(--card);border:1px solid var(--line);color:var(--text);border-radius:8px;padding:9px 10px;outline:none;font-size:13px;width:100%;box-sizing:border-box}
+.ship-grid input:focus{border-color:var(--accent)}
+.ship-hint{margin-top:8px;font-size:11px;color:var(--muted)}
 .complaint-box{font-size:13px;color:var(--muted)}
 .complaint-line{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px dashed var(--line)}
 .complaint-line b{color:var(--accent2)}
