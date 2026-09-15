@@ -746,12 +746,12 @@ function doPay() {
     const lines = items.map((i, idx) => `${idx + 1}. ${i.title} · ${sup(i.supplier).name}${i.size ? " · talla " + i.size : ""} · ${fmt(i.unit)}`).join("\n");
 
     function buildSummary() {
-      const g = v => document.getElementById(v).value.trim();
+      const g = v => { const el = document.getElementById(v); return el ? el.value.trim() : ""; };
       const shipBlock = [
         "ENVÍO A:",
         "  Nombre: " + (g("fName") || "(escribe tu nombre)"),
         "  Dirección: " + (g("fStreet") || "(escribe tu calle y numero)"),
-        "  CP y ciudad: " + (g("fCp") || "(CP y ciudad)"),
+        "  CP y ciudad: " + ((g("fCp") && g("fCity")) ? g("fCp") + ", " + g("fCity") : (g("fCp") || g("fCity") || "(CP y ciudad)")),
         "  Teléfono: " + (g("fPhone") || "(tu móvil)"),
         "  Correo (para el tracking): " + (g("fEmail") || "(tu email)")
       ].join("\n");
