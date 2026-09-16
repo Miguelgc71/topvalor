@@ -71,18 +71,68 @@
     </div>`;
   };
 
-  const bindColor = p => {
-    $$(".color-chip[data-color]").forEach(c => c.onclick = () => {
-      const i = Number(c.dataset.color);
-      const col = p.colors[i];
-      if (!col) return;
-      ST[p.id].color = { idx: i, label: col.label || ("Foto " + (i + 1)), img: col.img };
-      $$(".color-chip").forEach(x => x.classList.toggle("active", Number(x.dataset.color) === i));
+  const applyView = (p, idx) => {
+    const col = idx > 0 && p.colors ? p.colors[idx - 1] : null;
+    if (col) {
+      ST[p.id].color = { idx: idx - 1, label: col.label || ("Foto " + idx), img: col.img };
       const img = $("#mhImg");
       if (img) img.src = col.img;
+      $$(".color-chip").forEach(x => x.classList.toggle("active", Number(x.dataset.color) === idx - 1));
       const sel = $("#colorSel");
       if (sel) sel.textContent = "Elegido: " + ST[p.id].color.label;
+    } else {
+      ST[p.id].color = null;
+      $$(".color-chip").forEach(x => x.classList.remove("active"));
+      const img = $("#mhImg");
+      if (img && imgFor(p)) img.src = imgFor(p);
+      const sel = $("#colorSel");
+      if (sel) sel.textContent = "Elige la foto que quieras (o déjalo con la principal) · se envía igual al proveedor";
+    }
+  };
+
+  const bindColor = p => {
+    const img = $("#mhImg");
+    if (img) img.onclick = () => openLightbox(p, 0);
+    $$(".color-chip[data-color]").forEach(c => c.onclick = () => {
+      const i = Number(c.dataset.color);
+      if (!p.colors || !p.colors[i]) return;
+      applyView(p, i + 1);
+      openLightbox(p, i + 1);
     });
+  };
+
+  const lbPhotos = [];
+  const lbState = { p: null, i: 0 };
+  const renderLb = () => {
+    const ph = lbPhotos[lbState.i];
+    const img = $("#lbImg");
+    if (!img || !ph) return;
+    img.src = ph.img;
+    img.classList.add("loading");
+    img.onload = () => img.classList.remove("loading");
+    const cap = $("#lbCap");
+    if (cap) cap.textContent = ph.label + (lbPhotos.length > 1 ? " · " + (lbState.i + 1) + " / " + lbPhotos.length : "");
+    const single = lbPhotos.length <= 1;
+    const prev = $("#lbPrev"), next = $("#lbNext");
+    if (prev) prev.hidden = single;
+    if (next) next.hidden = single;
+  };
+  const openLightbox = (p, start) => {
+    lbState.p = p;
+    lbPhotos.length = 0;
+    const main = imgFor(p);
+    if (main) lbPhotos.push({ img: main, label: "Foto principal" });
+    (p.colors || []).forEach((c, i) => lbPhotos.push({ img: c.img, label: c.label || ("Foto " + (i + 1)) }));
+    if (!lbPhotos.length) return;
+    lbState.i = Math.max(0, Math.min(start, lbPhotos.length - 1));
+    renderLb();
+    $("#lbBackdrop").hidden = false;
+  };
+  const lbStep = d => {
+    if (!lbState.p || lbPhotos.length <= 1) return;
+    lbState.i = (lbState.i + d + lbPhotos.length) % lbPhotos.length;
+    applyView(lbState.p, lbState.i);
+    renderLb();
   };
 
   const GROUP_MIN = 2, GROUP_MAX = 5;
@@ -842,6 +892,12 @@ function doPay() {
   }
 
   $$("[data-close]").forEach(b => b.onclick = () => { $("#" + b.dataset.close).hidden = true; });
+  $("#lbPrev").onclick = () => lbStep(-1);
+  $("#lbNext").onclick = () => lbStep(1);
+  $("#lbBackdrop").addEventListener("click", e => { if (e.target.id === "lbBackdrop") $("#lbBackdrop").hidden = true; });
+  document.addEventListener("keydown", e => {
+    if (e.key === "Escape") ["modalBackdrop", "cartBackdrop", "howBackdrop", "lbBackdrop"].forEach(id => { const el = $("#" + id); if (el) el.hidden = true; });
+  });
   $("#modalBackdrop").addEventListener("click", e => { if (e.target.id === "modalBackdrop") $("#modalBackdrop").hidden = true; });
   $("#cartBackdrop").addEventListener("click", e => { if (e.target.id === "cartBackdrop") $("#cartBackdrop").hidden = true; });
   $("#howBackdrop").addEventListener("click", e => { if (e.target.id === "howBackdrop") $("#howBackdrop").hidden = true; });
