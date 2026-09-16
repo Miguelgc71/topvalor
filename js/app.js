@@ -14,7 +14,7 @@
 
   const ST = {};
   PRODUCTS.forEach(p => {
-    const s = { sold: 0, earlySold: 0, size: null };
+    const s = { sold: 0, earlySold: 0, size: null, color: null };
     if (p.deal === "flash") s.flashExpires = p.id === "p14" ? NOW + 66000 : NOW + p.flash.minutes * MIN;
     if (p.deal === "pricedrop") s.dropCur = p.price;
     if (p.deal === "pool") {
@@ -55,6 +55,35 @@
   const shipFor = p => p.shipOverride != null ? p.shipOverride : sup(p.supplierId).base + sup(p.supplierId).perKg * (p.grams / 1000);
 
   const imgFor = p => p.imgData && p.imgData !== "null" ? p.imgData : null;
+
+  const colorStrip = p => {
+    const cs = (p.colors && p.colors.length) ? p.colors : null;
+    if (!cs) return "";
+    const sel = ST[p.id].color;
+    return `<div class="color-wrap">
+      <div class="color-label">Colores / fotos disponibles</div>
+      <div class="color-strip">
+        ${cs.map((c, i) => `<button class="color-chip ${sel && sel.idx === i ? "active" : ""}" data-color="${i}">
+          <img src="${c.img}" loading="lazy" onerror="this.style.display='none'">
+          <span>${c.label || "Foto " + (i + 1)}</span></button>`).join("")}
+      </div>
+      <div class="color-sel" id="colorSel">${sel ? "Elegido: " + sel.label : "Elige la foto que quieras (o déjalo con la principal) · se envía igual al proveedor"}</div>
+    </div>`;
+  };
+
+  const bindColor = p => {
+    $$(".color-chip[data-color]").forEach(c => c.onclick = () => {
+      const i = Number(c.dataset.color);
+      const col = p.colors[i];
+      if (!col) return;
+      ST[p.id].color = { idx: i, label: col.label || ("Foto " + (i + 1)), img: col.img };
+      $$(".color-chip").forEach(x => x.classList.toggle("active", Number(x.dataset.color) === i));
+      const img = $("#mhImg");
+      if (img) img.src = col.img;
+      const sel = $("#colorSel");
+      if (sel) sel.textContent = "Elegido: " + ST[p.id].color.label;
+    });
+  };
 
   const GROUP_MIN = 2, GROUP_MAX = 5;
   const groupMath = (p, passShare, n) => {
@@ -505,7 +534,7 @@
 
     return {
       head: `<div class="mh-media" style="background:linear-gradient(135deg,${p.grad[0]},${p.grad[1]})">
-          ${imgFor(p) ? `<img src="${imgFor(p)}" class="mh-img" onerror="this.style.display='none'">` : `<div class="mono">${p.mono}</div>`}</div>
+          ${imgFor(p) ? `<img src="${imgFor(p)}" class="mh-img" id="mhImg" onerror="this.style.display='none'">` : `<div class="mono">${p.mono}</div>`}</div>
         <div class="mh-info">
           <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1px">${p.brand} · ${sup(p.supplierId).name}</div>
           <div class="mh-title">${p.title}</div>
@@ -515,7 +544,7 @@
             ${dealBadge(p)}
           </div>
           <div class="mh-price">${fmt(eff.price)} <span class="iva-tag">IVA incl.</span> ${eff.tag ? `<span style="font-size:13px;color:var(--green)">(${eff.tag})</span>` : ""}</div>
-        </div>`,
+        </div>${colorStrip(p)}`,
       panels: {
         desc: `<p>${p.note}</p><p style="margin-top:10px;color:var(--muted)">Fotos QC (control de calidad) disponibles en el proveedor ${sup(p.supplierId).name} antes del envío. Peso estimado <b>${(p.grams / 1000).toFixed(2).replace(".", ",")} kg</b>.</p>${dealPanel}`,
         fit: sizePanel,
@@ -576,6 +605,7 @@
     });
     bindFit(p);
     bindModalActions(p);
+    bindColor(p);
     $$(".modal tr[data-size]").forEach(r => r.onclick = () => pickSize(p, r.dataset.size));
     $("#addBtn").onclick = () => {
       if (fitInfo(p) && !ST[p.id].size) {
@@ -660,10 +690,11 @@
       toast("Oferta relámpago agotada o terminada.", false);
       return;
     }
-    STORE.cart.push({ id: p.id, mono: p.mono, grad: p.grad, title: p.title, supplier: p.supplierId, size: fitInfo(p) ? s.size : null, unit: eff.price, ship, isGroup: inClosedGroup(p.id) });
+    const selColor = s.color ? s.color.label : null;
+    STORE.cart.push({ id: p.id, mono: p.mono, grad: p.grad, title: p.title, supplier: p.supplierId, size: fitInfo(p) ? s.size : null, color: selColor, unit: eff.price, ship, isGroup: inClosedGroup(p.id) });
     if (p.deal === "flash") s.sold++;
     if (p.deal === "earlybird") s.earlySold = Math.min(p.early.quota, s.earlySold + 1);
-    toast("Añadido al carrito:" + (fitInfo(p) ? " talla " + s.size : "") + " · " + fmt(eff.price + ship), true);
+    toast("Añadido al carrito:" + (fitInfo(p) ? " talla " + s.size : "") + (selColor ? " · " + selColor : "") + " · " + fmt(eff.price + ship), true);
     updateCart();
     openCart();
   }
@@ -703,7 +734,7 @@
       ${items.length === 0 ? "<p style='color:var(--muted)'>Vacío. Toca \u201cVer \u00b7 elegir talla\u201d y eliges un producto.</p>" : items.map((i, idx) => `
         <div class="cart-row">
           <div class="cr-img" style="background:linear-gradient(135deg,${i.grad[0]},${i.grad[1]})"><span class="mono">${i.mono}</span></div>
-          <div><b>${i.title}</b><br><span style="color:var(--muted);font-size:12px">${sup(i.supplier).name}${i.size ? " · talla " + i.size : ""} · ${fmt(i.unit)}</span></div>
+          <div><b>${i.title}</b><br><span style="color:var(--muted);font-size:12px">${sup(i.supplier).name}${i.size ? " · talla " + i.size : ""}${i.color ? " · " + i.color : ""} · ${fmt(i.unit)}</span></div>
           <button class="cr-x" data-rm="${idx}">&times;</button>
         </div>`).join("")}
       ${items.length ? `<div class="cart-total">
@@ -743,7 +774,7 @@ function doPay() {
     const total = sub + ship;
     const supNames = [...new Set(STORE.cart.map(i => i.supplier))];
     const items = STORE.cart;
-    const lines = items.map((i, idx) => `${idx + 1}. ${i.title} · ${sup(i.supplier).name}${i.size ? " · talla " + i.size : ""} · ${fmt(i.unit)}`).join("\n");
+    const lines = items.map((i, idx) => `${idx + 1}. ${i.title} · ${sup(i.supplier).name}${i.size ? " · talla " + i.size : ""}${i.color ? " · " + i.color : ""} · ${fmt(i.unit)}`).join("\n");
 
     function buildSummary() {
       const g = v => { const el = document.getElementById(v); return el ? el.value.trim() : ""; };
@@ -967,7 +998,7 @@ function doPay() {
 
   function initProductState(p) {
     if (ST[p.id]) return;
-    const s = { sold: 0, earlySold: 0, size: null };
+    const s = { sold: 0, earlySold: 0, size: null, color: null };
     if (p.deal === "flash") s.flashExpires = NOW + (p.flash ? p.flash.minutes : 5) * MIN;
     if (p.deal === "pricedrop") s.dropCur = p.price;
     if (p.deal === "pool") {

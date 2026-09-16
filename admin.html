@@ -48,6 +48,10 @@
   .status{font-size:12px;color:var(--green);margin-top:8px}
   .sup-chip{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:999px;border:1px solid var(--line);font-size:12px;cursor:pointer;background:var(--bg2);color:var(--muted)}
   .sup-chip.active{background:var(--accent);color:#0f1115;border-color:var(--accent);font-weight:600}
+  .color-tag{display:inline-flex;align-items:center;gap:8px;background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:4px 4px 4px 6px;font-size:12px}
+  .color-tag img{width:40px;height:40px;border-radius:7px;object-fit:cover;border:1px solid var(--line);background:#000}
+  .color-tag span{max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .color-tag button{background:none;border:none;color:var(--accent2);cursor:pointer;font-size:14px;line-height:1;padding:0 4px}
 </style>
 </head>
 <body>
@@ -112,6 +116,21 @@
         <input type="file" id="fImgFile" accept="image/*" style="color:var(--muted);font-size:12px;width:100%">
         <img id="fImgPreview" class="img-preview">
         <p style="font-size:11px;color:var(--muted);margin-top:4px">Consigue la imagen: en la web del agente, clic derecho sobre la foto → "Copiar dirección de la imagen" y pégala (botón Descargar), o guárdala y súbela aquí.</p>
+      </div>
+
+      <!-- COLORS -->
+      <div class="field">
+        <label>Colores / fotos disponibles (opcional)</label>
+        <p style="font-size:11px;color:var(--muted);margin:0 0 8px">Añade las fotos de los colores del modelo (como salen en la web del agente). El cliente las verá en la ficha y elegirá tocando la foto.</p>
+        <div class="img-row">
+          <div class="field" style="margin:0"><input id="fColorNum" placeholder="Nº / nombre (ej. 2153)"></div>
+          <div class="field" style="margin:0"><input id="fColorImg" placeholder="URL de la foto (o súbela abajo)"></div>
+          <button class="btn btn-green" id="addColorBtn" style="flex:0;min-width:auto;padding:9px 14px">+ Añadir</button>
+        </div>
+        <p style="font-size:11px;color:var(--muted);margin:6px 0">O sube la foto guardada (captura, imagen recibida por WhatsApp):</p>
+        <input type="file" id="fColorFile" accept="image/*" style="color:var(--muted);font-size:12px;width:100%">
+        <div class="size-tags" id="colorTags" style="margin-top:8px"></div>
+        <p style="font-size:11px;color:var(--muted);margin-top:6px">Deja vacío si el producto solo tiene un color. Incrustar fotos subidas pesa mucho: mejor usa URL de la web del agente si puedes.</p>
       </div>
 
       <!-- PRICING -->

@@ -11,6 +11,7 @@
   let editingId = null;
   let selectedSup = localStorage.getItem("tv_last_sup") || SUPPLIERS[0].id;
   let sizes = [];
+  let colors = [];
 
   // ---------- LOGIN ----------
   function tryLogin() {
@@ -146,6 +147,42 @@
     e.target.value = "";
   });
 
+  // ---------- COLORS ----------
+  function renderColors() {
+    const wrap = $("#colorTags");
+    if (!colors.length) { wrap.innerHTML = `<span style="font-size:12px;color:var(--muted)">Sin fotos extra. El producto mostrará solo una imagen.</span>`; return; }
+    wrap.innerHTML = colors.map((c, i) =>
+      `<span class="color-tag"><img src="${c.img}" onerror="this.style.display='none'"><span>${c.label || "Foto " + (i + 1)}</span><button data-rm="${i}">&times;</button></span>`
+    ).join("");
+    $$("[data-rm]", wrap).forEach(b => b.onclick = () => { colors.splice(Number(b.dataset.rm), 1); renderColors(); });
+  }
+  function addColor(label, img) {
+    if (!img) return;
+    colors.push({ label: (label || "").trim() || ("Foto " + (colors.length + 1)), img });
+    renderColors();
+  }
+  $("#addColorBtn").onclick = () => {
+    const img = $("#fColorImg").value.trim();
+    if (!img) { $("#formStatus").textContent = "Pega primero la URL de la foto del color."; return; }
+    addColor($("#fColorNum").value, img);
+    $("#fColorNum").value = "";
+    $("#fColorImg").value = "";
+    $("#formStatus").textContent = "";
+  };
+  $("#fColorImg").addEventListener("keydown", e => { if (e.key === "Enter") { e.preventDefault(); $("#addColorBtn").click(); } });
+  $("#fColorFile").addEventListener("change", e => {
+    const f = e.target.files[0];
+    if (!f) return;
+    const r = new FileReader();
+    r.onload = () => {
+      addColor($("#fColorNum").value, r.result);
+      $("#fColorNum").value = "";
+      $("#formStatus").textContent = "Foto de color añadida desde el archivo (" + Math.round(f.size / 1024) + " KB). Ojo: incrustar muchas fotos pesa mucho; prefiere URLs.";
+    };
+    r.readAsDataURL(f);
+    e.target.value = "";
+  });
+
   // ---------- SAVE / EDIT ----------
   const fitByCat = cat => (
     cat === "shoes" ? "shoe" :
@@ -186,6 +223,7 @@
       note: $("#fNote").value.trim(),
       sizes: manual ? sizes.slice() : undefined,
       imgData: $("#fImgUrl").value.trim() || null,
+      colors: colors.length ? colors.slice() : undefined,
       shipOverride: ship,
       isCustom: true,
       dateAdded: Date.now()
@@ -218,6 +256,7 @@
   function resetForm() {
     editingId = null;
     sizes = [];
+    colors = [];
     ["fName", "fBrand", "fNote", "fImgUrl", "fCost", "fShip"].forEach(id => $("#" + id).value = "");
     $("#fMargin").value = "15";
     $("#fDeal").value = "none";
@@ -230,6 +269,9 @@
     $("#poolFields").style.display = "none";
     document.querySelector('input[name="sizeMode"][value="auto"]').checked = true;
     $("#manualSizes").style.display = "none";
+    $("#fColorNum").value = "";
+    $("#fColorImg").value = "";
+    renderColors();
     renderSizes();
     calc();
   }
@@ -252,6 +294,8 @@
     $("#manualSizes").style.display = manual ? "block" : "none";
     sizes = (p.sizes || []).slice();
     renderSizes();
+    colors = (p.colors || []).map(c => ({ label: c.label || c.name || "", img: c.img || "" }));
+    renderColors();
     $("#fDeal").value = p.deal || "none";
     if (p.flash) {
       $("#flashFields").style.display = "block";
@@ -286,7 +330,7 @@
         ${p.imgData ? `<img class="pi-img" src="${p.imgData}">` : `<div class="pi-img" style="display:grid;place-items:center;font-weight:800;color:var(--muted)">${p.mono}</div>`}
         <div class="pi-info">
           <b>${p.title}</b>
-          <span style="color:var(--muted)">${p.brand} · ${sup(p.supplierId).name} · ${fmt(p.price)}${p.price ? "" : ""} · ${p.deal !== "none" ? p.deal.toUpperCase() : "Normal"}</span>
+          <span style="color:var(--muted)">${p.brand} · ${sup(p.supplierId).name} · ${fmt(p.price)}${p.price ? "" : ""} · ${p.deal !== "none" ? p.deal.toUpperCase() : "Normal"} · ${p.colors && p.colors.length ? p.colors.length + " colores/fotos" : "1 imagen"}</span>
         </div>
         <div class="pi-actions">
           <button data-edit="${p.id}">Editar</button>

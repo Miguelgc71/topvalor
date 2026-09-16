@@ -118,7 +118,7 @@ code{background:#0b0e13;padding:2px 6px;border-radius:6px;color:var(--accent)}
 .how-modal h3{margin-bottom:14px;font-size:20px}
 .how-modal li{margin-bottom:8px;font-size:14px}
 
-.modal-head{display:flex;gap:18px;padding:22px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--card);z-index:4}
+.modal-head{display:flex;flex-wrap:wrap;gap:18px;padding:22px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--card);z-index:4}
 .mh-media{width:150px;height:150px;border-radius:12px;flex-shrink:0;display:grid;place-items:center}
 .mh-media .mono{font-size:44px;font-weight:900;color:rgba(255,255,255,.92)}
 .mh-info{flex:1}
@@ -169,6 +169,13 @@ code{background:#0b0e13;padding:2px 6px;border-radius:6px;color:var(--accent)}
 .ship-grid input{background:var(--card);border:1px solid var(--line);color:var(--text);border-radius:8px;padding:9px 10px;outline:none;font-size:13px;width:100%;box-sizing:border-box}
 .ship-grid input:focus{border-color:var(--accent)}
 .ship-hint{margin-top:8px;font-size:11px;color:var(--muted)}
+.color-wrap{flex-basis:100%;border-top:1px dashed var(--line);padding-top:12px}
+.color-label{font-size:11px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}
+.color-strip{display:flex;gap:8px;overflow-x:auto;padding-bottom:6px}
+.color-chip{flex:0 0 auto;display:flex;flex-direction:column;align-items:center;gap:4px;border:2px solid var(--line);background:var(--card2);border-radius:10px;padding:4px;font-size:11px;color:var(--muted);cursor:pointer;min-width:84px}
+.color-chip img{width:76px;height:76px;object-fit:cover;border-radius:7px;background:#000}
+.color-chip.active{border-color:var(--accent);color:var(--text);font-weight:700}
+.color-sel{margin-top:8px;font-size:12px;color:var(--accent);font-weight:700}
 .complaint-box{font-size:13px;color:var(--muted)}
 .complaint-line{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px dashed var(--line)}
 .complaint-line b{color:var(--accent2)}
