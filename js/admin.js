@@ -384,15 +384,39 @@
     const token = $("#ghToken").value.trim(), user = $("#ghUser").value.trim(), repo = $("#ghRepo").value.trim();
     if (!token || !user || !repo) { $("#exportStatus").textContent = "Faltan token, usuario o repo."; return; }
     const st = $("#exportStatus");
-    st.textContent = "Publicando " + custom.length + " producto(s)...";
+
+    // --- Protección 1: fotos incrustadas (base64) hinchan el catálogo ---
+    const emb = custom.filter(p => JSON.stringify(p).toLowerCase().includes("data:image"));
+    if (emb.length) {
+      st.textContent = "Bloqueado: " + emb.length + " producto(s) tienen la foto incrustada en el JSON (data:image). Eso engorda el catálogo. Pon la foto como archivo en tienda/imagenes/... y usa la ruta relativa (ej. imagenes/zapatillas/Nike/...) en «Imagen del producto».";
+      return;
+    }
+    const kb = Math.round(new Blob([currentJson()]).size / 1024);
+    if (kb > 300) {
+      st.textContent = "Bloqueado: el catálogo pesa " + kb + " KB. Suele ser por fotos incrustadas o imágenes gigantes. Usa rutas relativas a archivos del repo para mantenerlo ligero (el actual pesa 5 KB).";
+      return;
+    }
+
     const api = `https://api.github.com/repos/${encodeURIComponent(user)}/${encodeURIComponent(repo)}/contents/data/productos.json`;
     const hdr = { "Authorization": "token " + token, "Accept": "application/vnd.github.v3+json" };
     try {
+      // --- Protección 2: no eliminar por accidente productos ya publicados ---
       let sha = null;
+      let published = [];
       try {
         const r = await fetch(api, { headers: hdr });
-        if (r.ok) sha = (await r.json()).sha;
+        if (r.ok) {
+          const j = await r.json();
+          sha = j.sha;
+          try { published = JSON.parse(decodeURIComponent(escape(atob(j.content)))); } catch (e) { published = []; }
+        }
       } catch (e) { /* 404 o sin archivo: se crea */ }
+      const removed = Array.isArray(published) ? published.filter(p => p && p.id && !custom.some(c => c.id === p.id)).map(p => p.title || p.id) : [];
+      if (removed.length) {
+        const ok = confirm("⚠️ Al publicar se quitarán del catálogo publicado " + removed.length + " producto(s) que NO están en tu lista actual:\n\n• " + removed.slice(0, 10).join("\n• ") + (removed.length > 10 ? "\n… y " + (removed.length - 10) + " más" : "") + "\n\nEsto ocurre si tu lista del navegador no los incluye.\n¿Continuar de todas formas?");
+        if (!ok) { st.textContent = "Publicación cancelada (se protege el catálogo publicado)."; return; }
+      }
+
       const body = {
         message: "Publicar catalogo desde panel admin",
         content: btoa(unescape(encodeURIComponent(currentJson()))),
@@ -407,7 +431,7 @@
           : `Error ${res.status}: comprueba token (permiso repo) o red. ` + txt;
         return;
       }
-      st.textContent = "Publicado. Espera ~30 s y recarga la web: la tienda ya tiene " + custom.length + " producto(s).";
+      st.textContent = "Publicado (" + custom.length + " producto(s) + IVA). Espera ~30 s y recarga la web con Ctrl+F5.";
     } catch (err) {
       st.textContent = "Fallo de red: " + err.message;
     }

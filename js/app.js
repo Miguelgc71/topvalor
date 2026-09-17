@@ -61,14 +61,32 @@
     if (!cs) return "";
     const sel = ST[p.id].color;
     return `<div class="color-wrap">
-      <div class="color-label">Colores / fotos disponibles</div>
-      <div class="color-strip">
-        ${cs.map((c, i) => `<button class="color-chip ${sel && sel.idx === i ? "active" : ""}" data-color="${i}">
-          <img src="${c.img}" loading="lazy" onerror="this.style.display='none'">
-          <span>${c.label || "Foto " + (i + 1)}</span></button>`).join("")}
+      <div class="color-label">Colores / fotos disponibles <span class="color-hint">(${cs.length} — cada una es un modelo que puedes pedir)</span></div>
+      <div class="color-nav">
+        <button class="color-arrow" id="colorPrev" aria-label="Anterior">&#10094;</button>
+        <div class="color-strip">
+          ${cs.map((c, i) => `<button class="color-chip ${sel && sel.idx === i ? "active" : ""}" data-color="${i}">
+            <img src="${c.img}" loading="lazy" onerror="this.style.display='none'">
+            <span>${c.label || "Foto " + (i + 1)}</span></button>`).join("")}
+        </div>
+        <button class="color-arrow" id="colorNext" aria-label="Siguiente">&#10095;</button>
       </div>
-      <div class="color-sel" id="colorSel">${sel ? "Elegido: " + sel.label : "Elige la foto que quieras (o déjalo con la principal) · se envía igual al proveedor"}</div>
+      <div class="color-sel" id="colorSel">${sel ? "Elegido: " + sel.label : "Toca una de las fotos para elegir con qué modelo compras (o déjalo con la principal) · se envía igual al proveedor"}</div>
     </div>`;
+  };
+
+  const colorScrollInto = () => {
+    const strip = document.querySelector(".color-strip");
+    const act = strip && strip.querySelector(".color-chip.active");
+    if (strip && act) act.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+  };
+
+  const colorStep = d => {
+    const strip = document.querySelector(".color-strip");
+    if (!strip) return;
+    const chip = strip.querySelector(".color-chip");
+    const step = chip ? chip.offsetWidth + 8 : 100;
+    strip.scrollBy({ left: d * step, behavior: "smooth" });
   };
 
   const applyView = (p, idx) => {
@@ -80,13 +98,14 @@
       $$(".color-chip").forEach(x => x.classList.toggle("active", Number(x.dataset.color) === idx - 1));
       const sel = $("#colorSel");
       if (sel) sel.textContent = "Elegido: " + ST[p.id].color.label;
+      colorScrollInto();
     } else {
       ST[p.id].color = null;
       $$(".color-chip").forEach(x => x.classList.remove("active"));
       const img = $("#mhImg");
       if (img && imgFor(p)) img.src = imgFor(p);
       const sel = $("#colorSel");
-      if (sel) sel.textContent = "Elige la foto que quieras (o déjalo con la principal) · se envía igual al proveedor";
+      if (sel) sel.textContent = "Toca una de las fotos para elegir con qué modelo compras (o déjalo con la principal) · se envía igual al proveedor";
     }
   };
 
@@ -99,6 +118,19 @@
       applyView(p, i + 1);
       openLightbox(p, i + 1);
     });
+    const prev = $("#colorPrev"), next = $("#colorNext");
+    if (prev) prev.onclick = () => colorStep(-1);
+    if (next) next.onclick = () => colorStep(1);
+    const strip = $(".color-strip");
+    if (strip) {
+      strip.addEventListener("wheel", e => {
+        if (strip.scrollWidth > strip.clientWidth) {
+          e.preventDefault();
+          strip.scrollLeft += e.deltaY;
+        }
+      }, { passive: false });
+    }
+    colorScrollInto();
   };
 
   const lbPhotos = [];
