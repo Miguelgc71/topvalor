@@ -1071,17 +1071,17 @@ function doPay() {
     .catch(() => [])
     .then(arr => {
       if (!Array.isArray(arr) || !arr.length) return;
-      const known = new Set(PRODUCTS.map(p => p.id));
       let changed = false;
       arr.forEach(p => {
-        if (!p || !p.id || known.has(p.id)) return;
+        if (!p || !p.id) return;
         p.mono = p.mono || (p.title || "").split(" ").map(w => w[0]).join("").slice(0, 2).toUpperCase();
         p.grad = p.grad || ["#1e293b", "#0f172a"];
         p.fit = p.fit || "none";
         p.complaints = p.complaints || 0;
         p.rating = p.rating || 4.8;
         p.reviews = p.reviews || 0;
-        PRODUCTS.push(p);
+        const i = PRODUCTS.findIndex(x => x.id === p.id);
+        if (i >= 0) PRODUCTS[i] = p; else PRODUCTS.push(p);
         initProductState(p);
         changed = true;
       });
