@@ -11,24 +11,60 @@
     "orig": null,
     "grams": 500,
     "mono": "AF",
-    "grad": ["#1e293b", "#0f172a"],
+    "grad": [
+      "#1e293b",
+      "#0f172a"
+    ],
     "deal": "none",
     "complaints": 0,
     "fit": "shoe",
     "note": "Nike Air Force One. Mira las 11 fotos y elige el color/combinación que más te guste.",
     "imgData": "imagenes/zapatillas/Nike/Air Force uno/White_AF1.jpg",
     "colors": [
-      { "label": "Apricot Blue Spell", "img": "imagenes/zapatillas/Nike/Air Force uno/apricot_blue_spell.jpg" },
-      { "label": "Black AF1", "img": "imagenes/zapatillas/Nike/Air Force uno/Black_AF1.jpg" },
-      { "label": "Black and White Spelling", "img": "imagenes/zapatillas/Nike/Air Force uno/Black_and_white_spelling.jpg" },
-      { "label": "Blue and White Spell", "img": "imagenes/zapatillas/Nike/Air Force uno/blue_and_white_spell.jpg" },
-      { "label": "Dark Red and White Spell", "img": "imagenes/zapatillas/Nike/Air Force uno/dark_red_and_white_spell.jpg" },
-      { "label": "Orange White Spell", "img": "imagenes/zapatillas/Nike/Air Force uno/orange_white_spell.jpg" },
-      { "label": "Pink White Spell", "img": "imagenes/zapatillas/Nike/Air Force uno/Pink_White_Spell.jpg" },
-      { "label": "Purple White Spell", "img": "imagenes/zapatillas/Nike/Air Force uno/purple_white_spell.jpg" },
-      { "label": "Red and White Spell", "img": "imagenes/zapatillas/Nike/Air Force uno/red_and_white_spell.jpg" },
-      { "label": "White AF1", "img": "imagenes/zapatillas/Nike/Air Force uno/White_AF1.jpg" },
-      { "label": "Yellow and Green Spell", "img": "imagenes/zapatillas/Nike/Air Force uno/yellow_and_green_spell.jpg" }
+      {
+        "label": "Apricot Blue Spell",
+        "img": "imagenes/zapatillas/Nike/Air Force uno/apricot_blue_spell.jpg"
+      },
+      {
+        "label": "Black AF1",
+        "img": "imagenes/zapatillas/Nike/Air Force uno/Black_AF1.jpg"
+      },
+      {
+        "label": "Black and White Spelling",
+        "img": "imagenes/zapatillas/Nike/Air Force uno/Black_and_white_spelling.jpg"
+      },
+      {
+        "label": "Blue and White Spell",
+        "img": "imagenes/zapatillas/Nike/Air Force uno/blue_and_white_spell.jpg"
+      },
+      {
+        "label": "Dark Red and White Spell",
+        "img": "imagenes/zapatillas/Nike/Air Force uno/dark_red_and_white_spell.jpg"
+      },
+      {
+        "label": "Orange White Spell",
+        "img": "imagenes/zapatillas/Nike/Air Force uno/orange_white_spell.jpg"
+      },
+      {
+        "label": "Pink White Spell",
+        "img": "imagenes/zapatillas/Nike/Air Force uno/Pink_White_Spell.jpg"
+      },
+      {
+        "label": "Purple White Spell",
+        "img": "imagenes/zapatillas/Nike/Air Force uno/purple_white_spell.jpg"
+      },
+      {
+        "label": "Red and White Spell",
+        "img": "imagenes/zapatillas/Nike/Air Force uno/red_and_white_spell.jpg"
+      },
+      {
+        "label": "White AF1",
+        "img": "imagenes/zapatillas/Nike/Air Force uno/White_AF1.jpg"
+      },
+      {
+        "label": "Yellow and Green Spell",
+        "img": "imagenes/zapatillas/Nike/Air Force uno/yellow_and_green_spell.jpg"
+      }
     ],
     "shipOverride": 0,
     "isCustom": true
@@ -45,37 +81,112 @@
     "orig": null,
     "grams": 500,
     "mono": "AG",
-    "grad": ["#1e293b", "#0f172a"],
+    "grad": [
+      "#1e293b",
+      "#0f172a"
+    ],
     "deal": "none",
     "complaints": 0,
     "fit": "shoe",
     "note": "Asics Gel NYC. Mira las 24 fotos y elige el color/combinación que más te guste.",
     "imgData": "imagenes/zapatillas/Asics/Asics Gel/mov01.png",
     "colors": [
-      { "label": "01", "img": "imagenes/zapatillas/Asics/Asics Gel/mov01.png" },
-      { "label": "02", "img": "imagenes/zapatillas/Asics/Asics Gel/mov02.png" },
-      { "label": "03", "img": "imagenes/zapatillas/Asics/Asics Gel/mov03.png" },
-      { "label": "04", "img": "imagenes/zapatillas/Asics/Asics Gel/mov04.png" },
-      { "label": "05", "img": "imagenes/zapatillas/Asics/Asics Gel/mov05.png" },
-      { "label": "06", "img": "imagenes/zapatillas/Asics/Asics Gel/mov06.png" },
-      { "label": "07", "img": "imagenes/zapatillas/Asics/Asics Gel/mov07.png" },
-      { "label": "08", "img": "imagenes/zapatillas/Asics/Asics Gel/mov08.png" },
-      { "label": "09", "img": "imagenes/zapatillas/Asics/Asics Gel/mov09.png" },
-      { "label": "10", "img": "imagenes/zapatillas/Asics/Asics Gel/mov10.png" },
-      { "label": "11", "img": "imagenes/zapatillas/Asics/Asics Gel/mov11.png" },
-      { "label": "12", "img": "imagenes/zapatillas/Asics/Asics Gel/mov12.png" },
-      { "label": "13", "img": "imagenes/zapatillas/Asics/Asics Gel/mov13.png" },
-      { "label": "14", "img": "imagenes/zapatillas/Asics/Asics Gel/mov14.png" },
-      { "label": "15", "img": "imagenes/zapatillas/Asics/Asics Gel/mov15.png" },
-      { "label": "16", "img": "imagenes/zapatillas/Asics/Asics Gel/mov16.png" },
-      { "label": "17", "img": "imagenes/zapatillas/Asics/Asics Gel/mov17.png" },
-      { "label": "18", "img": "imagenes/zapatillas/Asics/Asics Gel/mov18.png" },
-      { "label": "19", "img": "imagenes/zapatillas/Asics/Asics Gel/mov19.png" },
-      { "label": "20", "img": "imagenes/zapatillas/Asics/Asics Gel/mov20.png" },
-      { "label": "21", "img": "imagenes/zapatillas/Asics/Asics Gel/mov21.png" },
-      { "label": "22", "img": "imagenes/zapatillas/Asics/Asics Gel/mov22.png" },
-      { "label": "23", "img": "imagenes/zapatillas/Asics/Asics Gel/mov23.png" },
-      { "label": "24", "img": "imagenes/zapatillas/Asics/Asics Gel/mov24.png" }
+      {
+        "label": "01",
+        "img": "imagenes/zapatillas/Asics/Asics Gel/mov01.png"
+      },
+      {
+        "label": "02",
+        "img": "imagenes/zapatillas/Asics/Asics Gel/mov02.png"
+      },
+      {
+        "label": "03",
+        "img": "imagenes/zapatillas/Asics/Asics Gel/mov03.png"
+      },
+      {
+        "label": "04",
+        "img": "imagenes/zapatillas/Asics/Asics Gel/mov04.png"
+      },
+      {
+        "label": "05",
+        "img": "imagenes/zapatillas/Asics/Asics Gel/mov05.png"
+      },
+      {
+        "label": "06",
+        "img": "imagenes/zapatillas/Asics/Asics Gel/mov06.png"
+      },
+      {
+        "label": "07",
+        "img": "imagenes/zapatillas/Asics/Asics Gel/mov07.png"
+      },
+      {
+        "label": "08",
+        "img": "imagenes/zapatillas/Asics/Asics Gel/mov08.png"
+      },
+      {
+        "label": "09",
+        "img": "imagenes/zapatillas/Asics/Asics Gel/mov09.png"
+      },
+      {
+        "label": "10",
+        "img": "imagenes/zapatillas/Asics/Asics Gel/mov10.png"
+      },
+      {
+        "label": "11",
+        "img": "imagenes/zapatillas/Asics/Asics Gel/mov11.png"
+      },
+      {
+        "label": "12",
+        "img": "imagenes/zapatillas/Asics/Asics Gel/mov12.png"
+      },
+      {
+        "label": "13",
+        "img": "imagenes/zapatillas/Asics/Asics Gel/mov13.png"
+      },
+      {
+        "label": "14",
+        "img": "imagenes/zapatillas/Asics/Asics Gel/mov14.png"
+      },
+      {
+        "label": "15",
+        "img": "imagenes/zapatillas/Asics/Asics Gel/mov15.png"
+      },
+      {
+        "label": "16",
+        "img": "imagenes/zapatillas/Asics/Asics Gel/mov16.png"
+      },
+      {
+        "label": "17",
+        "img": "imagenes/zapatillas/Asics/Asics Gel/mov17.png"
+      },
+      {
+        "label": "18",
+        "img": "imagenes/zapatillas/Asics/Asics Gel/mov18.png"
+      },
+      {
+        "label": "19",
+        "img": "imagenes/zapatillas/Asics/Asics Gel/mov19.png"
+      },
+      {
+        "label": "20",
+        "img": "imagenes/zapatillas/Asics/Asics Gel/mov20.png"
+      },
+      {
+        "label": "21",
+        "img": "imagenes/zapatillas/Asics/Asics Gel/mov21.png"
+      },
+      {
+        "label": "22",
+        "img": "imagenes/zapatillas/Asics/Asics Gel/mov22.png"
+      },
+      {
+        "label": "23",
+        "img": "imagenes/zapatillas/Asics/Asics Gel/mov23.png"
+      },
+      {
+        "label": "24",
+        "img": "imagenes/zapatillas/Asics/Asics Gel/mov24.png"
+      }
     ],
     "shipOverride": 0,
     "isCustom": true
@@ -92,7 +203,10 @@
     "orig": null,
     "grams": 500,
     "mono": "B",
-    "grad": ["#1e293b", "#0f172a"],
+    "grad": [
+      "#1e293b",
+      "#0f172a"
+    ],
     "deal": "none",
     "complaints": 0,
     "fit": "shoe",
@@ -114,35 +228,104 @@
     "orig": null,
     "grams": 1200,
     "mono": "AS",
-    "grad": ["#1e293b", "#0f172a"],
+    "grad": [
+      "#1e293b",
+      "#0f172a"
+    ],
     "deal": "none",
     "complaints": 0,
     "fit": "shoe",
     "note": "Adidas Samba OG. Mira las 22 fotos y elige el color/combinación que más te guste. Peso real estimado con caja 1,2 kg.",
     "imgData": "imagenes/zapatillas/Adidas/pcitem1841939635-613e0000018e8b8bf24c0a20e2c5_1080_1080.jpg",
     "colors": [
-      { "label": "01", "img": "imagenes/zapatillas/Adidas/samba/mov01.jpg" },
-      { "label": "04", "img": "imagenes/zapatillas/Adidas/samba/mov04.jpg" },
-      { "label": "05", "img": "imagenes/zapatillas/Adidas/samba/mov05.jpg" },
-      { "label": "06", "img": "imagenes/zapatillas/Adidas/samba/mov06.jpg" },
-      { "label": "07", "img": "imagenes/zapatillas/Adidas/samba/mov07.jpg" },
-      { "label": "08", "img": "imagenes/zapatillas/Adidas/samba/mov08.jpg" },
-      { "label": "09", "img": "imagenes/zapatillas/Adidas/samba/mov09.jpg" },
-      { "label": "10", "img": "imagenes/zapatillas/Adidas/samba/mov10.jpg" },
-      { "label": "11", "img": "imagenes/zapatillas/Adidas/samba/mov11.jpg" },
-      { "label": "12", "img": "imagenes/zapatillas/Adidas/samba/mov12.jpg" },
-      { "label": "13", "img": "imagenes/zapatillas/Adidas/samba/mov13.jpg" },
-      { "label": "14", "img": "imagenes/zapatillas/Adidas/samba/mov14.jpg" },
-      { "label": "15", "img": "imagenes/zapatillas/Adidas/samba/mov15.jpg" },
-      { "label": "16", "img": "imagenes/zapatillas/Adidas/samba/mov16.jpg" },
-      { "label": "17", "img": "imagenes/zapatillas/Adidas/samba/mov17.jpg" },
-      { "label": "18", "img": "imagenes/zapatillas/Adidas/samba/mov18.jpg" },
-      { "label": "19", "img": "imagenes/zapatillas/Adidas/samba/mov19.jpg" },
-      { "label": "20", "img": "imagenes/zapatillas/Adidas/samba/mov20.jpg" },
-      { "label": "21", "img": "imagenes/zapatillas/Adidas/samba/mov21.jpg" },
-      { "label": "22", "img": "imagenes/zapatillas/Adidas/samba/mov22.jpg" },
-      { "label": "23", "img": "imagenes/zapatillas/Adidas/samba/mov23.jpg" },
-      { "label": "24", "img": "imagenes/zapatillas/Adidas/samba/mov24.jpg" }
+      {
+        "label": "01",
+        "img": "imagenes/zapatillas/Adidas/samba/mov01.jpg"
+      },
+      {
+        "label": "04",
+        "img": "imagenes/zapatillas/Adidas/samba/mov04.jpg"
+      },
+      {
+        "label": "05",
+        "img": "imagenes/zapatillas/Adidas/samba/mov05.jpg"
+      },
+      {
+        "label": "06",
+        "img": "imagenes/zapatillas/Adidas/samba/mov06.jpg"
+      },
+      {
+        "label": "07",
+        "img": "imagenes/zapatillas/Adidas/samba/mov07.jpg"
+      },
+      {
+        "label": "08",
+        "img": "imagenes/zapatillas/Adidas/samba/mov08.jpg"
+      },
+      {
+        "label": "09",
+        "img": "imagenes/zapatillas/Adidas/samba/mov09.jpg"
+      },
+      {
+        "label": "10",
+        "img": "imagenes/zapatillas/Adidas/samba/mov10.jpg"
+      },
+      {
+        "label": "11",
+        "img": "imagenes/zapatillas/Adidas/samba/mov11.jpg"
+      },
+      {
+        "label": "12",
+        "img": "imagenes/zapatillas/Adidas/samba/mov12.jpg"
+      },
+      {
+        "label": "13",
+        "img": "imagenes/zapatillas/Adidas/samba/mov13.jpg"
+      },
+      {
+        "label": "14",
+        "img": "imagenes/zapatillas/Adidas/samba/mov14.jpg"
+      },
+      {
+        "label": "15",
+        "img": "imagenes/zapatillas/Adidas/samba/mov15.jpg"
+      },
+      {
+        "label": "16",
+        "img": "imagenes/zapatillas/Adidas/samba/mov16.jpg"
+      },
+      {
+        "label": "17",
+        "img": "imagenes/zapatillas/Adidas/samba/mov17.jpg"
+      },
+      {
+        "label": "18",
+        "img": "imagenes/zapatillas/Adidas/samba/mov18.jpg"
+      },
+      {
+        "label": "19",
+        "img": "imagenes/zapatillas/Adidas/samba/mov19.jpg"
+      },
+      {
+        "label": "20",
+        "img": "imagenes/zapatillas/Adidas/samba/mov20.jpg"
+      },
+      {
+        "label": "21",
+        "img": "imagenes/zapatillas/Adidas/samba/mov21.jpg"
+      },
+      {
+        "label": "22",
+        "img": "imagenes/zapatillas/Adidas/samba/mov22.jpg"
+      },
+      {
+        "label": "23",
+        "img": "imagenes/zapatillas/Adidas/samba/mov23.jpg"
+      },
+      {
+        "label": "24",
+        "img": "imagenes/zapatillas/Adidas/samba/mov24.jpg"
+      }
     ],
     "shipOverride": 14.1,
     "isCustom": true
