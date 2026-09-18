@@ -446,7 +446,7 @@
       try {
         const data = JSON.parse(r.result);
         if (!Array.isArray(data)) throw 0;
-        const merged = custom.concat(data.filter(x => !custom.some(c => c.id === x.id)));
+        const merged = custom.filter(x => !data.some(d => d.id === x.id)).concat(data.filter(x => x && x.id));
         custom = merged;
         localStorage.setItem(PRODUCTS_KEY, JSON.stringify(custom));
         renderList();
