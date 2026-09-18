@@ -388,7 +388,7 @@
     // --- Protección 1: fotos incrustadas (base64) hinchan el catálogo ---
     const emb = custom.filter(p => JSON.stringify(p).toLowerCase().includes("data:image"));
     if (emb.length) {
-      st.textContent = "Bloqueado: " + emb.length + " producto(s) tienen la foto incrustada en el JSON (data:image). Eso engorda el catálogo. Pon la foto como archivo en tienda/imagenes/... y usa la ruta relativa (ej. imagenes/zapatillas/Nike/...) en «Imagen del producto».";
+      st.textContent = "Bloqueado: " + emb.length + " producto(s) tienen la foto incrustada en el JSON (data:image): «" + emb.map(p => p.title).join("», «") + "». Eso engorda el catálogo. Pon la foto como archivo en tienda/imagenes/... y usa la ruta relativa (ej. imagenes/zapatillas/Nike/...) en «Imagen del producto», o pulsa «Sincronizar con repo» para traer la lista limpia.";
       return;
     }
     const kb = Math.round(new Blob([currentJson()]).size / 1024);
@@ -459,4 +459,22 @@
     r.readAsText(f);
     e.target.value = "";
   });
+
+  $("#syncBtn").onclick = async () => {
+    const st = $("#exportStatus");
+    st.textContent = "Sincronizando...";
+    try {
+      const res = await fetch("data/productos.json", { cache: "no-store" });
+      if (!res.ok) throw 0;
+      const data = await res.json();
+      if (!Array.isArray(data)) throw 0;
+      custom = data.slice();
+      localStorage.setItem(PRODUCTS_KEY, JSON.stringify(custom));
+      renderList();
+      renderStats();
+      st.textContent = "Lista sincronizada con el repo: " + custom.length + " producto(s). Ya puedes publicar.";
+    } catch (err) {
+      st.textContent = "No se pudo leer data/productos.json (¿estás en local con file://? Usa el botón «Importar JSON» con el archivo).";
+    }
+  };
 })();
