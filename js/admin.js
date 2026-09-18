@@ -399,31 +399,36 @@
 
     const api = `https://api.github.com/repos/${encodeURIComponent(user)}/${encodeURIComponent(repo)}/contents/data/productos.json`;
     const hdr = { "Authorization": "token " + token, "Accept": "application/vnd.github.v3+json" };
+    const readRemote = async () => {
+      const r = await fetch(api, { headers: hdr, cache: "no-store" });
+      if (!r.ok) return { sha: null, published: [] };
+      const j = await r.json();
+      let published = [];
+      try { published = JSON.parse(decodeURIComponent(escape(atob(j.content)))); } catch (e) { published = []; }
+      return { sha: j.sha, published };
+    };
+    const buildBody = sha => {
+      const body = { message: "Publicar catalogo desde panel admin", content: btoa(unescape(encodeURIComponent(currentJson()))), branch: "main" };
+      if (sha) body.sha = sha;
+      return JSON.stringify(body);
+    };
+    const putRemote = sha => fetch(api, { method: "PUT", headers: hdr, body: buildBody(sha), cache: "no-store" });
     try {
       // --- Protección 2: no eliminar por accidente productos ya publicados ---
-      let sha = null;
-      let published = [];
-      try {
-        const r = await fetch(api, { headers: hdr });
-        if (r.ok) {
-          const j = await r.json();
-          sha = j.sha;
-          try { published = JSON.parse(decodeURIComponent(escape(atob(j.content)))); } catch (e) { published = []; }
-        }
-      } catch (e) { /* 404 o sin archivo: se crea */ }
+      const remote = await readRemote();
+      const published = remote.published || [];
       const removed = Array.isArray(published) ? published.filter(p => p && p.id && !custom.some(c => c.id === p.id)).map(p => p.title || p.id) : [];
       if (removed.length) {
         const ok = confirm("⚠️ Al publicar se quitarán del catálogo publicado " + removed.length + " producto(s) que NO están en tu lista actual:\n\n• " + removed.slice(0, 10).join("\n• ") + (removed.length > 10 ? "\n… y " + (removed.length - 10) + " más" : "") + "\n\nEsto ocurre si tu lista del navegador no los incluye.\n¿Continuar de todas formas?");
         if (!ok) { st.textContent = "Publicación cancelada (se protege el catálogo publicado)."; return; }
       }
 
-      const body = {
-        message: "Publicar catalogo desde panel admin",
-        content: btoa(unescape(encodeURIComponent(currentJson()))),
-        branch: "main"
-      };
-      if (sha) body.sha = sha;
-      const res = await fetch(api, { method: "PUT", headers: hdr, body: JSON.stringify(body) });
+      let res = await putRemote(remote.sha);
+      if (res.status === 409) {
+        st.textContent = "El catálogo cambió en el repo. Reintentando con el sha actualizado...";
+        const again = await readRemote();
+        res = await putRemote(again.sha);
+      }
       if (!res.ok) {
         const txt = await res.text();
         st.textContent = (res.status === 404)
