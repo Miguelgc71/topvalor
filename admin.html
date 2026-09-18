@@ -238,6 +238,19 @@
       <p style="font-size:11px;color:var(--muted);margin-top:6px">Protección: se bloquea si hay fotos incrustadas (base64) o el catálogo supera 300 KB, y se avisa si la publicación eliminaría productos que ya están en la web.</p>
     </div>
 
+    <!-- UPLOAD PHOTOS -->
+    <div class="form-card">
+      <h3>Subir fotos al repositorio</h3>
+      <p style="font-size:12px;color:var(--muted);margin-bottom:12px">Sube las fotos a una carpeta de <code>imagenes/...</code> del repo (equivale a <code>git add/commit/push</code>, por la API). Luego usa la ruta relativa en «Imagen del producto» y en los colores. <b>Publicar solo sube el JSON, no las fotos: este botón es el que sube las fotos.</b></p>
+      <div class="field"><label>Carpeta destino (ruta relativa)</label><input id="upFolder" placeholder="imagenes/zapatillas/Bapesta/bapesta"></div>
+      <div class="field"><label>Fotos (selecciona varias a la vez)</label><input type="file" id="upFiles" accept="image/*" multiple style="color:var(--muted);font-size:12px;width:100%"></div>
+      <div class="action-bar" style="flex-wrap:wrap">
+        <button class="btn btn-green" id="upBtn">Subir fotos al repo</button>
+      </div>
+      <div id="upStatus" class="status" style="margin-top:6px"></div>
+      <p style="font-size:11px;color:var(--muted);margin-top:6px">Usa el mismo token/usuario/repo de la tarjeta de arriba. Si el archivo ya existe se reemplaza. Los espacios del nombre se cambian por «_».</p>
+    </div>
+
     <!-- QUICK STATS -->
     <div class="form-card">
       <h3>Resumen</h3>

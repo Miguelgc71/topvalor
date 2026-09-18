@@ -482,4 +482,65 @@
       st.textContent = "No se pudo leer data/productos.json (¿estás en local con file://? Usa el botón «Importar JSON» con el archivo).";
     }
   };
+
+  // ---------- SUBIR FOTOS AL REPO ----------
+  $("#upBtn").onclick = async () => {
+    const st = $("#upStatus");
+    const token = $("#ghToken").value.trim(), user = $("#ghUser").value.trim(), repo = $("#ghRepo").value.trim();
+    let folder = $("#upFolder").value.trim().replace(/\\/g, "/").replace(/^\/+|\/+$/g, "");
+    const files = Array.from(($("#upFiles").files) || []);
+    if (!token || !user || !repo) { st.textContent = "Faltan token, usuario o repo (en la tarjeta de arriba)."; return; }
+    if (!folder) { st.textContent = "Escribe la carpeta destino, ej. imagenes/zapatillas/Marca/Modelo"; return; }
+    if (!files.length) { st.textContent = "Selecciona al menos una foto."; return; }
+    ghSave();
+    const apiBase = "https://api.github.com/repos/" + encodeURIComponent(user) + "/" + encodeURIComponent(repo) + "/contents/";
+    const hdr = { "Authorization": "token " + token, "Accept": "application/vnd.github.v3+json" };
+    const encPath = p => p.split("/").map(encodeURIComponent).join("/");
+    const readB64 = f => new Promise((ok, no) => { const r = new FileReader(); r.onload = () => ok(String(r.result).split(",")[1] || ""); r.onerror = no; r.readAsDataURL(f); });
+    const getSha = async path => {
+      try {
+        const r = await fetch(apiBase + encPath(path), { headers: hdr, cache: "no-store" });
+        if (r.ok) { const j = await r.json(); return j.sha || null; }
+      } catch (e) {}
+      return null;
+    };
+    const putFile = async (path, b64) => {
+      let sha = await getSha(path);
+      const body = { message: "Subir foto: " + path, content: b64, branch: "main" };
+      if (sha) body.sha = sha;
+      let res = await fetch(apiBase + encPath(path), { method: "PUT", headers: hdr, body: JSON.stringify(body), cache: "no-store" });
+      if (res.status === 409 || res.status === 422) {
+        sha = await getSha(path);
+        if (sha) { body.sha = sha; res = await fetch(apiBase + encPath(path), { method: "PUT", headers: hdr, body: JSON.stringify(body), cache: "no-store" }); }
+      }
+      return res;
+    };
+    let done = 0, fail = 0;
+    const uploaded = [];
+    for (let i = 0; i < files.length; i++) {
+      const f = files[i];
+      const name = f.name.replace(/\s+/g, "_");
+      st.textContent = "Subiendo " + (i + 1) + "/" + files.length + ": " + name + "...";
+      try {
+        const b64 = await readB64(f);
+        const res = await putFile(folder + "/" + name, b64);
+        if (res.ok) { done++; uploaded.push(folder + "/" + name); }
+        else { fail++; if (res.status === 404) { st.textContent = "Error 404: usuario/repo o token incorrecto."; return; } }
+      } catch (e) { fail++; }
+    }
+    if (uploaded.length) {
+      uploaded.forEach(pth => {
+        const base = pth.split("/").pop().replace(/\.[^.]+$/, "");
+        const num = (base.match(/\d+/) || [base])[0];
+        if (!colors.some(c => c.img === pth)) colors.push({ label: num, img: pth });
+      });
+      renderColors();
+      if (!$("#fImgUrl").value.trim()) {
+        $("#fImgUrl").value = uploaded[0];
+        $("#fImgPreview").src = uploaded[0];
+        $("#fImgPreview").style.display = "block";
+      }
+    }
+    st.textContent = "Fotos subidas: " + done + (fail ? " · con error: " + fail : "") + ". Añadidas como colores del producto. Revisa el formulario y pulsa «Publicar producto» y luego «Publicar en GitHub ahora». Espera ~1 min y recarga con Ctrl+F5.";
+  };
 })();
