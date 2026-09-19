@@ -333,6 +333,7 @@
         <div class="pi-info">
           <b>${p.title}</b>
           <span style="color:var(--muted)">${p.brand} · ${sup(p.supplierId).name} · ${fmt(p.price)}${p.price ? "" : ""} · ${p.deal !== "none" ? p.deal.toUpperCase() : "Normal"} · ${p.colors && p.colors.length ? p.colors.length + " colores/fotos" : "1 imagen"}</span>
+          ${p.supLink ? `<a href="${p.supLink}" target="_blank" rel="noopener" style="font-size:11px;color:var(--accent);word-break:break-all">Abrir enlace en ${sup(p.supplierId).name}</a>` : `<span style="font-size:11px;color:var(--muted)">Sin enlace del proveedor</span>`}
         </div>
         <div class="pi-actions">
           <button data-edit="${p.id}">Editar</button>
