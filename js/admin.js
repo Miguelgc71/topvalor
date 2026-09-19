@@ -213,6 +213,7 @@
       rating: 4.8,
       reviews: 0,
       price: Math.round(price * 100) / 100,
+      cost: Math.round(cost * 100) / 100,
       orig: null,
       grams: 500,
       mono: $("#fName").value.trim().split(" ").map(w => w[0]).join("").slice(0, 2).toUpperCase() || "TV",
@@ -286,7 +287,7 @@
     $("#fCat").value = p.cat || "shoes";
     $("#fNote").value = p.note || "";
     $("#fSupLink").value = p.supLink || "";
-    $("#fCost").value = (p.price ? (p.price / 1.21 / 1.15) : 0).toFixed(2);
+    $("#fCost").value = (p.cost != null ? p.cost : (p.price ? (p.price / 1.21 / 1.15) : 0)).toFixed(2);
     $("#fMargin").value = "15";
     $("#fShip").value = p.shipOverride || 0;
     selectedSup = p.supplierId;
@@ -485,6 +486,78 @@
       st.textContent = "No se pudo leer data/productos.json (¿estás en local con file://? Usa el botón «Importar JSON» con el archivo).";
     }
   };
+
+  // ---------- REVISAR PRECIOS ----------
+  const MARGIN_PCT = 15, IVA = 1.21;
+  const costOf = p => (p.cost != null ? Number(p.cost) || 0 : (p.price ? p.price / IVA / (1 + MARGIN_PCT / 100) : 0));
+  const saleFromCost = c => Math.round(c * (1 + MARGIN_PCT / 100) * IVA * 100) / 100;
+
+  function renderCheck() {
+    const area = $("#checkArea");
+    $("#checkSaveBtn").style.display = "inline-block";
+    $("#checkPubBtn").style.display = "inline-block";
+    if (!custom.length) {
+      area.innerHTML = `<p style="color:var(--muted);font-size:13px">No hay productos que revisar.</p>`;
+      return;
+    }
+    area.innerHTML = `<div style="overflow-x:auto"><table class="price-table">
+      <thead><tr><th>Producto</th><th>Coste actual</th><th>Coste nuevo</th><th>Precio venta</th><th>Proveedor</th><th>Estado</th></tr></thead>
+      <tbody>` + custom.map(p => {
+        const c = costOf(p);
+        return `<tr>
+          <td><b>${p.title}</b><br><span style="color:var(--muted)">${p.brand || ""}</span></td>
+          <td style="white-space:nowrap">${fmt(c)}</td>
+          <td><input type="number" step="0.01" min="0" value="${c ? c.toFixed(2) : ""}" data-cost="${p.id}"></td>
+          <td class="sale" data-sale="${p.id}">${fmt(saleFromCost(c))}</td>
+          <td>${p.supLink ? `<a href="${p.supLink}" target="_blank" rel="noopener" style="color:var(--accent);white-space:nowrap">Abrir en ${sup(p.supplierId).name}</a>` : `<span style="color:var(--muted)">Sin enlace</span>`}</td>
+          <td class="st-same" data-st="${p.id}">Igual</td>
+        </tr>`;
+      }).join("") + `</tbody></table></div>`;
+    $$("[data-cost]", area).forEach(inp => {
+      inp.addEventListener("input", () => {
+        const id = inp.dataset.cost;
+        const p = custom.find(x => x.id === id);
+        const val = parseFloat(inp.value.replace(",", "."));
+        const newCost = isNaN(val) ? 0 : val;
+        $("[data-sale='" + id + "']").textContent = fmt(saleFromCost(newCost));
+        const st = $("[data-st='" + id + "']");
+        const changed = Math.abs(newCost - costOf(p)) > 0.005;
+        st.textContent = changed ? "Cambiado" : "Igual";
+        st.className = changed ? "st-changed" : "st-same";
+      });
+    });
+  }
+
+  $("#checkBtn").onclick = () => {
+    renderCheck();
+    $("#checkStatus").textContent = custom.length + " producto(s). Revisa el coste y pulsa «Guardar cambios».";
+  };
+
+  $("#checkSaveBtn").onclick = () => {
+    let n = 0;
+    $$("[data-cost]").forEach(inp => {
+      const id = inp.dataset.cost;
+      const p = custom.find(x => x.id === id);
+      if (!p) return;
+      const val = parseFloat(inp.value.replace(",", "."));
+      if (isNaN(val)) return;
+      const old = costOf(p);
+      if (Math.abs(val - old) > 0.005) {
+        p.cost = Math.round(val * 100) / 100;
+        p.price = saleFromCost(val);
+        n++;
+      } else if (p.cost == null) {
+        p.cost = Math.round(old * 100) / 100;
+      }
+    });
+    localStorage.setItem(PRODUCTS_KEY, JSON.stringify(custom));
+    renderList();
+    renderStats();
+    renderCheck();
+    $("#checkStatus").textContent = n ? ("Actualizados " + n + " producto(s). Ahora pulsa «Publicar en GitHub».") : "No había cambios de coste.";
+  };
+
+  $("#checkPubBtn").onclick = () => $("#publishBtn").click();
 
   // ---------- SUBIR FOTOS AL REPO ----------
   $("#upBtn").onclick = async () => {

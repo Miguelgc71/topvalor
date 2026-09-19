@@ -42,6 +42,13 @@
   .prod-item .pi-actions button{background:none;border:1px solid var(--line);color:var(--muted);border-radius:8px;padding:5px 10px;font-size:12px;cursor:pointer}
   .prod-item .pi-actions button:hover{border-color:var(--accent);color:var(--text)}
   .prod-item .pi-actions .del{border-color:var(--accent2);color:var(--accent2)}
+  .price-table{width:100%;border-collapse:collapse;font-size:12px}
+  .price-table th,.price-table td{padding:8px 6px;border-bottom:1px solid var(--line);text-align:left;vertical-align:middle}
+  .price-table th{color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.5px}
+  .price-table input{width:92px;background:var(--bg2);border:1px solid var(--line);color:var(--text);border-radius:8px;padding:6px 8px;font-size:12px}
+  .price-table .sale{color:var(--accent);font-weight:700;white-space:nowrap}
+  .price-table .st-changed{color:var(--accent);font-weight:700}
+  .price-table .st-same{color:var(--muted)}
   .action-bar{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
   .action-bar .btn{flex:1;min-width:140px}
   .hidden{display:none!important}
@@ -220,6 +227,19 @@
       <div id="prodList" class="prod-list"><p style="color:var(--muted);font-size:13px">Aún no hay productos personalizados.</p></div>
     </div>
 
+    <!-- PRICE REVIEW -->
+    <div class="form-card">
+      <h3>Revisar precios</h3>
+      <p style="font-size:12px;color:var(--muted);margin-bottom:12px">Comprueba el coste de cada artículo. Abre el enlace del proveedor, pon el <b>coste nuevo</b> (o déjalo igual) y guarda: el precio de venta se recalcula solo con tu margen (15% + IVA).</p>
+      <div class="action-bar" style="flex-wrap:wrap">
+        <button class="btn btn-primary" id="checkBtn">🔍 Revisar precios</button>
+        <button class="btn btn-ghost" id="checkSaveBtn" style="display:none">Guardar cambios</button>
+        <button class="btn btn-green" id="checkPubBtn" style="display:none">Publicar en GitHub</button>
+      </div>
+      <div id="checkArea" style="margin-top:14px"></div>
+      <div id="checkStatus" class="status" style="margin-top:6px"></div>
+    </div>
+
     <!-- EXPORT / IMPORT / PUBLISH -->
     <div class="form-card">
       <h3>Publicar en la web (GitHub Pages)</h3>
@@ -268,6 +288,6 @@
 </div>
 
 <script src="js/data.js?v=20260919"></script>
-<script src="js/admin.js?v=20260919"></script>
+<script src="js/admin.js?v=20260919b"></script>
 </body>
 </html>
