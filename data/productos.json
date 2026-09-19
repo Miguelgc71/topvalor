@@ -7,7 +7,7 @@
     "supplierId": "hipobuy",
     "rating": 4.8,
     "reviews": 0,
-    "price": 24.78,
+    "price": 30.2,
     "orig": null,
     "grams": 500,
     "mono": "AF",
@@ -69,7 +69,8 @@
     "shipOverride": 0,
     "supLink": "https://hipobuy.com/product/2/7442542749?inviteCode=1212",
     "isCustom": true,
-    "dateAdded": 1789805355682
+    "dateAdded": 1789805355682,
+    "cost": 21.7
   },
   {
     "id": "cmu2qq5ut",
@@ -193,7 +194,8 @@
     "shipOverride": 0,
     "supLink": "https://hipobuy.com/product/2/7444430516?inviteCode=1212",
     "isCustom": true,
-    "dateAdded": 1789807400837
+    "dateAdded": 1789807400837,
+    "cost": 38.43
   },
   {
     "id": "cmu2qwawz",
@@ -203,7 +205,7 @@
     "supplierId": "hipobuy",
     "rating": 4.8,
     "reviews": 0,
-    "price": 54.14,
+    "price": 79.68,
     "orig": null,
     "grams": 500,
     "mono": "B",
@@ -341,7 +343,8 @@
     "shipOverride": 0,
     "supLink": "https://hipobuy.com/product/2/7444396886?inviteCode=1212",
     "isCustom": true,
-    "dateAdded": 1789807482916
+    "dateAdded": 1789807482916,
+    "cost": 57.26
   },
   {
     "id": "samba0525",
@@ -351,7 +354,7 @@
     "supplierId": "hipobuy",
     "rating": 4.8,
     "reviews": 0,
-    "price": 58.93,
+    "price": 55.99,
     "orig": null,
     "grams": 500,
     "mono": "AS",
@@ -457,6 +460,7 @@
     "shipOverride": 14.1,
     "supLink": "https://hipobuy.com/product/2/7444424636?inviteCode=1212",
     "isCustom": true,
-    "dateAdded": 1789807540139
+    "dateAdded": 1789807540139,
+    "cost": 40.24
   }
 ]
