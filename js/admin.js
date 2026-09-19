@@ -225,6 +225,7 @@
       imgData: $("#fImgUrl").value.trim() || null,
       colors: colors.length ? colors.slice() : undefined,
       shipOverride: ship,
+      supLink: $("#fSupLink").value.trim() || null,
       isCustom: true,
       dateAdded: Date.now()
     };
@@ -257,7 +258,7 @@
     editingId = null;
     sizes = [];
     colors = [];
-    ["fName", "fBrand", "fNote", "fImgUrl", "fCost", "fShip"].forEach(id => $("#" + id).value = "");
+    ["fName", "fBrand", "fNote", "fImgUrl", "fCost", "fShip", "fSupLink"].forEach(id => $("#" + id).value = "");
     $("#fMargin").value = "15";
     $("#fDeal").value = "none";
     $("#fCat").value = "shoes";
@@ -284,6 +285,7 @@
     $("#fBrand").value = p.brand || "";
     $("#fCat").value = p.cat || "shoes";
     $("#fNote").value = p.note || "";
+    $("#fSupLink").value = p.supLink || "";
     $("#fCost").value = (p.price ? (p.price / 1.21 / 1.15) : 0).toFixed(2);
     $("#fMargin").value = "15";
     $("#fShip").value = p.shipOverride || 0;

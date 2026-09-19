@@ -772,7 +772,7 @@
       return;
     }
     const selColor = s.color ? s.color.label : null;
-    STORE.cart.push({ id: p.id, mono: p.mono, grad: p.grad, title: p.title, supplier: p.supplierId, size: fitInfo(p) ? s.size : null, color: selColor, unit: eff.price, ship, isGroup: inClosedGroup(p.id) });
+    STORE.cart.push({ id: p.id, mono: p.mono, grad: p.grad, title: p.title, supplier: p.supplierId, supLink: p.supLink || null, size: fitInfo(p) ? s.size : null, color: selColor, unit: eff.price, ship, isGroup: inClosedGroup(p.id) });
     if (p.deal === "flash") s.sold++;
     if (p.deal === "earlybird") s.earlySold = Math.min(p.early.quota, s.earlySold + 1);
     toast("Añadido al carrito:" + (fitInfo(p) ? " talla " + s.size : "") + (selColor ? " · " + selColor : "") + " · " + fmt(eff.price + ship), true);
@@ -855,7 +855,11 @@ function doPay() {
     const total = sub + ship;
     const supNames = [...new Set(STORE.cart.map(i => i.supplier))];
     const items = STORE.cart;
-    const lines = items.map((i, idx) => `${idx + 1}. ${i.title} · ${sup(i.supplier).name}${i.size ? " · talla " + i.size : ""}${i.color ? " · " + i.color : ""} · ${fmt(i.unit)}`).join("\n");
+    const lines = items.map((i, idx) => {
+      let l = `${idx + 1}. ${i.title} · ${sup(i.supplier).name}${i.size ? " · talla " + i.size : ""}${i.color ? " · " + i.color : ""} · ${fmt(i.unit)}`;
+      if (i.supLink) l += "\n   Enlace proveedor: " + i.supLink;
+      return l;
+    }).join("\n");
 
     function buildSummary() {
       const g = v => { const el = document.getElementById(v); return el ? el.value.trim() : ""; };
