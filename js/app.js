@@ -116,7 +116,6 @@
       const i = Number(c.dataset.color);
       if (!p.colors || !p.colors[i]) return;
       applyView(p, i + 1);
-      openLightbox(p, i + 1);
     });
     const prev = $("#colorPrev"), next = $("#colorNext");
     if (prev) prev.onclick = () => colorStep(-1);
@@ -924,6 +923,10 @@ function doPay() {
   }
 
   $$("[data-close]").forEach(b => b.onclick = () => { $("#" + b.dataset.close).hidden = true; });
+  document.addEventListener("click", e => {
+    const b = e.target.closest && e.target.closest("[data-close]");
+    if (b) { const el = $("#" + b.dataset.close); if (el) el.hidden = true; }
+  });
   $("#lbPrev").onclick = () => lbStep(-1);
   $("#lbNext").onclick = () => lbStep(1);
   $("#lbBackdrop").addEventListener("click", e => { if (e.target.id === "lbBackdrop") $("#lbBackdrop").hidden = true; });
