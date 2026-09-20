@@ -620,5 +620,58 @@
     "supLink": "https://hipobuy.com/product/2/7442416279?inviteCode=1212",
     "isCustom": true,
     "dateAdded": 1789926502927
+  },
+  {
+    "id": "cmua4klhc",
+    "title": "Pulsera Lacoste",
+    "brand": "Lacoste",
+    "cat": "acc",
+    "supplierId": "hipobuy",
+    "rating": 4.8,
+    "reviews": 0,
+    "price": 0,
+    "cost": 0,
+    "orig": null,
+    "grams": 500,
+    "mono": "PL",
+    "grad": [
+      "#1e293b",
+      "#0f172a"
+    ],
+    "deal": "none",
+    "complaints": 0,
+    "fit": "none",
+    "note": "",
+    "imgData": "imagenes\\Accesorios  y Relojes\\Accesorios\\Pulseras\\Lacoste\\Silver Crocodile Strap Bracelet",
+    "colors": [
+      {
+        "label": "Black_Carved_Strap_Bracelet",
+        "img": "imagenes/Accesorios  y Relojes/Accesorios/Pulseras/Lacoste/Black_Carved_Strap_Bracelet.jpg"
+      },
+      {
+        "label": "Black_Crocodile_Strap_Bracelet",
+        "img": "imagenes/Accesorios  y Relojes/Accesorios/Pulseras/Lacoste/Black_Crocodile_Strap_Bracelet.jpg"
+      },
+      {
+        "label": "Gold_Carved_Strap_Bracelet",
+        "img": "imagenes/Accesorios  y Relojes/Accesorios/Pulseras/Lacoste/Gold_Carved_Strap_Bracelet.jpg"
+      },
+      {
+        "label": "Gold_Crocodile_Strap_Bracelet",
+        "img": "imagenes/Accesorios  y Relojes/Accesorios/Pulseras/Lacoste/Gold_Crocodile_Strap_Bracelet.jpg"
+      },
+      {
+        "label": "Silver_Carved_Strap_Bracelet",
+        "img": "imagenes/Accesorios  y Relojes/Accesorios/Pulseras/Lacoste/Silver_Carved_Strap_Bracelet.jpg"
+      },
+      {
+        "label": "Silver_Crocodile_Strap_Bracelet",
+        "img": "imagenes/Accesorios  y Relojes/Accesorios/Pulseras/Lacoste/Silver_Crocodile_Strap_Bracelet.jpg"
+      }
+    ],
+    "shipOverride": 0,
+    "supLink": "https://hipobuy.com/product/2/7493663648?inviteCode=1212",
+    "isCustom": true,
+    "dateAdded": 1789927421376
   }
 ]
