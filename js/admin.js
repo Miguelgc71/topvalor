@@ -2,6 +2,7 @@
   const $ = s => document.querySelector(s);
   const $$ = s => Array.from(document.querySelectorAll(s));
   const fmt = n => (isNaN(n) ? "0,00" : n.toFixed(2).replace(".", ",")) + " €";
+  const normPath = s => (s || "").trim().replace(/\\/g, "/");
 
   const SUPPLIERS = [
     { id: "kakobuy",  name: "Kakobuy",  fee: "0%",    qc: "Excelente · QC 5-8 fotos", eta: "7-18 d", base: 3.90, perKg: 7.50, color: "#5b8def" },
@@ -233,8 +234,8 @@
       fit: manual ? "custom" : fitByCat(cat),
       note: $("#fNote").value.trim(),
       sizes: manual ? sizes.slice() : undefined,
-      imgData: $("#fImgUrl").value.trim() || null,
-      colors: colors.length ? colors.slice() : undefined,
+      imgData: normPath($("#fImgUrl").value) || null,
+      colors: colors.length ? colors.map(c => ({ label: c.label, img: normPath(c.img) })) : undefined,
       shipOverride: ship,
       supLink: $("#fSupLink").value.trim() || null,
       isCustom: true,
@@ -404,6 +405,18 @@
       return;
     }
 
+    // --- Protección 2: rutas de imagen mal escritas (barras invertidas o sin extensión) ---
+    const badPaths = [];
+    custom.forEach(p => {
+      const check = t => { if (t && !/data:image/.test(t)) { if (t.includes("\\")) badPaths.push(t); const ext = (t.split("?")[0].match(/\.[a-z0-9]{2,4}$/i) || [null])[0]; if (t.startsWith("imagenes") && !ext) badPaths.push(t); } };
+      check(p.imgData);
+      (p.colors || []).forEach(c => check(c.img));
+    });
+    if (badPaths.length) {
+      st.textContent = "Bloqueado: hay rutas de imagen mal escritas (barras invertidas \\ o falta extensión .jpg/.png):\n• " + badPaths.slice(0, 5).map(t => t.replace(/\\/g, "/")).join("\n• ") + "\n\nCorrige «Imagen del producto» y los colores para que usen / y acaben en .jpg/.png, o pulsa «Sincronizar con repo» y vuelve a publicar.";
+      return;
+    }
+
     const api = `https://api.github.com/repos/${encodeURIComponent(user)}/${encodeURIComponent(repo)}/contents/data/productos.json`;
     const hdr = { "Authorization": "token " + token, "Accept": "application/vnd.github.v3+json" };
     const readRemote = async () => {
@@ -421,7 +434,7 @@
     };
     const putRemote = sha => fetch(api, { method: "PUT", headers: hdr, body: buildBody(sha), cache: "no-store" });
     try {
-      // --- Protección 2: no eliminar por accidente productos ya publicados ---
+      // --- Protección 3: no eliminar por accidente productos ya publicados ---
       const remote = await readRemote();
       const published = remote.published || [];
       const removed = Array.isArray(published) ? published.filter(p => p && p.id && !custom.some(c => c.id === p.id)).map(p => p.title || p.id) : [];
