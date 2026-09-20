@@ -629,8 +629,8 @@
     "supplierId": "hipobuy",
     "rating": 4.8,
     "reviews": 0,
-    "price": 0,
-    "cost": 0,
+    "price": 13.55,
+    "cost": 9.74,
     "orig": null,
     "grams": 500,
     "mono": "PL",
@@ -672,6 +672,6 @@
     "shipOverride": 0,
     "supLink": "https://hipobuy.com/product/2/7493663648?inviteCode=1212",
     "isCustom": true,
-    "dateAdded": 1789927523703
+    "dateAdded": 1789928076467
   }
 ]
