@@ -83,6 +83,7 @@
     <!-- NEW PRODUCT FORM -->
     <div class="form-card" id="formCard">
       <h3 id="formTitle">Nuevo producto</h3>
+      <p style="font-size:11px;color:var(--muted);margin:-8px 0 14px">Obligatorio: <b>nombre</b>, <b>marca</b>, <b>proveedor</b> y <b>precio de compra</b>. El resto tiene valor por defecto. Rutas de imagen: empiezan por <code>imagenes/</code>.</p>
 
       <div class="field">
         <label>Nombre del producto</label>
@@ -122,13 +123,14 @@
       <div class="field">
         <label>Imagen del producto</label>
         <div class="img-row">
-          <div class="field" style="margin:0"><input id="fImgUrl" placeholder="URL de la imagen del agente"></div>
+          <div class="field" style="margin:0"><input id="fImgUrl" placeholder="Ruta en el repo, ej. imagenes/zapatillas/Nike/Jordan 5/01.jpg"></div>
           <button class="btn btn-green" id="dlImgBtn" style="flex:0;min-width:auto;padding:9px 14px">Descargar</button>
         </div>
-        <p style="font-size:11px;color:var(--muted);margin:6px 0">O sube un archivo de imagen directo (foto guardada, captura, imagen recibida por WhatsApp):</p>
+        <p style="font-size:11px;color:var(--green);margin:6px 0"><b>Cómo hacerlo bien:</b> 1) sube las fotos con «Subir fotos al repo» (más abajo), 2) escribe aquí la ruta que ha quedado, ej. <code style="color:var(--green)">imagenes/zapatillas/Nike/Jordan 5/01.jpg</code>.</p>
+        <p style="font-size:11px;color:var(--accent2);margin:4px 0">⚠️ «Descargar» y subir un archivo <b>incrustan la foto en el producto</b> (base64): sirve para previsualizar, pero engorda el catálogo y bloquea «Publicar en GitHub». Evítalo.</p>
         <input type="file" id="fImgFile" accept="image/*" style="color:var(--muted);font-size:12px;width:100%">
         <img id="fImgPreview" class="img-preview">
-        <p style="font-size:11px;color:var(--muted);margin-top:4px">Consigue la imagen: en la web del agente, clic derecho sobre la foto → "Copiar dirección de la imagen" y pégala (botón Descargar), o guárdala y súbela aquí.</p>
+        <p style="font-size:11px;color:var(--muted);margin-top:4px">La ruta debe empezar por <code>imagenes/</code> y la foto ya debe estar subida a GitHub (con «Subir fotos al repo» o copiada en tu carpeta del proyecto).</p>
       </div>
 
       <!-- COLORS -->
@@ -137,13 +139,13 @@
         <p style="font-size:11px;color:var(--muted);margin:0 0 8px">Añade las fotos de los colores del modelo (como salen en la web del agente). El cliente las verá en la ficha y elegirá tocando la foto.</p>
         <div class="img-row">
           <div class="field" style="margin:0"><input id="fColorNum" placeholder="Nº / nombre (ej. 2153)"></div>
-          <div class="field" style="margin:0"><input id="fColorImg" placeholder="URL de la foto (o súbela abajo)"></div>
+          <div class="field" style="margin:0"><input id="fColorImg" placeholder="Ruta en el repo, ej. imagenes/zapatillas/Nike/Jordan 5/02.jpg"></div>
           <button class="btn btn-green" id="addColorBtn" style="flex:0;min-width:auto;padding:9px 14px">+ Añadir</button>
         </div>
         <p style="font-size:11px;color:var(--muted);margin:6px 0">O sube la foto guardada (captura, imagen recibida por WhatsApp):</p>
         <input type="file" id="fColorFile" accept="image/*" style="color:var(--muted);font-size:12px;width:100%">
         <div class="size-tags" id="colorTags" style="margin-top:8px"></div>
-        <p style="font-size:11px;color:var(--muted);margin-top:6px">Deja vacío si el producto solo tiene un color. Incrustar fotos subidas pesa mucho: mejor usa URL de la web del agente si puedes.</p>
+        <p style="font-size:11px;color:var(--muted);margin-top:6px">Deja vacío si el producto solo tiene un color. En cada foto usa la ruta del archivo ya subido al repo (<code>imagenes/...</code>). Incrustar/«Descargar» pesa mucho y bloquea la publicación.</p>
       </div>
 
       <!-- PRICING -->
@@ -259,8 +261,9 @@
     <!-- UPLOAD PHOTOS -->
     <div class="form-card">
       <h3>Subir fotos al repositorio</h3>
-      <p style="font-size:12px;color:var(--muted);margin-bottom:12px">Sube las fotos a una carpeta de <code>imagenes/...</code> del repo (equivale a <code>git add/commit/push</code>, por la API). Luego usa la ruta relativa en «Imagen del producto» y en los colores. <b>Publicar solo sube el JSON, no las fotos: este botón es el que sube las fotos.</b></p>
-      <div class="field"><label>Carpeta destino (ruta relativa)</label><input id="upFolder" placeholder="imagenes/zapatillas/Bapesta/bapesta"></div>
+      <p style="font-size:12px;color:var(--muted);margin-bottom:12px">Sube las fotos a una carpeta de <code>imagenes/...</code> del repo (equivale a <code>git add/commit/push</code>, por la API). Luego usa exactamente esas rutas en «Imagen del producto» y en los colores. <b>Publicar solo sube el JSON, no las fotos: este botón es el que sube las fotos.</b></p>
+      <div class="field"><label>Carpeta destino (ruta relativa, sin C: ni tienda/)</label><input id="upFolder" placeholder="imagenes/zapatillas/Nike/Jordan 5"></div>
+      <p style="font-size:11px;color:var(--muted);margin:-6px 0 10px">Pega la ruta relativa dentro del repo: empieza por <code>imagenes/</code>. <b>No</b> pegues la ruta del PC (C:/Usuarios/...) aunque empiece con <code>C:</code>.</p>
       <div class="field"><label>Fotos (selecciona varias a la vez)</label><input type="file" id="upFiles" accept="image/*" multiple style="color:var(--muted);font-size:12px;width:100%"></div>
       <div class="action-bar" style="flex-wrap:wrap">
         <button class="btn btn-green" id="upBtn">Subir fotos al repo</button>
