@@ -462,5 +462,66 @@
     "isCustom": true,
     "dateAdded": 1789807540139,
     "cost": 40.24
+  },
+  {
+    "id": "cmu2tj5a8",
+    "title": "Air Jordan 5",
+    "brand": "Jordan/Nike",
+    "cat": "shoes",
+    "supplierId": "hipobuy",
+    "rating": 4.8,
+    "reviews": 0,
+    "price": 75.49,
+    "orig": null,
+    "grams": 500,
+    "mono": "AJ5",
+    "grad": [
+      "#1e293b",
+      "#0f172a"
+    ],
+    "deal": "none",
+    "complaints": 0,
+    "fit": "shoe",
+    "note": "Air Jordan 5. Mira las 8 fotos y elige el color/combinación que más te guste.",
+    "imgData": "imagenes/zapatillas/Nike/Jordan 5/01.jpg",
+    "colors": [
+      {
+        "label": "01",
+        "img": "imagenes/zapatillas/Nike/Jordan 5/01.jpg"
+      },
+      {
+        "label": "02",
+        "img": "imagenes/zapatillas/Nike/Jordan 5/02.jpg"
+      },
+      {
+        "label": "03",
+        "img": "imagenes/zapatillas/Nike/Jordan 5/03.jpg"
+      },
+      {
+        "label": "04",
+        "img": "imagenes/zapatillas/Nike/Jordan 5/04.jpg"
+      },
+      {
+        "label": "05",
+        "img": "imagenes/zapatillas/Nike/Jordan 5/05.jpg"
+      },
+      {
+        "label": "06",
+        "img": "imagenes/zapatillas/Nike/Jordan 5/06.jpg"
+      },
+      {
+        "label": "07",
+        "img": "imagenes/zapatillas/Nike/Jordan 5/07.jpg"
+      },
+      {
+        "label": "08",
+        "img": "imagenes/zapatillas/Nike/Jordan 5/08.jpg"
+      }
+    ],
+    "shipOverride": 0,
+    "supLink": "https://hipobuy.com/product/2/7444489812?inviteCode=1212",
+    "isCustom": true,
+    "dateAdded": 1789862400000,
+    "cost": 54.25
   }
 ]
