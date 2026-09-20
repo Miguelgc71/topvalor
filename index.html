@@ -24,8 +24,6 @@
     <nav class="main-nav">
       <a href="#catalogo">Catálogo</a>
       <a href="#ofertas">Ofertas</a>
-      <a href="#grupos">Grupos</a>
-      <a href="#proveedores">Proveedores</a>
       <button class="link-btn" data-open="how">Cómo funciona</button>
       <a href="admin.html" style="color:var(--green)">+ Admin</a>
     </nav>
@@ -54,7 +52,6 @@
     </div>
 
     <div class="filter-bar">
-      <div class="filter-group" id="supplierFilters"></div>
       <div class="filter-group" id="categoryFilters"></div>
       <select id="brandSelect" class="select filter-select" style="margin-left:0">
         <option value="">Todas las marcas</option>
@@ -70,58 +67,6 @@
 
     <div class="product-grid" id="productGrid"></div>
     <div class="grid-empty" id="gridEmpty" hidden>No hay productos con esos filtros.</div>
-  </div>
-</section>
-
-<section id="grupos" class="section section-alt">
-  <div class="container">
-    <h2 class="section-title">Compra en grupo con amigos
-      <span class="section-sub">Con 2, 3 o 5 personas hay descuento — a más gente, más rebaja. El grupo lo cierra el líder "con los que haya". Todo o nada: si no se llega al mínimo, no paga nadie.</span>
-    </h2>
-    <div class="group-layout">
-      <div class="group-col box">
-        <h3 class="group-title">Crea un grupo</h3>
-        <label class="group-label">Elige el artículo del grupo</label>
-        <select id="groupProduct" class="select group-select"></select>
-        <button class="btn btn-primary" id="createGroupBtn">Crear grupo · mínimo 2, máximo 5</button>
-        <p class="group-note">Te genera un código (ej. GR-7K2M) que pasas a tus amigos. Cada uno elige su talla. Eres el líder: cierras el grupo cuando queráis (con 2, 3 o 5) y cada uno paga lo suyo.</p>
-        <div class="cart-flow">
-          <div class="step"><span class="n">1</span><span>Creas el grupo y lo pasas a amigos (o a gente con el enlace).</span></div>
-          <div class="step"><span class="n">2</span><span>Cada uno elige artículo y talla.</span></div>
-          <div class="step"><span class="n">3</span><span>El líder cierra con 2, 3 o 5 · descuento según cuántos seáis.</span></div>
-          <div class="step"><span class="n">4</span><span>Cuando me paguéis por Bizum, hago el pedido al proveedor con las tallas, direcciones, nombres y correos de los miembros.</span></div>
-        </div>
-      </div>
-      <div class="group-col box">
-        <h3 class="group-title">Grupos abiertos</h3>
-        <div id="groupList"><p style="color:var(--muted);font-size:13px">Cargando grupos...</p></div>
-      </div>
-      <div class="group-col box">
-        <h3 class="group-title">Simulador de margen</h3>
-        <label class="group-label">Artículo de ejemplo</label>
-        <select id="simProduct" class="select group-select"></select>
-        <label class="group-label">Personas del grupo
-          <span style="float:right">
-            <button class="chip seg" data-n="2">2</button>
-            <button class="chip seg" data-n="3">3</button>
-            <button class="chip seg active" data-n="5">5</button>
-          </span>
-        </label>
-        <label class="group-label">% del ahorro que pasas al grupo
-          <span id="simPassVal" style="float:right;color:var(--accent);font-weight:700">60%</span>
-          <input type="range" id="simPass" class="group-range" min="30" max="100" value="60" step="5">
-        </label>
-        <div id="simOut" style="font-size:13px"></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section id="proveedores" class="section">
-  <div class="container">
-    <h2 class="section-title">Proveedores que nos sirven</h2>
-    <table class="sup-table" id="supplierTable"></table>
-    <p class="table-note">Tarifa de envío propia por proveedor: <code>base + €/kg</code>. El envío del artículo se muestra siempre en su tarjeta.</p>
   </div>
 </section>
 
@@ -156,8 +101,8 @@
     <button class="modal-close" data-close="howBackdrop">&times;</button>
     <h3>Cómo funciona TopValor</h3>
     <ol>
-      <li>Recorro agencias de compra (Hipobuy, ACBuy, Kakobuy...) y marketplaces y <strong>solo guardo productos con valoración máxima</strong> y QC verificado.</li>
-      <li>Esos productos se agrupan por <strong>proveedor</strong> y <strong>categoría</strong>, con talla real en cm y <strong>precio final con IVA</strong>.</li>
+      <li>Recorro y verifico proveedores de confianza y <strong>solo guardo productos con valoración máxima</strong> y QC verificado.</li>
+      <li>Esos productos se agrupan por <strong>categoría</strong>, con talla real en cm y <strong>precio final con IVA</strong>.</li>
       <li>Tú eliges producto y talla: te sale un <strong>resumen con el precio total</strong> y mi Bizum.</li>
       <li>Me pagas por <strong>Bizum (o en mano)</strong> y yo hago el pedido al proveedor con tu talla y dirección.</li>
       <li>El proveedor envía <strong>directo a tu casa</strong> (o te lo traigo yo mismo si eres de mi zona).</li>
@@ -180,7 +125,7 @@
 
 <div id="toast" class="toast" hidden></div>
 
-<script src="js/data.js"></script>
-<script src="js/app.js"></script>
+<script src="js/data.js?v=20260920"></script>
+<script src="js/app.js?v=20260920"></script>
 </body>
 </html>

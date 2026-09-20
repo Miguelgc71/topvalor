@@ -3,7 +3,7 @@
   const $$ = (s, el = document) => Array.from(el.querySelectorAll(s));
 
   const fmt = n => n.toFixed(2).replace(".", ",") + " €";
-  const sup = id => SUPPLIERS.find(s => s.id === id);
+  const sup = id => SHIP_RATES[id] || { base: 4.5, perKg: 8, eta: "7-15 d" };
 
   const nullImg = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="300" height="200"><rect width="100%" height="100%" fill="#1b2029"/><text x="50%" y="50%" fill="#3a4553" font-size="22" text-anchor="middle" font-family="sans-serif">SIN FOTO</text></svg>`);
 
@@ -17,38 +17,25 @@
     const s = { sold: 0, earlySold: 0, size: null, color: null };
     if (p.deal === "flash") s.flashExpires = p.id === "p14" ? NOW + 66000 : NOW + p.flash.minutes * MIN;
     if (p.deal === "pricedrop") s.dropCur = p.price;
-    if (p.deal === "pool") {
-      const saved = Number(localStorage.getItem("tv_pool_" + p.id));
-      s.poolNow = saved || p.pool.now;
-      s.poolUnlocked = s.poolNow >= p.pool.target;
-    }
     if (p.deal === "fastpay") s.fastStart = 0;
     if (p.deal === "auction") { s.bidCur = p.auc.start; s.bidEnd = NOW + p.auc.mins * MIN; s.bidder = null; }
     ST[p.id] = s;
   });
 
-  const savePool = id => localStorage.setItem("tv_pool_" + id, String(ST[id].poolNow));
-
-  let filters = { supplier: null, cat: null, brand: null, sizeCm: null, q: "" };
+  let filters = { cat: null, brand: null, sizeCm: null, q: "" };
   let sortBy = "rating";
   let currentProduct = null;
   let currentTab = "desc";
-  let simN = 5;
 
   const effDiscount = p => {
     const s = ST[p.id];
     if (p.deal === "pricedrop") return { price: Math.max(p.drop.floor, s.dropCur), tag: "Precio bajando" };
-    if (p.deal === "pool" && s.poolUnlocked) return { price: p.price * (1 - p.pool.disc / 100), tag: "Pool desbloqueado -" + p.pool.disc + "%" };
     if (p.deal === "fastpay" && s.fastStart > 0) {
       const gone = Math.floor((Date.now() - s.fastStart) / MIN);
       const disc = Math.max(0, 6 - gone * 0.5);
       return { price: p.price * (1 - disc / 100), tag: "Bono rápido -" + disc.toFixed(1).replace(".", ",") + "%" };
     }
     if (p.deal === "watch" && STORE.coupons[p.id]) return { price: p.price * 0.95, tag: "Cupón aviso -5%" };
-    if (inClosedGroup(p.id)) {
-      const g = closedGroupFor(p.id);
-      return { price: p.price * (1 - groupMath(p, groupPassShare(), g.members.length).discPct), tag: "Precio de grupo (" + g.members.length + " personas)" };
-    }
     return { price: p.price, tag: null };
   };
 
@@ -166,78 +153,6 @@
     renderLb();
   };
 
-  const GROUP_MIN = 2, GROUP_MAX = 5;
-  const groupMath = (p, passShare, n) => {
-    n = n || GROUP_MAX;
-    passShare = passShare || 0.6;
-    const agentCost = p.price * 0.80;
-    const shipSolo = shipFor(p);
-    const soloPrice = p.price + shipSolo;
-    const soloCost = agentCost + shipSolo;
-    const soloMargin = soloPrice - soloCost;
-    const rFac = n >= 5 ? 0.92 : n === 3 ? 0.945 : 0.965;
-    const kg = p.grams / 1000;
-    const s = sup(p.supplierId);
-    const shipGroupShare = s.base / n + 0.82 * s.perKg * kg;
-    const agentCostGroup = agentCost * rFac;
-    const groupCost = agentCostGroup + shipGroupShare;
-    const savings = soloCost - groupCost;
-    const groupPrice = groupCost + soloMargin + savings * (1 - passShare);
-    const discPct = (soloPrice - groupPrice) / soloPrice;
-    return {
-      n, soloPrice, soloCost, soloMargin, agentCost, shipSolo,
-      agentCostGroup, shipGroupShare, groupCost, savings, groupPrice, discPct,
-      ourMarginGroup: soloMargin + savings * (1 - passShare),
-      perPersonSave: soloPrice - groupPrice,
-    };
-  };
-  const tiersLabel = (p, passShare) => [2, 3, 5].map(n => {
-    const m = groupMath(p, passShare, n);
-    return n + " pers: −" + (m.discPct * 100).toFixed(1).replace(".", ",") + "%";
-  }).join(" · ");
-
-  const groupKey = "tv_groups_v2";
-  const GROUP_SEED = [
-    { code: "GR-7K2M", productId: "p03", max: GROUP_MAX, min: GROUP_MIN, leader: "Ana", members: ["tú", "Ana", "Luis", "Marta", "José"], deadline: NOW + 5 * MIN, closedAt: NOW },
-    { code: "GR-4AB9", productId: "p12", max: GROUP_MAX, min: GROUP_MIN, leader: "tú", members: ["tú", "Sara"], deadline: NOW + 25 * MIN, closedAt: null },
-    { code: "GR-9Q1W", productId: "p06", max: GROUP_MAX, min: GROUP_MIN, leader: "Raúl", members: ["Raúl", "Miguel", "Clara"], deadline: NOW + 8 * MIN, closedAt: null },
-  ];
-  const groups = (() => {
-    try {
-      const raw = localStorage.getItem(groupKey);
-      if (raw) return JSON.parse(raw);
-    } catch (e) { }
-    return GROUP_SEED.map(g => Object.assign({}, g));
-  })();
-  const saveGroups = () => localStorage.setItem(groupKey, JSON.stringify(groups));
-  const groupStatus = g => {
-    if (g.closedAt) return "closed";
-    const elapsed = Date.now() > g.deadline;
-    if (elapsed) {
-      if (g.members.length >= g.min) { g.closedAt = Date.now(); saveGroups(); return "closed"; }
-      return "expired";
-    }
-    if (g.members.length >= g.max) { g.closedAt = Date.now(); saveGroups(); return "closed"; }
-    return "open";
-  };
-  const closedGroupFor = pId => groups
-    .filter(g => g.productId === pId && g.members.includes("tú") && groupStatus(g) === "closed")
-    .sort((a, b) => b.members.length - a.members.length)[0];
-  const inClosedGroup = pId => !!closedGroupFor(pId);
-  const groupPassShare = () => Number(localStorage.getItem("tv_pass") || 60) / 100;
-
-  function renderSuppliers() {
-    const wrap = $("#supplierFilters");
-    wrap.innerHTML = `<button class="chip ${filters.supplier ? "" : "active"}" data-sup="">Todos</button>` +
-      SUPPLIERS.map(s => `<button class="chip ${filters.supplier === s.id ? "active" : ""}" data-sup="${s.id}">
-        <span class="sup-dot" style="background:${s.color}"></span>${s.name}</button>`).join("");
-    $$("[data-sup]", wrap).forEach(b => b.onclick = () => {
-      filters.supplier = b.dataset.sup || null;
-      renderFilters();
-      renderGrid();
-    });
-  }
-
   function renderFilters() {
     const catWrap = $("#categoryFilters");
     catWrap.innerHTML = `<button class="chip ${filters.cat ? "" : "active"}" data-cat="">Todo</button>` +
@@ -247,7 +162,6 @@
       renderFilters();
       renderGrid();
     });
-    renderSuppliers();
 
     const bSel = $("#brandSelect");
     const brands = [...new Set(PRODUCTS.map(p => p.brand))].sort();
@@ -267,13 +181,12 @@
 
   function visibleProducts() {
     return PRODUCTS.filter(p => {
-      if (filters.supplier && p.supplierId !== filters.supplier) return false;
       if (filters.cat && p.cat !== filters.cat) return false;
       if (filters.brand && p.brand !== filters.brand) return false;
       if (filters.sizeCm != null && !sizeMatches(p, filters.sizeCm)) return false;
       if (filters.q) {
         const q = filters.q.toLowerCase();
-        if (!(p.title.toLowerCase().includes(q) || p.brand.toLowerCase().includes(q) || sup(p.supplierId).name.toLowerCase().includes(q))) return false;
+        if (!(p.title.toLowerCase().includes(q) || p.brand.toLowerCase().includes(q))) return false;
       }
       return true;
     }).sort((a, b) => {
@@ -313,15 +226,6 @@
     return { remaining, left, msg };
   }
 
-  function poolBar(p) {
-    const s = ST[p.id];
-    const pct = Math.round((s.poolNow / p.pool.target) * 100);
-    return `<div class="pool-bar">${s.poolUnlocked
-      ? `<b style="color:var(--accent)">Desbloqueado</b> · -${p.pool.disc}% para los ${p.pool.target} interesados`
-      : `Interés: <b>${s.poolNow}/${p.pool.target}</b> para desbloquear -${p.pool.disc}%`}
-      <div class="pool-fill ${s.poolUnlocked ? "locked" : ""}" style="width:${Math.min(100, pct)}%"></div></div>`;
-  }
-
   function priceBlock(p) {
     const eff = effDiscount(p);
     const ship = shipFor(p);
@@ -337,7 +241,6 @@
       const f = flashState(p);
       extra = `${countdownHtml(f.remaining)}<div class="pa-meta"><span>${f.msg}</span></div>`;
     }
-    if (p.deal === "pool") extra = poolBar(p);
     if (p.deal === "pricedrop") extra = `<div class="pa-meta"><span class="pa-complaints">Precio bajando cada ${p.drop.everyMin} min</span></div>`;
     if (p.deal === "auction") extra = `<div class="pa-meta"><span>Puja actual: ${fmt(s.bidCur)}</span></div>`;
     const img = imgFor(p);
@@ -346,7 +249,7 @@
       : `<div class="mono">${p.mono}</div>`;
     return `<article class="product-card" data-open="${p.id}">
       <div class="pa-co ${img ? "pa-co-img" : ""}" style="background:linear-gradient(135deg,${p.grad[0]},${p.grad[1]})">
-        <div class="pa-badges"><span class="supplier-badge">${sup(p.supplierId).name}</span>${dealBadge(p)}</div>
+        <div class="pa-badges"><span class="supplier-badge">Verificado</span>${dealBadge(p)}</div>
         ${media}
         <div class="rating-tag">&#9733; ${p.rating} <small>(${p.reviews})</small></div>
       </div>
@@ -393,11 +296,6 @@
           body = `${countdownHtml(f.remaining)}<div class="countdown-live">${f.msg}</div>`;
           break;
         }
-        case "pool": {
-          const s = ST[p.id];
-          body = `<p class="deal-desc">5 interesados desbloquean -${p.pool.disc}%. Vamos por <b>${s.poolNow}/${p.pool.target}</b>.</p>`;
-          break;
-        }
         case "auction": body = `<p class="deal-desc">Puja actual: <b>${fmt(ST[p.id].bidCur)}</b>. Cierra en ${countdownHtml(ST[p.id].bidEnd - Date.now())}</p>`; break;
         case "pricedrop": body = `<p class="deal-desc">Precio actual: <b>${fmt(Math.max(p.drop.floor, ST[p.id].dropCur))}</b>. Baja solo cada ${p.drop.everyMin} min hasta ${fmt(p.drop.floor)}.</p>`; break;
         case "fastpay": body = `<p class="deal-desc">Date prisa: muestra interés y el bono decae 0,5%/min durante 10 min.</p>`; break;
@@ -406,21 +304,12 @@
       return `<div class="deal-card">
         <div class="deal-type">${DEAL_INFO[p.deal].label}</div>
         <div class="deal-title">${p.title}</div>
-        <p class="deal-desc">${fmt(effDiscount(p).price)} · vía ${sup(p.supplierId).name}</p>
+        <p class="deal-desc">${fmt(effDiscount(p).price)} · IVA incl.</p>
         ${body}
         <button class="btn btn-primary" data-view="${p.id}" style="margin-top:10px">Entrar</button>
       </div>`;
     }).join("");
     $$("[data-view]", $("#dealGrid")).forEach(b => b.onclick = () => openModal(b.dataset.view));
-  }
-
-  function renderSupplierTable() {
-    $("#supplierTable").innerHTML = `<tr><th>Proveedor</th><th>Fee servicio</th><th>QC</th><th>Envio EU</th><th>Tarifa envio</th><th>Articulos en catalogo</th></tr>` +
-      SUPPLIERS.map(s => {
-        const n = PRODUCTS.filter(p => p.supplierId === s.id).length;
-        return `<tr><td><span class="sup-dot" style="background:${s.color}"></span><b>${s.name}</b></td>
-          <td>${s.fee}</td><td>${s.qc}</td><td>${s.eta}</td><td>${fmt(s.base)} + ${fmt(s.perKg)}/kg</td><td>${n}</td></tr>`;
-      }).join("");
   }
 
   function fitInfo(p) {
@@ -554,13 +443,6 @@
       dealPanel = `<div class="fit-assist">${countdownHtml(f.remaining)}<div class="countdown-live">${f.msg}</div>
         <p style="margin-top:8px;font-size:13px">Al acabarse el tiempo, o al venderse las 3 unidades, la oferta termina automáticamente.</p></div>`;
     }
-    if (p.deal === "pool") {
-      const unlocked = s.poolUnlocked;
-      dealPanel = `<div class="fit-assist">${poolBar(p)}
-        <button class="btn ${unlocked ? "btn-ghost" : "btn-green"}" id="poolBtn" style="margin-top:10px;width:100%">${unlocked ? "Precio -" + p.pool.disc + "% ya aplicado" : "Me interesa (hazte del pool)"}</button>
-        ${unlocked ? "" : `<p style="font-size:12px;color:var(--muted);margin-top:8px">Quedan ${p.pool.target - s.poolNow} interesados para desbloquear el descuento para los ${p.pool.target}.</p>`}
-      </div>`;
-    }
     if (p.deal === "auction") {
       dealPanel = `<div class="fit-assist">
         <div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap">
@@ -606,18 +488,18 @@
     const complaintsTab = p.complaints > 0 ? `
       <div class="complaint-box">
         <b>Quejas reportadas (${p.complaints}):</b>
-        <div class="complaint-line"><span>Talla mal (pedida M, llega S)</span><span>vía ${sup(p.supplierId).name}</span></div>
-        <div class="complaint-line"><span>Costura defectuosa</span><span>vía ${sup(p.supplierId).name}</span></div>
-        ${p.complaints > 2 ? `<div class="complaint-line"><span>Color distinto a la foto</span><span>vía ${sup(p.supplierId).name}</span></div>` : ""}
+        <div class="complaint-line"><span>Talla mal (pedida M, llega S)</span><span>reportada</span></div>
+        <div class="complaint-line"><span>Costura defectuosa</span><span>reportada</span></div>
+        ${p.complaints > 2 ? `<div class="complaint-line"><span>Color distinto a la foto</span><span>reportada</span></div>` : ""}
         <p style="margin-top:10px">Cuando un artículo almacena <b>3+ quejas en 30 días se retira de la página automáticamente</b>.</p>
       </div>`
-      : `<p>Sin quejas reportadas. Rating <b>${p.rating}</b> con ${p.reviews} reseñas verificadas por el proveedor.</p>`;
+      : `<p>Sin quejas reportadas. Rating <b>${p.rating}</b> con ${p.reviews} reseñas verificadas.</p>`;
 
     return {
       head: `<div class="mh-media" style="background:linear-gradient(135deg,${p.grad[0]},${p.grad[1]})">
           ${imgFor(p) ? `<img src="${imgFor(p)}" class="mh-img" id="mhImg" onerror="this.style.display='none'">` : `<div class="mono">${p.mono}</div>`}</div>
         <div class="mh-info">
-          <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1px">${p.brand} · ${sup(p.supplierId).name}</div>
+          <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1px">${p.brand}</div>
           <div class="mh-title">${p.title}</div>
           <div class="mh-meta">
             <span>&#9733; ${p.rating} · ${p.reviews} reseñas</span>
@@ -627,12 +509,11 @@
           <div class="mh-price">${fmt(eff.price)} <span class="iva-tag">IVA incl.</span> ${eff.tag ? `<span style="font-size:13px;color:var(--green)">(${eff.tag})</span>` : ""}</div>
         </div>${colorStrip(p)}`,
       panels: {
-        desc: `<p>${p.note}</p><p style="margin-top:10px;color:var(--muted)">Fotos QC (control de calidad) disponibles en el proveedor ${sup(p.supplierId).name} antes del envío. Peso estimado <b>${(p.grams / 1000).toFixed(2).replace(".", ",")} kg</b>.</p>${dealPanel}`,
+        desc: `<p>${p.note}</p><p style="margin-top:10px;color:var(--muted)">Fotos QC (control de calidad) disponibles antes del envío. Peso estimado <b>${(p.grams / 1000).toFixed(2).replace(".", ",")} kg</b>.</p>${dealPanel}`,
         fit: sizePanel,
         ship: `<h4>Coste de envío — transparente</h4>
           <div class="fit-assist">
             <div style="display:grid;gap:4px">
-              <div><b>Proveedor:</b> ${sup(p.supplierId).name} (tarifa ${fmt(sup(p.supplierId).base)} + ${fmt(sup(p.supplierId).perKg)}/kg)</div>
               <div><b>Peso:</b> ${(p.grams / 1000).toFixed(2).replace(".", ",")} kg</div>
               <div><b>Envío estimado:</b> ${fmt(ship)}</div>
               <div><b>Plazo:</b> ${sup(p.supplierId).eta} EU</div>
@@ -640,9 +521,9 @@
           </div>
           <h4>Quien lo gestiona</h4>
           <ul style="margin-left:18px;font-size:13px">
-            <li>El proveedor envía <b>directamente a tu casa</b>.</li>
-            <li>Retrasos, faltas o tallas incorrectas: yo hablo <b>directamente con ${sup(p.supplierId).name}</b> y lo arreglamos.</li>
-            <li>Tú me pagas por <b>Bizum</b> y te doy el número de seguimiento (tracking) cuando lo envía.</li>
+            <li>El envío llega <b>directamente a tu casa</b>.</li>
+            <li>Retrasos, faltas o tallas incorrectas: yo lo gestiono <b>personalmente</b> hasta arreglarlo.</li>
+            <li>Tú me pagas por <b>Bizum</b> y te doy el número de seguimiento (tracking) cuando se envía.</li>
           </ul>`,
         rate: complaintsTab,
       },
@@ -709,20 +590,6 @@
   }
 
   function bindModalActions(p) {
-    if (p.deal === "pool") {
-      const b = $("#poolBtn");
-      if (b) b.onclick = () => {
-        if (ST[p.id].poolUnlocked) return;
-        ST[p.id].poolNow = Math.min(p.pool.target, ST[p.id].poolNow + 1);
-        ST[p.id].poolUnlocked = ST[p.id].poolNow >= p.pool.target;
-        savePool(p.id);
-        const m = modalBody(p);
-        $("#tabPanel").innerHTML = m.panels[currentTab];
-        bindFit(p); bindModalActions(p);
-        toast(ST[p.id].poolUnlocked ? "Pool desbloqueado: -" + p.pool.disc + "% para los " + p.pool.target : "Interés registrado (" + ST[p.id].poolNow + "/" + p.pool.target + ")", true);
-        renderGrid(); renderDeals();
-      };
-    }
     if (p.deal === "auction") {
       const bi = $("#bidInput"), bb = $("#bidBtn");
       if (bb) bb.onclick = () => {
@@ -772,7 +639,7 @@
       return;
     }
     const selColor = s.color ? s.color.label : null;
-    STORE.cart.push({ id: p.id, mono: p.mono, grad: p.grad, title: p.title, supplier: p.supplierId, size: fitInfo(p) ? s.size : null, color: selColor, unit: eff.price, ship, isGroup: inClosedGroup(p.id) });
+    STORE.cart.push({ id: p.id, mono: p.mono, grad: p.grad, title: p.title, supplier: p.supplierId, size: fitInfo(p) ? s.size : null, color: selColor, unit: eff.price, ship });
     if (p.deal === "flash") s.sold++;
     if (p.deal === "earlybird") s.earlySold = Math.min(p.early.quota, s.earlySold + 1);
     toast("Añadido al carrito:" + (fitInfo(p) ? " talla " + s.size : "") + (selColor ? " · " + selColor : "") + " · " + fmt(eff.price + ship), true);
@@ -807,29 +674,27 @@
     const ship = groupedShip();
     const sub = items.reduce((a, i) => a + i.unit, 0);
     const total = sub + ship;
-    const bySup = {};
-    items.forEach(i => bySup[i.supplier] = (bySup[i.supplier] || 0) + 1);
 
     $("#cartDrawer").innerHTML = `<button class="modal-close" data-close="cartBackdrop">&times;</button>
       <h2 style="font-size:20px;margin-bottom:12px">Mi selección</h2>
       ${items.length === 0 ? "<p style='color:var(--muted)'>Vacío. Toca \u201cVer \u00b7 elegir talla\u201d y eliges un producto.</p>" : items.map((i, idx) => `
         <div class="cart-row">
           <div class="cr-img" style="background:linear-gradient(135deg,${i.grad[0]},${i.grad[1]})"><span class="mono">${i.mono}</span></div>
-          <div><b>${i.title}</b><br><span style="color:var(--muted);font-size:12px">${sup(i.supplier).name}${i.size ? " · talla " + i.size : ""}${i.color ? " · " + i.color : ""} · ${fmt(i.unit)}</span></div>
+          <div><b>${i.title}</b><br><span style="color:var(--muted);font-size:12px">${i.size ? "talla " + i.size : ""}${i.color ? " · " + i.color : ""} · ${fmt(i.unit)}</span></div>
           <button class="cr-x" data-rm="${idx}">&times;</button>
         </div>`).join("")}
       ${items.length ? `<div class="cart-total">
         <div><span>Subtotal producto (${items.length}) · IVA incl.</span><b>${fmt(sub)}</b></div>
-        <div><span>Envío consolidado (${Object.keys(bySup).length} proveedor${Object.keys(bySup).length > 1 ? "es" : ""})</span><b>${fmt(ship)}</b></div>
+        <div><span>Envío a tu casa</span><b>${fmt(ship)}</b></div>
         <div class="grand"><span>Total a pagar</span><span>${fmt(total)}</span></div>
       </div>
       <button class="btn btn-primary" id="payBtn" style="width:100%;margin-top:12px">Pedir por Bizum · ${fmt(total)}</button>
       <p class="table-note" style="margin-top:8px">Preparo el pedido cuando me pagas por <b>Bizum ${BIZUM}</b>. Precio final con 21% IVA.</p>
       <div class="cart-flow">
         <div class="step"><span class="n">1</span><span>Me pagas por <b>Bizum</b> y rellenas tus <b>datos de envío</b> (te los pido al pedir, incluido el correo para el tracking).</span></div>
-        <div class="step"><span class="n">2</span><span>Hago el pedido al <b>proveedor</b> (${sup(items[0].supplier).name}...).</span></div>
-        <div class="step"><span class="n">3</span><span>El proveedor envía <b>directo a tu casa</b> y te paso el tracking.</span></div>
-        <div class="step"><span class="n">4</span><span>Incidencias: las hablo <b>yo con el proveedor</b> por ti.</span></div>
+        <div class="step"><span class="n">2</span><span>Hago el pedido con tus datos y te paso el <b>tracking</b>.</span></div>
+        <div class="step"><span class="n">3</span><span>El envío llega <b>directo a tu casa</b>.</span></div>
+        <div class="step"><span class="n">4</span><span>Incidencias: las gestiono <b>yo</b> por ti.</span></div>
       </div>` : ""}`;
 
     $("#cartBackdrop").hidden = false;
@@ -842,20 +707,12 @@
     if (pay) pay.onclick = () => doPay();
   }
 
-  function groupSummary(g, p) {
-    return g.members.map(member => {
-      const line = (member + ": " + p.title + " (" + fmt(p.price) + " + env\u00edo)");
-      return line;
-    }).join("\n");
-  }
-
-function doPay() {
+  function doPay() {
     const sub = STORE.cart.reduce((a, i) => a + i.unit, 0);
     const ship = groupedShip();
     const total = sub + ship;
-    const supNames = [...new Set(STORE.cart.map(i => i.supplier))];
     const items = STORE.cart;
-    const lines = items.map((i, idx) => `${idx + 1}. ${i.title} · ${sup(i.supplier).name}${i.size ? " · talla " + i.size : ""}${i.color ? " · " + i.color : ""} · ${fmt(i.unit)}`).join("\n");
+    const lines = items.map((i, idx) => `${idx + 1}. ${i.title}${i.size ? " · talla " + i.size : ""}${i.color ? " · " + i.color : ""} · ${fmt(i.unit)}`).join("\n");
 
     function buildSummary() {
       const g = v => { const el = document.getElementById(v); return el ? el.value.trim() : ""; };
@@ -874,7 +731,7 @@ function doPay() {
       <div class="cart-flow" id="flow">
         <div class="step"><span class="n">1</span><span>Rellena tus <b>datos de envío</b> abajo (nombre, dirección, CP, ciudad, teléfono y correo)</span></div>
         <div class="step"><span class="n">2</span><span>Mándame por Bizum <b>${fmt(total)}</b> a <b>${BIZUM}</b></span></div>
-        <div class="step"><span class="n">3</span><span>Hago el pedido a <b>${supNames.map(s => sup(s).name).join(", ")}</b> y te paso el <b>tracking a tu correo</b></span></div>
+        <div class="step"><span class="n">3</span><span>Hago el pedido con tus datos y te paso el <b>tracking a tu correo</b></span></div>
         <div class="step"><span class="n">4</span><span>Envío directo a tu casa · si algo falla, lo arreglo <b>yo</b></span></div>
       </div>
       <div class="ship-form">
@@ -951,110 +808,6 @@ function doPay() {
 
   $("#retiredBanner").hidden = true;
 
-  function renderGroups() {
-    const sel = $("#groupProduct"), sim = $("#simProduct");
-    if (PRODUCTS.length === 0) {
-      sel.innerHTML = `<option value="">(sin productos - añade alguno en el admin)</option>`;
-      sim.innerHTML = ``;
-      $("#createGroupBtn").disabled = true;
-      $("#groupList").innerHTML = `<p style="color:var(--muted);font-size:13px">Primero añade un producto desde el panel de administración (link + Admin).</p>`;
-      return;
-    }
-    $("#createGroupBtn").disabled = false;
-    $("#createGroupBtn").onclick = () => {
-      const pid = sel.value;
-      const p = PRODUCTS.find(x => x.id === pid);
-      if (!p) { toast("Primero elige un artículo para el grupo.", false); return; }
-      const code = "GR-" + Math.random().toString(36).slice(2, 6).toUpperCase();
-      groups.push({ code, productId: pid, max: GROUP_MAX, min: GROUP_MIN, leader: "tú", members: ["tú"], deadline: Date.now() + 30 * MIN, closedAt: null });
-      saveGroups();
-      toast("Grupo " + code + " creado para " + p.title + ". Mínimo 2, máximo 5. Pásalo a amigos.", true);
-      renderGroups();
-    };
-    const opts = PRODUCTS.map(p => `<option value="${p.id}">${p.title} (${fmt(p.price)})</option>`).join("");
-    if (!sel._init) { sel.innerHTML = opts; sim.innerHTML = opts; sel._init = 1; }
-
-    const pass = groupPassShare();
-    const wrap = $("#groupList");
-    const valid = groups.filter(g => PRODUCTS.some(x => x.id === g.productId));
-    if (valid.length === 0) { wrap.innerHTML = `<p style="color:var(--muted);font-size:13px">Aún no hay grupos. Crea el primero a la izquierda.</p>`; return; }
-    wrap.innerHTML = valid.map(g => {
-      const p = PRODUCTS.find(x => x.id === g.productId);
-      const st = groupStatus(g);
-      const joined = g.members.includes("tú");
-      const leader = g.leader === "tú";
-      const tiers = tiersLabel(p, pass);
-      let cta = "";
-      if (st === "open") {
-        if (joined) {
-          cta = `<div style="margin-top:8px;font-size:12px;color:var(--green);font-weight:700">Estás dentro · lleváis ${g.members.length} de 5${leader ? " · eres el líder" : ""}</div>`;
-          if (leader && g.members.length >= g.min)
-            cta += `<button class="btn btn-primary" data-close-g="${g.code}" style="width:100%;margin-top:8px;font-size:13px">Cerrar con ${g.members.length} (descuento ya aplicado)</button>`;
-          else if (g.members.length < g.min)
-            cta += `<div style="font-size:11px;color:var(--muted);margin-top:6px">Mínimo ${g.min} para poder cerrar.</div>`;
-        } else {
-          cta = `<button class="btn btn-green" data-join="${g.code}" style="width:100%;margin-top:8px">Unirse (${g.members.length}/5)</button>`;
-          cta += `<div style="font-size:11px;color:var(--muted);margin-top:6px">${tiers}</div>`;
-        }
-      } else if (st === "closed") {
-        cta = `<div style="margin-top:8px;font-size:12px;color:var(--accent);font-weight:700">Cerrado con ${g.members.length} personas · precio de grupo aplicado</div>`;
-      } else {
-        cta = `<div style="margin-top:8px;font-size:12px;color:var(--accent2);font-weight:700">No se llegó al mínimo · nadie pagó</div>`;
-      }
-      const cd = st === "open" ? countdownHtml(g.deadline - Date.now()) : `<span class="countdown-live">${st === "closed" ? "cerrado" : "caducado"}</span>`;
-      return `<div class="group-card">
-        <div class="gc-head">
-          <span class="gc-code">${g.code}</span>
-          <span class="gc-status ${st}">${st}</span>
-        </div>
-        <div class="gc-prod">${p.title}</div>
-        <div class="gc-avatars">Miembros: <b>${g.members.length}/5</b> · ${g.members.map((m, i) => `<span title="${m}" style="display:inline-grid;place-items:center;width:22px;height:22px;border-radius:50%;background:hsla(${(i * 47) % 360},60%,50%,.5);font-size:10px">${m[0].toUpperCase()}</span>`).join(" ")}</div>
-        <div style="margin-top:8px">${cd}</div>
-        ${cta}
-      </div>`;
-    }).join("");
-
-    $$("[data-join]", wrap).forEach(b => b.onclick = () => {
-      const g = groups.find(x => x.code === b.dataset.join);
-      if (!g || g.members.includes("tú")) return;
-      g.members.push("tú");
-      const st = groupStatus(g);
-      saveGroups();
-      toast(st === "closed" ? "Grupo completo: +descuento de grupo (" + g.members.length + " personas) aplicado" : "Unido al grupo " + g.code + " · lleváis " + g.members.length + "/5, cierra el líder", true);
-      renderGroups();
-      renderGrid(); renderDeals();
-    });
-    $$("[data-close-g]", wrap).forEach(b => b.onclick = () => {
-      const g = groups.find(x => x.code === b.dataset.closeG);
-      if (!g || g.closedAt) return;
-      g.closedAt = Date.now();
-      saveGroups();
-      const m = groupMath(PRODUCTS.find(x => x.id === g.productId), groupPassShare(), g.members.length);
-      toast("Grupo " + g.code + " cerrado con " + g.members.length + " personas · descuento −" + (m.discPct * 100).toFixed(1).replace(".", ",") + "% para cada miembro", true);
-      renderGroups();
-      renderGrid(); renderDeals();
-    });
-  }
-
-  function renderSim() {
-    const p = PRODUCTS.find(x => x.id === $("#simProduct").value);
-    if (!p) { $("#simOut").innerHTML = `<p style="font-size:12px;color:var(--muted)">Elige un producto para ver la tabla de grupo.</p>`; return; }
-    const pass = Number($("#simPass").value) / 100;
-    const m = groupMath(p, pass, simN);
-    $("#simPassVal").textContent = Math.round(pass * 100) + "%";
-    $$(".seg").forEach(b => b.classList.toggle("active", Number(b.dataset.n) === simN));
-    $("#simOut").innerHTML = `<p style="font-size:11px;color:var(--muted);margin-bottom:6px">Descuento según cuántos seáis: <b style="color:var(--text)">${tiersLabel(p, pass)}</b></p>
-    <table class="sim-table">
-      <tr><td>Individual (1 persona)</td><td class="r">${fmt(m.soloPrice)}</td></tr>
-      <tr><td>Tu margen individual</td><td class="r">${fmt(m.soloMargin)}</td></tr>
-      <tr><td>Grupo (${m.n} personas)</td><td class="r">${fmt(m.groupPrice)}</td></tr>
-      <tr><td>Ahorro por persona (del proveedor)</td><td class="r">${fmt(m.savings)}</td></tr>
-      <tr><td>Descuento para cada uno</td><td class="r">-${fmt(m.perPersonSave)} (${(m.discPct * 100).toFixed(1).replace(".", ",")}%)</td></tr>
-      <tr class="total"><td>Tu margen en grupo (${m.n})</td><td class="r">${fmt(m.ourMarginGroup)}</td></tr>
-    </table>
-    <p style="font-size:11px;color:var(--muted);margin-top:8px">Tú mantienes tu margen normal y encima te quedas el ${Math.round((1 - pass) * 100)}% del ahorro por volumen. El resto baja el precio al grupo.</p>`;
-  }
-
   function tick() {
     $$(".countdown[data-end]").forEach(el => {
       const ms = Number(el.dataset.end) - Date.now();
@@ -1079,12 +832,6 @@ function doPay() {
   renderFilters();
   renderGrid();
   renderDeals();
-  renderSupplierTable();
-  renderGroups();
-  renderSim();
-  $("#simPass").addEventListener("input", renderSim);
-  $("#simProduct").addEventListener("change", renderSim);
-  $$(".seg").forEach(b => b.onclick = () => { simN = Number(b.dataset.n); renderSim(); });
   updateCart();
 
   function initProductState(p) {
@@ -1092,10 +839,6 @@ function doPay() {
     const s = { sold: 0, earlySold: 0, size: null, color: null };
     if (p.deal === "flash") s.flashExpires = NOW + (p.flash ? p.flash.minutes : 5) * MIN;
     if (p.deal === "pricedrop") s.dropCur = p.price;
-    if (p.deal === "pool") {
-      s.poolNow = p.pool ? p.pool.now || 0 : 0;
-      s.poolUnlocked = p.pool ? s.poolNow >= p.pool.target : false;
-    }
     if (p.deal === "fastpay") s.fastStart = 0;
     if (p.deal === "auction") { s.bidCur = p.auc ? p.auc.start : 0; s.bidEnd = NOW + (p.auc ? p.auc.mins : 10) * MIN; s.bidder = null; }
     ST[p.id] = s;
@@ -1120,6 +863,6 @@ function doPay() {
         initProductState(p);
         changed = true;
       });
-      if (changed) { renderFilters(); renderGrid(); renderDeals(); renderSupplierTable(); }
+      if (changed) { renderFilters(); renderGrid(); renderDeals(); }
     });
 })();

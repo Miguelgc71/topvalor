@@ -1,13 +1,13 @@
-const SUPPLIERS = [
-  { id: "kakobuy",  name: "Kakobuy",  fee: "0%",    qc: "Excelente · QC 5-8 fotos", eta: "7-18 d", base: 3.90, perKg: 7.50, color: "#5b8def" },
-  { id: "hipobuy",  name: "Hipobuy",  fee: "5-8%",  qc: "12 fotos QC gratis",       eta: "7-15 d", base: 4.50, perKg: 8.00, color: "#e25b5b" },
-  { id: "acbuy",    name: "ACBuy",    fee: "~5%",   qc: "5 fotos HD",               eta: "7-18 d", base: 4.20, perKg: 7.80, color: "#3fa36b" },
-  { id: "superbuy", name: "Superbuy", fee: "5-10%", qc: "Mejor QC del mercado",     eta: "7-20 d", base: 5.00, perKg: 8.50, color: "#8a6ae0" },
-  { id: "cnfans",   name: "CNFans",   fee: "~5%",   qc: "QC bueno",                 eta: "7-15 d", base: 4.00, perKg: 7.60, color: "#d99a2b" },
-  { id: "sugargoo", name: "Sugargoo", fee: "~5%",   qc: "QC bueno",                 eta: "7-18 d", base: 4.20, perKg: 7.40, color: "#2a9d8f" },
-  { id: "oopbuy",   name: "Oopbuy",   fee: "0%",    qc: "QC muy bueno",             eta: "10-20 d",base: 3.60, perKg: 7.20, color: "#4c6a92" },
-  { id: "cssbuy",   name: "CSSBuy",   fee: "4%",    qc: "QC bueno",                 eta: "9-25 d", base: 3.40, perKg: 6.90, color: "#9b6a3c" },
-];
+const SHIP_RATES = {
+  kakobuy:  { base: 3.90, perKg: 7.50, eta: "7-18 d" },
+  hipobuy:  { base: 4.50, perKg: 8.00, eta: "7-15 d" },
+  acbuy:    { base: 4.20, perKg: 7.80, eta: "7-18 d" },
+  superbuy: { base: 5.00, perKg: 8.50, eta: "7-20 d" },
+  cnfans:   { base: 4.00, perKg: 7.60, eta: "7-15 d" },
+  sugargoo: { base: 4.20, perKg: 7.40, eta: "7-18 d" },
+  oopbuy:   { base: 3.60, perKg: 7.20, eta: "10-20 d" },
+  cssbuy:   { base: 3.40, perKg: 6.90, eta: "9-25 d" },
+};
 
 const NOW = Date.now();
 const MIN = 60000;
@@ -54,7 +54,6 @@ const CATEGORIES = [
 
 const DEAL_INFO = {
   flash:     { label: "FlASH · cuenta atrás" },
-  pool:      { label: "POOL · interés agrupado" },
   auction:   { label: "SUBASTA" },
   pricedrop: { label: "PRECIO BAJANDO" },
   earlybird: { label: "EARLY BIRD" },
@@ -64,7 +63,6 @@ const DEAL_INFO = {
 
 const STORE = {
   cart: [],
-  pools: {},
   fastpays: {},
   bids: {},
   coupons: {},

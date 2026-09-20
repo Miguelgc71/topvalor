@@ -3,6 +3,17 @@
   const $$ = s => Array.from(document.querySelectorAll(s));
   const fmt = n => (isNaN(n) ? "0,00" : n.toFixed(2).replace(".", ",")) + " €";
 
+  const SUPPLIERS = [
+    { id: "kakobuy",  name: "Kakobuy",  fee: "0%",    qc: "Excelente · QC 5-8 fotos", eta: "7-18 d", base: 3.90, perKg: 7.50, color: "#5b8def" },
+    { id: "hipobuy",  name: "Hipobuy",  fee: "5-8%",  qc: "12 fotos QC gratis",       eta: "7-15 d", base: 4.50, perKg: 8.00, color: "#e25b5b" },
+    { id: "acbuy",    name: "ACBuy",    fee: "~5%",   qc: "5 fotos HD",               eta: "7-18 d", base: 4.20, perKg: 7.80, color: "#3fa36b" },
+    { id: "superbuy", name: "Superbuy", fee: "5-10%", qc: "Mejor QC del mercado",     eta: "7-20 d", base: 5.00, perKg: 8.50, color: "#8a6ae0" },
+    { id: "cnfans",   name: "CNFans",   fee: "~5%",   qc: "QC bueno",                 eta: "7-15 d", base: 4.00, perKg: 7.60, color: "#d99a2b" },
+    { id: "sugargoo", name: "Sugargoo", fee: "~5%",   qc: "QC bueno",                 eta: "7-18 d", base: 4.20, perKg: 7.40, color: "#2a9d8f" },
+    { id: "oopbuy",   name: "Oopbuy",   fee: "0%",    qc: "QC muy bueno",             eta: "10-20 d",base: 3.60, perKg: 7.20, color: "#4c6a92" },
+    { id: "cssbuy",   name: "CSSBuy",   fee: "4%",    qc: "QC bueno",                 eta: "9-25 d", base: 3.40, perKg: 6.90, color: "#9b6a3c" },
+  ];
+
   const ADMIN_PW_OK_KEY = "tv_admin_ok";
   const PRODUCTS_KEY = "tv_custom_products";
 
@@ -89,7 +100,6 @@
   // ---------- DEAL FIELDS ----------
   $("#fDeal").addEventListener("change", e => {
     $("#flashFields").style.display = e.target.value === "flash" ? "block" : "none";
-    $("#poolFields").style.display = e.target.value === "pool" ? "block" : "none";
   });
 
   $$('input[name="sizeMode"]').forEach(r => r.addEventListener("change", () => {
@@ -231,7 +241,6 @@
       dateAdded: Date.now()
     };
     if (deal === "flash") p.flash = { total: parseInt($("#fFlashQty").value) || 3, minutes: parseInt($("#fFlashMin").value) || 5 };
-    if (deal === "pool") p.pool = { target: parseInt($("#fPoolTarget").value) || 5, now: 0, disc: parseInt($("#fPoolDisc").value) || 8 };
     return p;
   }
 
@@ -268,7 +277,6 @@
     $("#saveBtn").textContent = "Publicar producto";
     $("#formStatus").textContent = "";
     $("#flashFields").style.display = "none";
-    $("#poolFields").style.display = "none";
     document.querySelector('input[name="sizeMode"][value="auto"]').checked = true;
     $("#manualSizes").style.display = "none";
     $("#fColorNum").value = "";
@@ -304,11 +312,6 @@
       $("#flashFields").style.display = "block";
       $("#fFlashQty").value = p.flash.total;
       $("#fFlashMin").value = p.flash.minutes;
-    }
-    if (p.pool) {
-      $("#poolFields").style.display = "block";
-      $("#fPoolTarget").value = p.pool.target;
-      $("#fPoolDisc").value = p.pool.disc;
     }
     if (p.imgData) { $("#fImgUrl").value = p.imgData; $("#fImgPreview").src = p.imgData; $("#fImgPreview").style.display = "block"; }
     calc();
