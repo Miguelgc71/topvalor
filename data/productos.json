@@ -642,7 +642,7 @@
     "complaints": 0,
     "fit": "none",
     "note": "",
-    "imgData": "imagenes\\Accesorios  y Relojes\\Accesorios\\Pulseras\\Lacoste\\Silver Crocodile Strap Bracelet",
+    "imgData": "imagenes\\Accesorios  y Relojes\\Accesorios\\Pulseras\\Lacoste\\Silver_Crocodile_Strap_Bracelet",
     "colors": [
       {
         "label": "Black_Carved_Strap_Bracelet",
@@ -672,6 +672,6 @@
     "shipOverride": 0,
     "supLink": "https://hipobuy.com/product/2/7493663648?inviteCode=1212",
     "isCustom": true,
-    "dateAdded": 1789927421376
+    "dateAdded": 1789927523703
   }
 ]
