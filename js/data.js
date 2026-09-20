@@ -1,12 +1,12 @@
 const SHIP_RATES = {
-  kakobuy:  { base: 4.50, perKg: 10.00, eta: "8-18 d" },
-  hipobuy:  { base: 4.80, perKg: 10.50, eta: "7-15 d" },
-  acbuy:    { base: 4.50, perKg: 10.20, eta: "8-18 d" },
-  superbuy: { base: 5.50, perKg: 11.00, eta: "7-20 d" },
-  cnfans:   { base: 4.30, perKg: 10.00, eta: "8-15 d" },
-  sugargoo: { base: 4.50, perKg: 9.80, eta: "8-18 d" },
-  oopbuy:   { base: 4.00, perKg: 9.60, eta: "10-20 d" },
-  cssbuy:   { base: 4.00, perKg: 9.50, eta: "9-25 d" },
+  kakobuy:  { base: 5.20, perKg: 11.80, eta: "8-18 d" },
+  hipobuy:  { base: 5.40, perKg: 12.00, eta: "7-15 d" },
+  acbuy:    { base: 5.20, perKg: 11.90, eta: "8-18 d" },
+  superbuy: { base: 5.80, perKg: 12.50, eta: "7-20 d" },
+  cnfans:   { base: 5.00, perKg: 11.70, eta: "8-15 d" },
+  sugargoo: { base: 5.20, perKg: 11.60, eta: "8-18 d" },
+  oopbuy:   { base: 4.80, perKg: 11.40, eta: "10-20 d" },
+  cssbuy:   { base: 4.80, perKg: 11.30, eta: "9-25 d" },
 };
 
 const NOW = Date.now();
@@ -66,4 +66,5 @@ const STORE = {
   fastpays: {},
   bids: {},
   coupons: {},
+  noBox: false,
 };

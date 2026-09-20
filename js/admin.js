@@ -5,14 +5,14 @@
   const normPath = s => (s || "").trim().replace(/\\/g, "/");
 
   const SUPPLIERS = [
-    { id: "kakobuy",  name: "Kakobuy",  fee: "0%",    qc: "Excelente · QC 5-8 fotos", eta: "8-18 d", base: 4.50, perKg: 10.00, color: "#5b8def" },
-    { id: "hipobuy",  name: "Hipobuy",  fee: "5-8%",  qc: "12 fotos QC gratis",       eta: "7-15 d", base: 4.80, perKg: 10.50, color: "#e25b5b" },
-    { id: "acbuy",    name: "ACBuy",    fee: "~5%",   qc: "5 fotos HD",               eta: "8-18 d", base: 4.50, perKg: 10.20, color: "#3fa36b" },
-    { id: "superbuy", name: "Superbuy", fee: "5-10%", qc: "Mejor QC del mercado",     eta: "7-20 d", base: 5.50, perKg: 11.00, color: "#8a6ae0" },
-    { id: "cnfans",   name: "CNFans",   fee: "~5%",   qc: "QC bueno",                 eta: "8-15 d", base: 4.30, perKg: 10.00, color: "#d99a2b" },
-    { id: "sugargoo", name: "Sugargoo", fee: "~5%",   qc: "QC bueno",                 eta: "8-18 d", base: 4.50, perKg: 9.80, color: "#2a9d8f" },
-    { id: "oopbuy",   name: "Oopbuy",   fee: "0%",    qc: "QC muy bueno",             eta: "10-20 d",base: 4.00, perKg: 9.60, color: "#4c6a92" },
-    { id: "cssbuy",   name: "CSSBuy",   fee: "4%",    qc: "QC bueno",                 eta: "9-25 d", base: 4.00, perKg: 9.50, color: "#9b6a3c" },
+    { id: "kakobuy",  name: "Kakobuy",  fee: "0%",    qc: "Excelente · QC 5-8 fotos", eta: "8-18 d", base: 5.20, perKg: 11.80, color: "#5b8def" },
+    { id: "hipobuy",  name: "Hipobuy",  fee: "5-8%",  qc: "12 fotos QC gratis",       eta: "7-15 d", base: 5.40, perKg: 12.00, color: "#e25b5b" },
+    { id: "acbuy",    name: "ACBuy",    fee: "~5%",   qc: "5 fotos HD",               eta: "8-18 d", base: 5.20, perKg: 11.90, color: "#3fa36b" },
+    { id: "superbuy", name: "Superbuy", fee: "5-10%", qc: "Mejor QC del mercado",     eta: "7-20 d", base: 5.80, perKg: 12.50, color: "#8a6ae0" },
+    { id: "cnfans",   name: "CNFans",   fee: "~5%",   qc: "QC bueno",                 eta: "8-15 d", base: 5.00, perKg: 11.70, color: "#d99a2b" },
+    { id: "sugargoo", name: "Sugargoo", fee: "~5%",   qc: "QC bueno",                 eta: "8-18 d", base: 5.20, perKg: 11.60, color: "#2a9d8f" },
+    { id: "oopbuy",   name: "Oopbuy",   fee: "0%",    qc: "QC muy bueno",             eta: "10-20 d",base: 4.80, perKg: 11.40, color: "#4c6a92" },
+    { id: "cssbuy",   name: "CSSBuy",   fee: "4%",    qc: "QC bueno",                 eta: "9-25 d", base: 4.80, perKg: 11.30, color: "#9b6a3c" },
   ];
 
   const ADMIN_PW_OK_KEY = "tv_admin_ok";

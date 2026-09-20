@@ -41,6 +41,8 @@
 
   const shipFor = p => p.shipOverride != null ? p.shipOverride : sup(p.supplierId).base + sup(p.supplierId).perKg * (p.grams / 1000);
 
+  const boxG = p => p.cat === "shoes" ? 400 : p.cat === "acc" ? 150 : 0;
+
   const imgFor = p => p.imgData && p.imgData !== "null" ? p.imgData : null;
 
   const colorStrip = p => {
@@ -519,6 +521,7 @@
               <div><b>Plazo:</b> ${sup(p.supplierId).eta} EU</div>
             </div>
           </div>
+          <p style="font-size:12px;color:var(--green);margin:8px 0 0">En el carrito puedes elegir enviarlo <b>sin caja</b>: pesa y ocupa menos, y te ahorras ~${fmt(boxG(p) / 1000 * sup(p.supplierId).perKg)}. El agente sigue embalándolo protegido.</p>
           <h4>Quien lo gestiona</h4>
           <ul style="margin-left:18px;font-size:13px">
             <li>El envío llega <b>directamente a tu casa</b>.</li>
@@ -647,17 +650,17 @@
     openCart();
   }
 
-  function groupedShip() {
+  function groupedShip(forceNoBox) {
+    const noBox = forceNoBox != null ? forceNoBox : !!STORE.noBox;
     const per = {};
     STORE.cart.forEach(i => {
-      const s = sup(i.supplier);
-      if (!per[i.supplier]) per[i.supplier] = 0;
-      per[i.supplier] += i.ship;
+      const p0 = PRODUCTS.find(p => p.id === i.id);
+      const g = p0 ? (noBox ? Math.max(0, p0.grams - boxG(p0)) : p0.grams) : 0;
+      per[i.supplier] = (per[i.supplier] || 0) + g / 1000;
     });
     let total = 0;
-    Object.entries(per).forEach(([sid, v]) => {
+    Object.entries(per).forEach(([sid, kgs]) => {
       const s = sup(sid);
-      const kgs = STORE.cart.filter(i => i.supplier === sid).reduce((a, i) => a + PRODUCTS.find(p => p.id === i.id).grams / 1000, 0);
       total += s.base + s.perKg * kgs;
     });
     return total;
@@ -683,14 +686,14 @@
           <div><b>${i.title}</b><br><span style="color:var(--muted);font-size:12px">${i.size ? "talla " + i.size : ""}${i.color ? " · " + i.color : ""} · ${fmt(i.unit)}</span></div>
           <button class="cr-x" data-rm="${idx}">&times;</button>
         </div>`).join("")}
-      ${items.length ? `<div class="cart-total">
+      ${items.length ? boxModeHtml() + `<div class="cart-total">
         <div><span>Subtotal producto (${items.length}) · IVA incl.</span><b>${fmt(sub)}</b></div>
         <div><span>Envío a tu casa</span><b>${fmt(ship)}</b></div>
         <div class="grand"><span>Total a pagar</span><span>${fmt(total)}</span></div>
-      </div>
-      <button class="btn btn-primary" id="payBtn" style="width:100%;margin-top:12px">Pedir por Bizum · ${fmt(total)}</button>
+      </div>` : ""}
+      ${items.length ? `<button class="btn btn-primary" id="payBtn" style="width:100%;margin-top:12px">Pedir por Bizum · ${fmt(total)}</button>` : ""}
       <p class="table-note" style="margin-top:8px">Preparo el pedido cuando me pagas por <b>Bizum ${BIZUM}</b>. Precio final con 21% IVA.</p>
-      <div class="cart-flow">
+      ${items.length ? `<div class="cart-flow">
         <div class="step"><span class="n">1</span><span>Me pagas por <b>Bizum</b> y rellenas tus <b>datos de envío</b> (te los pido al pedir, incluido el correo para el tracking).</span></div>
         <div class="step"><span class="n">2</span><span>Hago el pedido con tus datos y te paso el <b>tracking</b>.</span></div>
         <div class="step"><span class="n">3</span><span>El envío llega <b>directo a tu casa</b>.</span></div>
@@ -703,8 +706,25 @@
       updateCart();
       openCart();
     });
+    $$('input[name="boxMode"]', $("#cartDrawer")).forEach(r => r.onchange = () => {
+      STORE.noBox = r.value === "nobox";
+      openCart();
+    });
     const pay = $("#payBtn");
     if (pay) pay.onclick = () => doPay();
+  }
+
+  function boxModeHtml() {
+    const noBox = !!STORE.noBox;
+    const shipBox = groupedShip(false);
+    const shipNoBox = groupedShip(true);
+    const ahorro = shipBox - shipNoBox;
+    return `<div style="border:1px solid var(--border,#2a3441);border-radius:10px;padding:10px;margin:12px 0">
+      <div style="font-size:12px;color:var(--muted);margin-bottom:6px">¿Cómo lo enviamos? <span style="color:var(--green)">Sin caja ahorra ${fmt(ahorro)}</span></div>
+      <label class="sup-chip" style="cursor:pointer;margin-right:6px"><input type="radio" name="boxMode" value="box" ${noBox ? "" : "checked"} style="margin-right:5px;accent-color:var(--accent)">📦 Con caja (como viene)</label>
+      <label class="sup-chip" style="cursor:pointer"><input type="radio" name="boxMode" value="nobox" ${noBox ? "checked" : ""} style="margin-right:5px;accent-color:var(--accent)">Sin caja · ahorras ${fmt(ahorro)}</label>
+      <p style="font-size:11px;color:var(--muted);margin:6px 0 0">Sin caja = menos peso y menos volumen → envío más barato. El agente sigue embalando con protección. Indícalo al pedir para quitar las cajas.</p>
+    </div>`;
   }
 
   function doPay() {
@@ -724,7 +744,7 @@
         "  Teléfono: " + (g("fPhone") || "(tu móvil)"),
         "  Correo (para el tracking): " + (g("fEmail") || "(tu email)")
       ].join("\n");
-      return `TOP VALOR - PEDIDO\n\n${lines}\n\nSubtotal: ${fmt(sub)}\nEnv\u00edo: ${fmt(ship)}\nTOTAL (IVA incl.): ${fmt(total)}\n\n${shipBlock}\n\nMe pagas por Bizum ${BIZUM}\nGracias!`;
+      return `TOP VALOR - PEDIDO\n\n${lines}\n\nSubtotal: ${fmt(sub)}\nEnv\u00edo (${STORE.noBox ? "SIN CAJA" : "CON CAJA"}): ${fmt(ship)}\nTOTAL (IVA incl.): ${fmt(total)}\n\n${shipBlock}\n\nMe pagas por Bizum ${BIZUM}\nGracias!`;
     }
 
     $("#cartDrawer").innerHTML = `<h2 style="font-size:20px;margin-bottom:12px">Pedido listo · págame por Bizum</h2>

@@ -473,7 +473,7 @@
     "reviews": 0,
     "price": 75.49,
     "orig": null,
-    "grams": 1000,
+    "grams": 1400,
     "mono": "AJ5",
     "grad": [
       "#1e293b",
@@ -535,7 +535,7 @@
     "price": 50.33,
     "cost": 36.17,
     "orig": null,
-    "grams": 1000,
+    "grams": 1500,
     "mono": "NJ",
     "grad": [
       "#1e293b",
@@ -632,7 +632,7 @@
     "price": 13.55,
     "cost": 9.74,
     "orig": null,
-    "grams": 250,
+    "grams": 300,
     "mono": "PL",
     "grad": [
       "#1e293b",
