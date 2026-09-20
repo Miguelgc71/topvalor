@@ -1,10 +1,10 @@
-const CACHE = "topvalor-v4";
+const CACHE = "topvalor-v5";
 const ASSETS = [
   "/",
   "/index.html",
   "/css/style.css",
-  "/js/data.js?v=20260920",
-  "/js/app.js?v=20260920",
+  "/js/data.js?v=20260920d",
+  "/js/app.js?v=20260920d",
   "/manifest.json",
   "/img/icon-192.svg",
   "/img/icon-512.svg"

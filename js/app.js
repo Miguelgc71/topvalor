@@ -3,7 +3,7 @@
   const $$ = (s, el = document) => Array.from(el.querySelectorAll(s));
 
   const fmt = n => n.toFixed(2).replace(".", ",") + " €";
-  const sup = id => SHIP_RATES[id] || { base: 4.5, perKg: 8, eta: "7-15 d" };
+  const sup = id => SHIP_RATES[id] || { base: 4.8, perKg: 10.5, eta: "7-15 d" };
 
   const nullImg = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="300" height="200"><rect width="100%" height="100%" fill="#1b2029"/><text x="50%" y="50%" fill="#3a4553" font-size="22" text-anchor="middle" font-family="sans-serif">SIN FOTO</text></svg>`);
 

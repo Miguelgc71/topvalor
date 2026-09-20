@@ -5,14 +5,14 @@
   const normPath = s => (s || "").trim().replace(/\\/g, "/");
 
   const SUPPLIERS = [
-    { id: "kakobuy",  name: "Kakobuy",  fee: "0%",    qc: "Excelente · QC 5-8 fotos", eta: "7-18 d", base: 3.90, perKg: 7.50, color: "#5b8def" },
-    { id: "hipobuy",  name: "Hipobuy",  fee: "5-8%",  qc: "12 fotos QC gratis",       eta: "7-15 d", base: 4.50, perKg: 8.00, color: "#e25b5b" },
-    { id: "acbuy",    name: "ACBuy",    fee: "~5%",   qc: "5 fotos HD",               eta: "7-18 d", base: 4.20, perKg: 7.80, color: "#3fa36b" },
-    { id: "superbuy", name: "Superbuy", fee: "5-10%", qc: "Mejor QC del mercado",     eta: "7-20 d", base: 5.00, perKg: 8.50, color: "#8a6ae0" },
-    { id: "cnfans",   name: "CNFans",   fee: "~5%",   qc: "QC bueno",                 eta: "7-15 d", base: 4.00, perKg: 7.60, color: "#d99a2b" },
-    { id: "sugargoo", name: "Sugargoo", fee: "~5%",   qc: "QC bueno",                 eta: "7-18 d", base: 4.20, perKg: 7.40, color: "#2a9d8f" },
-    { id: "oopbuy",   name: "Oopbuy",   fee: "0%",    qc: "QC muy bueno",             eta: "10-20 d",base: 3.60, perKg: 7.20, color: "#4c6a92" },
-    { id: "cssbuy",   name: "CSSBuy",   fee: "4%",    qc: "QC bueno",                 eta: "9-25 d", base: 3.40, perKg: 6.90, color: "#9b6a3c" },
+    { id: "kakobuy",  name: "Kakobuy",  fee: "0%",    qc: "Excelente · QC 5-8 fotos", eta: "8-18 d", base: 4.50, perKg: 10.00, color: "#5b8def" },
+    { id: "hipobuy",  name: "Hipobuy",  fee: "5-8%",  qc: "12 fotos QC gratis",       eta: "7-15 d", base: 4.80, perKg: 10.50, color: "#e25b5b" },
+    { id: "acbuy",    name: "ACBuy",    fee: "~5%",   qc: "5 fotos HD",               eta: "8-18 d", base: 4.50, perKg: 10.20, color: "#3fa36b" },
+    { id: "superbuy", name: "Superbuy", fee: "5-10%", qc: "Mejor QC del mercado",     eta: "7-20 d", base: 5.50, perKg: 11.00, color: "#8a6ae0" },
+    { id: "cnfans",   name: "CNFans",   fee: "~5%",   qc: "QC bueno",                 eta: "8-15 d", base: 4.30, perKg: 10.00, color: "#d99a2b" },
+    { id: "sugargoo", name: "Sugargoo", fee: "~5%",   qc: "QC bueno",                 eta: "8-18 d", base: 4.50, perKg: 9.80, color: "#2a9d8f" },
+    { id: "oopbuy",   name: "Oopbuy",   fee: "0%",    qc: "QC muy bueno",             eta: "10-20 d",base: 4.00, perKg: 9.60, color: "#4c6a92" },
+    { id: "cssbuy",   name: "CSSBuy",   fee: "4%",    qc: "QC bueno",                 eta: "9-25 d", base: 4.00, perKg: 9.50, color: "#9b6a3c" },
   ];
 
   const ADMIN_PW_OK_KEY = "tv_admin_ok";
@@ -49,6 +49,10 @@
   if (localStorage.getItem(ADMIN_PW_OK_KEY)) showAdmin();
 
   // ---------- PRICE CALCULATOR ----------
+  function defaultGramsForCat(c) {
+    return ({ shoes: 1000, top: 350, bottom: 700, outer: 900, acc: 250 })[c] || 500;
+  }
+
   function calc() {
     const cost = parseFloat($("#fCost").value.replace(",", ".")) || 0;
     const margin = parseFloat($("#fMargin").value.replace(",", ".")) || 0;
@@ -59,15 +63,24 @@
     const total = sub + iva;                      // precio al cliente con IVA
     const grand = total + ship;                   // total con envío
 
+    const grams = parseInt($("#fWeight").value) || defaultGramsForCat($("#fCat").value);
+    const s = SUPPLIERS.find(x => x.id === selectedSup);
+    const estShip = s ? s.base + s.perKg * (grams / 1000) : 0;
+
     $("#calcCost").textContent = fmt(cost);
     $("#calcMargin").textContent = fmt(sub - cost);
     $("#calcSub").textContent = fmt(sub);
     $("#calcIva").textContent = fmt(iva);
     $("#calcTotal").textContent = fmt(total);
     $("#calcShip").textContent = fmt(ship);
+    $("#calcShipEst").textContent = fmt(estShip) + " (" + s.name + " · " + grams + " g)";
     $("#calcGrand").textContent = fmt(grand);
   }
-  ["fCost", "fMargin", "fShip"].forEach(id => $("." + id) && ($("#" + id).addEventListener("input", calc)));
+  ["fCost", "fMargin", "fShip", "fWeight"].forEach(id => $("." + id) && ($("#" + id).addEventListener("input", calc)));
+  $("#fCat").addEventListener("change", () => {
+    if (!parseInt($("#fWeight").value)) $("#fWeight").value = defaultGramsForCat($("#fCat").value);
+    calc();
+  });
 
   // ---------- SUPPLIER CHIPS ----------
   function renderSups() {
@@ -226,7 +239,7 @@
       price: Math.round(price * 100) / 100,
       cost: Math.round(cost * 100) / 100,
       orig: null,
-      grams: 500,
+      grams: parseInt($("#fWeight").value) || defaultGramsForCat($("#fCat").value),
       mono: $("#fName").value.trim().split(" ").map(w => w[0]).join("").slice(0, 2).toUpperCase() || "TV",
       grad: ["#1e293b", "#0f172a"],
       deal,
@@ -236,7 +249,7 @@
       sizes: manual ? sizes.slice() : undefined,
       imgData: normPath($("#fImgUrl").value) || null,
       colors: colors.length ? colors.map(c => ({ label: c.label, img: normPath(c.img) })) : undefined,
-      shipOverride: ship,
+      shipOverride: ship || null,
       supLink: $("#fSupLink").value.trim() || null,
       isCustom: true,
       dateAdded: Date.now()
@@ -273,6 +286,7 @@
     $("#fMargin").value = "15";
     $("#fDeal").value = "none";
     $("#fCat").value = "shoes";
+    $("#fWeight").value = defaultGramsForCat("shoes");
     $("#fImgPreview").style.display = "none";
     $("#formTitle").textContent = "Nuevo producto";
     $("#saveBtn").textContent = "Publicar producto";
@@ -298,7 +312,8 @@
     $("#fSupLink").value = p.supLink || "";
     $("#fCost").value = (p.cost != null ? p.cost : (p.price ? (p.price / 1.21 / 1.15) : 0)).toFixed(2);
     $("#fMargin").value = "15";
-    $("#fShip").value = p.shipOverride || 0;
+    $("#fShip").value = p.shipOverride == null ? "" : p.shipOverride;
+    $("#fWeight").value = p.grams || defaultGramsForCat($("#fCat").value);
     selectedSup = p.supplierId;
     renderSups();
     const manual = p.fit === "custom";

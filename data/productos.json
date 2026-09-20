@@ -9,7 +9,7 @@
     "reviews": 0,
     "price": 30.2,
     "orig": null,
-    "grams": 500,
+    "grams": 1000,
     "mono": "AF",
     "grad": [
       "#1e293b",
@@ -66,7 +66,7 @@
         "img": "imagenes/zapatillas/Nike/Air Force uno/yellow_and_green_spell.jpg"
       }
     ],
-    "shipOverride": 0,
+    "shipOverride": null,
     "supLink": "https://hipobuy.com/product/2/7442542749?inviteCode=1212",
     "isCustom": true,
     "dateAdded": 1789805355682,
@@ -82,7 +82,7 @@
     "reviews": 0,
     "price": 53.48,
     "orig": null,
-    "grams": 500,
+    "grams": 1000,
     "mono": "AG",
     "grad": [
       "#1e293b",
@@ -191,7 +191,7 @@
         "img": "imagenes/zapatillas/Asics/Asics Gel/mov24.png"
       }
     ],
-    "shipOverride": 0,
+    "shipOverride": null,
     "supLink": "https://hipobuy.com/product/2/7444430516?inviteCode=1212",
     "isCustom": true,
     "dateAdded": 1789807400837,
@@ -207,7 +207,7 @@
     "reviews": 0,
     "price": 79.68,
     "orig": null,
-    "grams": 500,
+    "grams": 1000,
     "mono": "B",
     "grad": [
       "#1e293b",
@@ -340,7 +340,7 @@
         "img": "imagenes/zapatillas/Bapesta/bapesta/mov31.jpg"
       }
     ],
-    "shipOverride": 0,
+    "shipOverride": null,
     "supLink": "https://hipobuy.com/product/2/7444396886?inviteCode=1212",
     "isCustom": true,
     "dateAdded": 1789807482916,
@@ -356,7 +356,7 @@
     "reviews": 0,
     "price": 55.99,
     "orig": null,
-    "grams": 500,
+    "grams": 1200,
     "mono": "AS",
     "grad": [
       "#1e293b",
@@ -457,7 +457,7 @@
         "img": "imagenes/zapatillas/Adidas/samba/mov24.jpg"
       }
     ],
-    "shipOverride": 14.1,
+    "shipOverride": null,
     "supLink": "https://hipobuy.com/product/2/7444424636?inviteCode=1212",
     "isCustom": true,
     "dateAdded": 1789807540139,
@@ -473,7 +473,7 @@
     "reviews": 0,
     "price": 75.49,
     "orig": null,
-    "grams": 500,
+    "grams": 1000,
     "mono": "AJ5",
     "grad": [
       "#1e293b",
@@ -518,7 +518,7 @@
         "img": "imagenes/zapatillas/Nike/Jordan 5/08.jpg"
       }
     ],
-    "shipOverride": 0,
+    "shipOverride": null,
     "supLink": "https://hipobuy.com/product/2/7444489812?inviteCode=1212",
     "isCustom": true,
     "dateAdded": 1789862400000,
@@ -535,7 +535,7 @@
     "price": 50.33,
     "cost": 36.17,
     "orig": null,
-    "grams": 500,
+    "grams": 1000,
     "mono": "NJ",
     "grad": [
       "#1e293b",
@@ -616,7 +616,7 @@
         "img": "imagenes/zapatillas/Nike/Jordan 4 retro/17.png"
       }
     ],
-    "shipOverride": 0,
+    "shipOverride": null,
     "supLink": "https://hipobuy.com/product/2/7442416279?inviteCode=1212",
     "isCustom": true,
     "dateAdded": 1789926502927
@@ -632,7 +632,7 @@
     "price": 13.55,
     "cost": 9.74,
     "orig": null,
-    "grams": 500,
+    "grams": 250,
     "mono": "PL",
     "grad": [
       "#1e293b",
@@ -669,7 +669,7 @@
         "img": "imagenes/Accesorios  y Relojes/Accesorios/Pulseras/Lacoste/Silver_Crocodile_Strap_Bracelet.jpg"
       }
     ],
-    "shipOverride": 0,
+    "shipOverride": null,
     "supLink": "https://hipobuy.com/product/2/7493663648?inviteCode=1212",
     "isCustom": true,
     "dateAdded": 1789928076467

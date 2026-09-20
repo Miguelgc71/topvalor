@@ -106,6 +106,7 @@
       <div class="field">
         <label>Proveedor</label>
         <div id="fSupChips"></div>
+        <p style="font-size:11px;color:var(--muted);margin:6px 0 0">El envío a España se estima con la tarifa del proveedor (líneas sin aduana/IOSS): <b>base fija + X €/kg</b>. Enviamos directo a tu casa; comprando 2+ artículos del mismo proveedor se consolidan y el envío baja por unidad.</p>
       </div>
 
       <div class="field">
@@ -152,7 +153,11 @@
       <div class="field-row-3">
         <div class="field"><label>Precio de compra (€)</label><input id="fCost" type="number" step="0.01" placeholder="29.50"></div>
         <div class="field"><label>Margen (%)</label><input id="fMargin" type="number" step="1" value="15" placeholder="15"></div>
-        <div class="field"><label>Envío (€)</label><input id="fShip" type="number" step="0.01" placeholder="11.25"></div>
+        <div class="field"><label>Envío fijo (€) · vacío = se estima</label><input id="fShip" type="number" step="0.01" placeholder="deja en blanco"></div>
+      </div>
+      <div class="field-row-3">
+        <div class="field"><label>Peso estimado (gramos)</label><input id="fWeight" type="number" step="10" placeholder="1000"></div>
+        <div class="field" style="grid-column:span 2"><p style="font-size:11px;color:var(--muted);margin:22px 0 0">Peso apróx. con caja: zapatilla ·1000 g · sudadera ·600 g · camiseta ·350 g · pantalón ·700 g · chaqueta ·900 g · pulsera/reloj ·250 g.</p></div>
       </div>
 
       <div class="calc-box" id="calcBox">
@@ -161,7 +166,8 @@
         <div class="calc-line"><span>Subtotal + margen</span><span id="calcSub">0,00 €</span></div>
         <div class="calc-line"><span>IVA (21%)</span><span id="calcIva">0,00 €</span></div>
         <div class="calc-line calc-total"><span>Precio al cliente (IVA incl.)</span><span id="calcTotal">0,00 €</span></div>
-        <div class="calc-line"><span>+ Envío</span><span id="calcShip">0,00 €</span></div>
+        <div class="calc-line"><span>+ Envío fijo (si lo rellenas)</span><span id="calcShip">0,00 €</span></div>
+        <div class="calc-line" style="color:var(--muted)"><span>· o envío estimado por peso/proveedor (si lo dejas vacío)</span><span id="calcShipEst">0,00 €</span></div>
         <div class="calc-line calc-total" style="color:var(--green)"><span>Total que paga el cliente</span><span id="calcGrand">0,00 €</span></div>
       </div>
 
@@ -282,7 +288,7 @@
   </div>
 </div>
 
-<script src="js/data.js?v=20260920"></script>
-<script src="js/admin.js?v=20260920c"></script>
+<script src="js/data.js?v=20260920d"></script>
+<script src="js/admin.js?v=20260920d"></script>
 </body>
 </html>
