@@ -567,6 +567,12 @@
     const st = $("#upStatus");
     const token = $("#ghToken").value.trim(), user = $("#ghUser").value.trim(), repo = $("#ghRepo").value.trim();
     let folder = $("#upFolder").value.trim().replace(/\\/g, "/").replace(/^\/+|\/+$/g, "");
+    const imgPos = folder.toLowerCase().indexOf("imagenes/");
+    if (imgPos >= 0) folder = folder.slice(imgPos);
+    if (/^[A-Za-z]:\//.test(folder)) {
+      st.textContent = "Pegaste una ruta absoluta. Usa la ruta relativa al repo, ej. imagenes/zapatillas/Marca/Modelo (debe contener «imagenes/»).";
+      return;
+    }
     const files = Array.from(($("#upFiles").files) || []);
     if (!token || !user || !repo) { st.textContent = "Faltan token, usuario o repo (en la tarjeta de arriba)."; return; }
     if (!folder) { st.textContent = "Escribe la carpeta destino, ej. imagenes/zapatillas/Marca/Modelo"; return; }
