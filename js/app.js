@@ -417,6 +417,10 @@
     const s = ST[p.id];
     const ship = shipFor(p);
 
+    const measureHint = fi && fi.type === "shoe" ? "Cómo medir: pie descalzo sobre una hoja, del talón a la punta del dedo más largo, sin contar calcetín." :
+      fi && fi.type === "top" ? "Cómo medir: cinta métrica a la altura de las axilas, por el punto más ancho del pecho, holgada (sin apretar)." :
+      fi && fi.type === "bottom" ? "Cómo medir: cinta alrededor de la cintura (a la altura del ombligo), sin apretar." : null;
+
     let sizePanel;
     if (fi && fi.type === "custom") {
       sizePanel = `<div class="fit-assist">
@@ -431,6 +435,7 @@
             <input id="fitInput" type="text" placeholder="ej. ${fi.type === "shoe" ? "27,5" : fi.type === "top" ? "104" : "82"}"></div>
           <button class="btn btn-green" id="fitBtn" style="width:auto">Calcular mi talla</button>
         </div>
+        <p style="font-size:11px;color:var(--muted);margin:6px 0 0">${measureHint}</p>
         <div class="fit-result" id="fitResult">Si introduces tu medida te recomendamos la talla y el % de ajuste.<br>
           <span class="pa-complaints">También puedes tocar una fila de la tabla para elegir talla manualmente.</span>
         </div>
