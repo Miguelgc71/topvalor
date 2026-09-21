@@ -1,5 +1,32 @@
 [
   {
+    "id": "cmubjmlmd",
+    "title": "camiseta termica nike",
+    "brand": "nike",
+    "cat": "top",
+    "supplierId": "hipobuy",
+    "rating": 4.8,
+    "reviews": 0,
+    "price": 12.31,
+    "cost": 8.85,
+    "orig": null,
+    "grams": 350,
+    "mono": "CT",
+    "grad": [
+      "#1e293b",
+      "#0f172a"
+    ],
+    "deal": "none",
+    "complaints": 0,
+    "fit": "top",
+    "note": "",
+    "imgData": null,
+    "shipOverride": null,
+    "supLink": "https://hipobuy.com/product/2/7478596371?inviteCode=1212",
+    "isCustom": true,
+    "dateAdded": 1790013175286
+  },
+  {
     "id": "cmu2q7oer",
     "title": "Air Force One",
     "brand": "Nike",
