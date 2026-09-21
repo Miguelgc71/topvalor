@@ -84,7 +84,7 @@
     "supplierId": "hipobuy",
     "rating": 4.8,
     "reviews": 0,
-    "price": 30.2,
+    "price": 30.25,
     "orig": null,
     "grams": 1000,
     "mono": "AF",
@@ -147,7 +147,7 @@
     "supLink": "https://hipobuy.com/product/2/7442542749?inviteCode=1212",
     "isCustom": true,
     "dateAdded": 1789805355682,
-    "cost": 21.7
+    "cost": 21.74
   },
   {
     "id": "cmu2qq5ut",
@@ -157,7 +157,7 @@
     "supplierId": "hipobuy",
     "rating": 4.8,
     "reviews": 0,
-    "price": 53.48,
+    "price": 53.56,
     "orig": null,
     "grams": 1000,
     "mono": "AG",
@@ -272,7 +272,7 @@
     "supLink": "https://hipobuy.com/product/2/7444430516?inviteCode=1212",
     "isCustom": true,
     "dateAdded": 1789807400837,
-    "cost": 38.43
+    "cost": 38.49
   },
   {
     "id": "cmu2qwawz",
@@ -282,7 +282,7 @@
     "supplierId": "hipobuy",
     "rating": 4.8,
     "reviews": 0,
-    "price": 79.68,
+    "price": 79.8,
     "orig": null,
     "grams": 1000,
     "mono": "B",
@@ -421,7 +421,7 @@
     "supLink": "https://hipobuy.com/product/2/7444396886?inviteCode=1212",
     "isCustom": true,
     "dateAdded": 1789807482916,
-    "cost": 57.26
+    "cost": 57.35
   },
   {
     "id": "samba0525",
@@ -431,7 +431,7 @@
     "supplierId": "hipobuy",
     "rating": 4.8,
     "reviews": 0,
-    "price": 55.99,
+    "price": 56.08,
     "orig": null,
     "grams": 1200,
     "mono": "AS",
@@ -538,7 +538,7 @@
     "supLink": "https://hipobuy.com/product/2/7444424636?inviteCode=1212",
     "isCustom": true,
     "dateAdded": 1789807540139,
-    "cost": 40.24
+    "cost": 40.3
   },
   {
     "id": "cmu2tj5a8",
@@ -548,7 +548,7 @@
     "supplierId": "hipobuy",
     "rating": 4.8,
     "reviews": 0,
-    "price": 75.49,
+    "price": 75.61,
     "orig": null,
     "grams": 1400,
     "mono": "AJ5",
@@ -599,7 +599,7 @@
     "supLink": "https://hipobuy.com/product/2/7444489812?inviteCode=1212",
     "isCustom": true,
     "dateAdded": 1789862400000,
-    "cost": 54.25
+    "cost": 54.34
   },
   {
     "id": "cmua40wsv",
@@ -609,8 +609,8 @@
     "supplierId": "hipobuy",
     "rating": 4.8,
     "reviews": 0,
-    "price": 50.33,
-    "cost": 36.17,
+    "price": 50.41,
+    "cost": 36.23,
     "orig": null,
     "grams": 1500,
     "mono": "NJ",
@@ -706,8 +706,8 @@
     "supplierId": "hipobuy",
     "rating": 4.8,
     "reviews": 0,
-    "price": 13.55,
-    "cost": 9.74,
+    "price": 13.57,
+    "cost": 9.75,
     "orig": null,
     "grams": 300,
     "mono": "PL",
