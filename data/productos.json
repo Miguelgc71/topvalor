@@ -673,5 +673,32 @@
     "supLink": "https://hipobuy.com/product/2/7493663648?inviteCode=1212",
     "isCustom": true,
     "dateAdded": 1789928076467
+  },
+  {
+    "id": "cmubgxfhg",
+    "title": "camiseta de deportes nike",
+    "brand": "Nike",
+    "cat": "top",
+    "supplierId": "hipobuy",
+    "rating": 4.8,
+    "reviews": 0,
+    "price": 19.33,
+    "cost": 13.89,
+    "orig": null,
+    "grams": 350,
+    "mono": "CD",
+    "grad": [
+      "#1e293b",
+      "#0f172a"
+    ],
+    "deal": "none",
+    "complaints": 0,
+    "fit": "top",
+    "note": "",
+    "imgData": "imagenes7camisetas/nike/camiseta_de_deporte_nike/05.jpg",
+    "shipOverride": null,
+    "supLink": "https://hipobuy.com/product/2/7442540791?inviteCode=1212",
+    "isCustom": true,
+    "dateAdded": 1790008641701
   }
 ]
