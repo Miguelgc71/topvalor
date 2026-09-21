@@ -523,7 +523,7 @@
             <div style="display:grid;gap:4px">
               <div><b>Peso:</b> ${(p.grams / 1000).toFixed(2).replace(".", ",")} kg</div>
               <div><b>Envío estimado:</b> ${fmt(ship)}</div>
-              <div><b>Plazo:</b> ${sup(p.supplierId).eta} EU</div>
+              <div><b>Plazo (España):</b> ${sup(p.supplierId).eta}</div>
             </div>
           </div>
           <p style="font-size:12px;color:var(--green);margin:8px 0 0">En el carrito puedes elegir enviarlo <b>sin caja</b>: pesa y ocupa menos, y te ahorras ~${fmt(boxG(p) / 1000 * sup(p.supplierId).perKg)}. El agente sigue embalándolo protegido.</p>
@@ -693,7 +693,7 @@
         </div>`).join("")}
       ${items.length ? boxModeHtml() + `<div class="cart-total">
         <div><span>Subtotal producto (${items.length}) · IVA incl.</span><b>${fmt(sub)}</b></div>
-        <div><span>Envío a tu casa</span><b>${fmt(ship)}</b></div>
+        <div><span>Envío a España</span><b>${fmt(ship)}</b></div>
         <div class="grand"><span>Total a pagar</span><span>${fmt(total)}</span></div>
       </div>` : ""}
       ${items.length ? `<button class="btn btn-primary" id="payBtn" style="width:100%;margin-top:12px">Pedir por Bizum · ${fmt(total)}</button>` : ""}
