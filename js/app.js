@@ -696,6 +696,7 @@
         <div><span>Envío a España</span><b>${fmt(ship)}</b></div>
         <div class="grand"><span>Total a pagar</span><span>${fmt(total)}</span></div>
       </div>` : ""}
+      ${items.length ? `<p style="font-size:12px;color:var(--accent2);margin:10px 0 0">⚠️ No hay cambios de talla ni devoluciones: comprueba la tabla (pestaña “Talla y ajuste“) antes de confirmar.</p>` : ""}
       ${items.length ? `<button class="btn btn-primary" id="payBtn" style="width:100%;margin-top:12px">Pedir por Bizum · ${fmt(total)}</button>` : ""}
       <p class="table-note" style="margin-top:8px">Preparo el pedido cuando me pagas por <b>Bizum ${BIZUM}</b>. Precio final con 21% IVA.</p>
       ${items.length ? `<div class="cart-flow">
