@@ -869,7 +869,7 @@
     ST[p.id] = s;
   }
 
-  fetch("data/productos.json")
+  fetch("data/productos.json?v=3")
     .then(r => { if (!r.ok) throw 0; return r.json(); })
     .catch(() => [])
     .then(arr => {
