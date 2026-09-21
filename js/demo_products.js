@@ -1,11 +1,11 @@
-// Respaldo de los productos de ejemplo originales.
+// Respaldo de los productos de ejemplo iniciales.
 // Si algún día quieres volver a tener estos 16 artículos:
 //   - Pon esta lista como el contenido de `var PRODUCTS = [ ... ];` en data.js
 // Este archivo no afecta a la app.
 var DEMO_PRODUCTS = [
   { id: "p01", title: "Nike Dunk Low \"Panda\"", brand: "Nike", cat: "shoes", supplierId: "hipobuy", rating: 4.9, reviews: 4120, price: 34.90, orig: 54.90, grams: 980, mono: "ND", grad: ["#cbd5e1", "#64748b"], deal: "none", complaints: 0, fit: "shoe", note: "Comfy, talle normal. Fotos QC disponibles." },
   { id: "p02", title: "Air Jordan 4 \"Bred\"", brand: "Jordan/Nike", cat: "shoes", supplierId: "kakobuy", rating: 4.9, reviews: 1860, price: 49.90, orig: 79.90, grams: 1200, mono: "AJ4", grad: ["#ef4444", "#7f1d1d"], deal: "flash", complaints: 0, fit: "shoe", flash: { total: 3, minutes: 5 }, note: "CVW factory. Talle normal." },
-  { id: "p03", title: "Yeezy Boost 350 V2 \"Core Black\"", brand: "Adidas", cat: "shoes", supplierId: "acbuy", rating: 4.8, reviews: 2210, price: 39.90, orig: 65.90, grams: 1050, mono: "YB", grad: ["#f1f5f9", "#94a3b8"], deal: "none", complaints: 0, fit: "shoe", note: "Boost auténtico al tacto. Talle medio: pide 0.5 arriba." },
+  { id: "p03", title: "Yeezy Boost 350 V2 \"Core Black\"", brand: "Adidas", cat: "shoes", supplierId: "acbuy", rating: 4.8, reviews: 2210, price: 39.90, orig: 65.90, grams: 1050, mono: "YB", grad: ["#f1f5f9", "#94a3b8"], deal: "none", complaints: 0, fit: "shoe", note: "Muy cómodo al tacto. Talle medio: pide 0.5 arriba." },
   { id: "p04", title: "Champion Reverse Weave Hoodie", brand: "Champion", cat: "top", supplierId: "superbuy", rating: 4.9, reviews: 3350, price: 41.90, orig: 69.90, grams: 850, mono: "CR", grad: ["#1e3a5f", "#0f172a"], deal: "none", complaints: 0, fit: "top", note: "Algodón grueso, costuras dobles." },
   { id: "p05", title: "FOG Essentials Tee (caja perfecta)", brand: "Essentials", cat: "top", supplierId: "sugargoo", rating: 4.8, reviews: 2980, price: 24.90, orig: 39.90, grams: 260, mono: "FT", grad: ["#f8fafc", "#475569"], deal: "earlybird", complaints: 0, fit: "top", early: { quota: 25 }, note: "Talle oversized real, va grande." },
   { id: "p06", title: "Nike Tech Fleece Pants", brand: "Nike", cat: "bottom", supplierId: "oopbuy", rating: 4.9, reviews: 1740, price: 35.90, orig: 59.90, grams: 640, mono: "NT", grad: ["#334155", "#0f172a"], deal: "none", complaints: 0, fit: "bottom", note: "Talle según cintura, táper regular." },
