@@ -176,9 +176,17 @@
     const wrap = $("#colorTags");
     if (!colors.length) { wrap.innerHTML = `<span style="font-size:12px;color:var(--muted)">Sin fotos extra. El producto mostrará solo una imagen.</span>`; return; }
     wrap.innerHTML = colors.map((c, i) =>
-      `<span class="color-tag"><img src="${c.img}" onerror="this.style.display='none'"><span>${c.label || "Foto " + (i + 1)}</span><button data-rm="${i}">&times;</button></span>`
+      `<span class="color-tag" title="Haz clic en el color para usarlo como imagen del producto. Ruta: ${c.img}" style="cursor:pointer"><img src="${c.img}" onerror="this.style.display='none'"><span>${c.label || "Foto " + (i + 1)}</span><button data-rm="${i}" title="Quitar este color">&times;</button></span>`
     ).join("");
-    $$("[data-rm]", wrap).forEach(b => b.onclick = () => { colors.splice(Number(b.dataset.rm), 1); renderColors(); });
+    $$("[data-rm]", wrap).forEach(b => b.onclick = (e) => { e.stopPropagation(); colors.splice(Number(b.dataset.rm), 1); renderColors(); });
+    $$(".color-tag", wrap).forEach(t => t.onclick = () => {
+      const img = colors.find(c => c.img === t.querySelector("img").src.split("/").pop());
+      const pth = colors[$$(".color-tag", wrap).indexOf(t)].img;
+      $("#fImgUrl").value = pth;
+      $("#fImgPreview").src = pth;
+      $("#fImgPreview").style.display = "block";
+      $("#formStatus").textContent = "Imagen del producto = " + pth;
+    });
   }
   function addColor(label, img) {
     if (!img) return;
@@ -261,6 +269,11 @@
   $("#saveBtn").onclick = () => {
     const name = $("#fName").value.trim();
     if (!name) { $("#formStatus").textContent = "Escribe el nombre del producto."; return; }
+    const img = normPath($("#fImgUrl").value).trim();
+    if (!img) {
+      $("#formStatus").textContent = "Falta la imagen del producto. Pulsa «Subir fotos al repo» o haz clic en un color para usarlo como imagen.";
+      return;
+    }
     const p = currentProduct();
 
     if (editingId) {
