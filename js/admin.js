@@ -508,11 +508,12 @@
       if (!res.ok) throw 0;
       const data = await res.json();
       if (!Array.isArray(data)) throw 0;
-      custom = data.slice();
+      const merged = custom.filter(x => !data.some(d => d && d.id && d.id === x.id)).concat(data.filter(x => x && x.id));
+      custom = merged;
       localStorage.setItem(PRODUCTS_KEY, JSON.stringify(custom));
       renderList();
       renderStats();
-      st.textContent = "Lista sincronizada con el repo: " + custom.length + " producto(s). Ya puedes publicar.";
+      st.textContent = "Lista sincronizada con el repo (" + data.length + " productos). Tienes " + custom.length + " en total: los del repo + tus borradores nuevos conservados.";
     } catch (err) {
       st.textContent = "No se pudo leer data/productos.json (¿estás en local con file://? Usa el botón «Importar JSON» con el archivo).";
     }
