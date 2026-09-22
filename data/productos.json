@@ -1,5 +1,86 @@
 [
   {
+    "id": "cmucw9g4o",
+    "title": "cazadora north face",
+    "brand": "north face",
+    "cat": "shoes",
+    "supplierId": "hipobuy",
+    "rating": 4.8,
+    "reviews": 0,
+    "price": 60.91,
+    "cost": 43.77,
+    "orig": null,
+    "grams": 1000,
+    "mono": "CN",
+    "grad": [
+      "#1e293b",
+      "#0f172a"
+    ],
+    "deal": "none",
+    "complaints": 0,
+    "fit": "shoe",
+    "note": "",
+    "imgData": "imagenes/cazadora/north_face/Black.png",
+    "colors": [
+      {
+        "label": "beige_white",
+        "img": "imagenes/cazadora/north_face/beige_white.png"
+      },
+      {
+        "label": "Black",
+        "img": "imagenes/cazadora/north_face/Black.png"
+      },
+      {
+        "label": "black_liner",
+        "img": "imagenes/cazadora/north_face/black_liner.png"
+      },
+      {
+        "label": "Green",
+        "img": "imagenes/cazadora/north_face/Green.png"
+      },
+      {
+        "label": "green_liner",
+        "img": "imagenes/cazadora/north_face/green_liner.png"
+      },
+      {
+        "label": "light_gray",
+        "img": "imagenes/cazadora/north_face/light_gray.png"
+      },
+      {
+        "label": "light_green",
+        "img": "imagenes/cazadora/north_face/light_green.png"
+      },
+      {
+        "label": "Navy_blue_liner",
+        "img": "imagenes/cazadora/north_face/Navy_blue_liner.png"
+      },
+      {
+        "label": "Pink",
+        "img": "imagenes/cazadora/north_face/Pink.png"
+      },
+      {
+        "label": "Pink_liner",
+        "img": "imagenes/cazadora/north_face/Pink_liner.png"
+      },
+      {
+        "label": "White",
+        "img": "imagenes/cazadora/north_face/White.png"
+      },
+      {
+        "label": "white_liner",
+        "img": "imagenes/cazadora/north_face/white_liner.png"
+      },
+      {
+        "label": "Yellow",
+        "img": "imagenes/cazadora/north_face/Yellow.png"
+      }
+    ],
+    "shipOverride": null,
+    "supLink": "https://hipobuy.com/product/2/7442615863?inviteCode=1212",
+    "isCustom": true,
+    "dateAdded": 1790094862824
+  },
+  {
     "id": "cmubm4zbk",
     "title": "gazelle",
     "brand": "adidas",
