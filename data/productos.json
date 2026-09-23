@@ -1,5 +1,126 @@
 [
   {
+    "id": "cmuec3o7t",
+    "title": "converse",
+    "brand": "converse",
+    "cat": "shoes",
+    "supplierId": "hipobuy",
+    "rating": 4.8,
+    "reviews": 0,
+    "price": 59.44,
+    "cost": 42.72,
+    "orig": null,
+    "grams": 1000,
+    "mono": "C",
+    "grad": [
+      "#1e293b",
+      "#0f172a"
+    ],
+    "deal": "none",
+    "complaints": 0,
+    "fit": "shoe",
+    "note": "",
+    "imgData": "imagenes/zapatillas/Asics/asics gel kajana/17.jpg",
+    "colors": [
+      {
+        "label": "1",
+        "img": "imagenes/zapatillas/Asics/asics gel kajana/1.jpg"
+      },
+      {
+        "label": "2",
+        "img": "imagenes/zapatillas/Asics/asics gel kajana/2.jpg"
+      },
+      {
+        "label": "3",
+        "img": "imagenes/zapatillas/Asics/asics gel kajana/3.jpg"
+      },
+      {
+        "label": "4",
+        "img": "imagenes/zapatillas/Asics/asics gel kajana/4.jpg"
+      },
+      {
+        "label": "5",
+        "img": "imagenes/zapatillas/Asics/asics gel kajana/5.jpg"
+      },
+      {
+        "label": "6",
+        "img": "imagenes/zapatillas/Asics/asics gel kajana/6.jpg"
+      },
+      {
+        "label": "7",
+        "img": "imagenes/zapatillas/Asics/asics gel kajana/7.jpg"
+      },
+      {
+        "label": "8",
+        "img": "imagenes/zapatillas/Asics/asics gel kajana/8.jpg"
+      },
+      {
+        "label": "9",
+        "img": "imagenes/zapatillas/Asics/asics gel kajana/9.jpg"
+      },
+      {
+        "label": "10",
+        "img": "imagenes/zapatillas/Asics/asics gel kajana/10.jpg"
+      },
+      {
+        "label": "11",
+        "img": "imagenes/zapatillas/Asics/asics gel kajana/11.jpg"
+      },
+      {
+        "label": "12",
+        "img": "imagenes/zapatillas/Asics/asics gel kajana/12.jpg"
+      },
+      {
+        "label": "13",
+        "img": "imagenes/zapatillas/Asics/asics gel kajana/13.jpg"
+      },
+      {
+        "label": "14",
+        "img": "imagenes/zapatillas/Asics/asics gel kajana/14.jpg"
+      },
+      {
+        "label": "15",
+        "img": "imagenes/zapatillas/Asics/asics gel kajana/15.jpg"
+      },
+      {
+        "label": "17",
+        "img": "imagenes/zapatillas/Asics/asics gel kajana/17.jpg"
+      },
+      {
+        "label": "18",
+        "img": "imagenes/zapatillas/Asics/asics gel kajana/18.jpg"
+      },
+      {
+        "label": "19",
+        "img": "imagenes/zapatillas/Asics/asics gel kajana/19.jpg"
+      },
+      {
+        "label": "20",
+        "img": "imagenes/zapatillas/Asics/asics gel kajana/20.jpg"
+      },
+      {
+        "label": "21",
+        "img": "imagenes/zapatillas/Asics/asics gel kajana/21.jpg"
+      },
+      {
+        "label": "22",
+        "img": "imagenes/zapatillas/Asics/asics gel kajana/22.jpg"
+      },
+      {
+        "label": "23",
+        "img": "imagenes/zapatillas/Asics/asics gel kajana/23.jpg"
+      },
+      {
+        "label": "24",
+        "img": "imagenes/zapatillas/Asics/asics gel kajana/24.jpg"
+      }
+    ],
+    "shipOverride": null,
+    "supLink": "https://hipobuy.com/product/2/7444480126?inviteCode=1212",
+    "isCustom": true,
+    "dateAdded": 1790181933402
+  },
+  {
     "id": "cmueb2kxi",
     "title": "converse shoes",
     "brand": "converse",
