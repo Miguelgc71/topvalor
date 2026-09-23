@@ -52,6 +52,13 @@ const CATEGORIES = [
   { id: "acc",    label: "Accesorios y relojes" },
 ];
 
+const SUBCATS = [
+  { id: "bracelets", label: "Pulseras" },
+  { id: "bags",      label: "Bolsas de deporte" },
+  { id: "watches",   label: "Relojes" },
+  { id: "caps",      label: "Gorras" },
+];
+
 const DEAL_INFO = {
   flash:     { label: "FlASH · cuenta atrás" },
   auction:   { label: "SUBASTA" },

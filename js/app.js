@@ -22,7 +22,7 @@
     ST[p.id] = s;
   });
 
-  let filters = { cat: null, brand: null, sizeCm: null, q: "" };
+  let filters = { cat: null, brand: null, sizeCm: null, q: "", subcat: null };
   let sortBy = "rating";
   let currentProduct = null;
   let currentTab = "desc";
@@ -161,9 +161,24 @@
       CATEGORIES.map(c => `<button class="chip ${filters.cat === c.id ? "active" : ""}" data-cat="${c.id}">${c.label}</button>`).join("");
     $$("[data-cat]", catWrap).forEach(b => b.onclick = () => {
       filters.cat = b.dataset.cat || null;
+      filters.subcat = null;
       renderFilters();
       renderGrid();
     });
+
+    const subWrap = $("#subcatFilters");
+    const subStart = filters.cat ? PRODUCTS.filter(p => p.cat === filters.cat && p.subcat) : [];
+    const subAvail = [...new Set(subStart.map(p => p.subcat))];
+    subWrap.style.display = subAvail.length ? "" : "none";
+    if (subAvail.length) {
+      subWrap.innerHTML = `<button class="chip ${!filters.subcat ? "active" : ""}" data-sub="">Todas</button>` +
+        SUBCATS.filter(s => subAvail.includes(s.id)).map(s => `<button class="chip ${filters.subcat === s.id ? "active" : ""}" data-sub="${s.id}">${s.label}</button>`).join("");
+      $$("[data-sub]", subWrap).forEach(b => b.onclick = () => {
+        filters.subcat = b.dataset.sub || null;
+        renderFilters();
+        renderGrid();
+      });
+    }
 
     const bSel = $("#brandSelect");
     const brands = [...new Set(PRODUCTS.map(p => p.brand))].sort();
@@ -184,6 +199,7 @@
   function visibleProducts() {
     return PRODUCTS.filter(p => {
       if (filters.cat && p.cat !== filters.cat) return false;
+      if (filters.subcat && p.subcat !== filters.subcat) return false;
       if (filters.brand && p.brand !== filters.brand) return false;
       if (filters.sizeCm != null && !sizeMatches(p, filters.sizeCm)) return false;
       if (filters.q) {
@@ -261,7 +277,7 @@
         ${priceBlock(p)}
         ${extra}
         <div class="pa-meta">
-          <span>${CATEGORIES.find(c => c.id === p.cat).label}</span>
+          <span>${CATEGORIES.find(c => c.id === p.cat).label}${p.subcat ? " · " + (SUBCATS.find(s => s.id === p.subcat) || { label: p.subcat }).label : ""}</span>
           <span class="pa-complaints">${p.complaints > 0 ? p.complaints + " quejas" : "sin quejas"}</span>
         </div>
         <div class="pa-bottom">

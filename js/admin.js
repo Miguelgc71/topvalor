@@ -253,6 +253,7 @@
       deal,
       complaints: 0,
       fit: manual ? "custom" : fitByCat(cat),
+      subcat: $("#fSubcat").value || undefined,
       note: $("#fNote").value.trim(),
       sizes: manual ? sizes.slice() : undefined,
       imgData: normPath($("#fImgUrl").value) || null,
@@ -295,7 +296,7 @@
     editingId = null;
     sizes = [];
     colors = [];
-    ["fName", "fBrand", "fNote", "fImgUrl", "fCost", "fShip", "fSupLink"].forEach(id => $("#" + id).value = "");
+    ["fName", "fBrand", "fNote", "fImgUrl", "fCost", "fShip", "fSupLink", "fSubcat"].forEach(id => $("#" + id).value = "");
     $("#fMargin").value = "15";
     $("#fDeal").value = "none";
     $("#fCat").value = "shoes";
@@ -321,6 +322,7 @@
     $("#fName").value = p.title;
     $("#fBrand").value = p.brand || "";
     $("#fCat").value = p.cat || "shoes";
+    $("#fSubcat").value = p.subcat || "";
     $("#fNote").value = p.note || "";
     $("#fSupLink").value = p.supLink || "";
     $("#fCost").value = (p.cost != null ? p.cost : (p.price ? (p.price / 1.21 / 1.15) : 0)).toFixed(2);
@@ -365,7 +367,7 @@
         ${p.imgData ? `<img class="pi-img" src="${p.imgData}">` : `<div class="pi-img" style="display:grid;place-items:center;font-weight:800;color:var(--muted)">${p.mono}</div>`}
         <div class="pi-info">
           <b>${p.title}</b>
-          <span style="color:var(--muted)">${p.brand} · ${sup(p.supplierId).name} · ${fmt(p.price)}${p.price ? "" : ""} · ${p.deal !== "none" ? p.deal.toUpperCase() : "Normal"} · ${p.colors && p.colors.length ? p.colors.length + " colores/fotos" : "1 imagen"}</span>
+          <span style="color:var(--muted)">${p.brand}${p.subcat ? " · " + (SUBCATS.find(s => s.id === p.subcat) || { label: p.subcat }).label : ""} · ${sup(p.supplierId).name} · ${fmt(p.price)}${p.price ? "" : ""} · ${p.deal !== "none" ? p.deal.toUpperCase() : "Normal"} · ${p.colors && p.colors.length ? p.colors.length + " colores/fotos" : "1 imagen"}</span>
           ${p.supLink ? `<a href="${p.supLink}" target="_blank" rel="noopener" style="font-size:11px;color:var(--accent);word-break:break-all">Abrir enlace en ${sup(p.supplierId).name}</a>` : `<span style="font-size:11px;color:var(--muted)">Sin enlace del proveedor</span>`}
         </div>
         <div class="pi-actions">
