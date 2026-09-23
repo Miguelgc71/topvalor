@@ -1,5 +1,135 @@
 [
   {
+    "id": "cmuef2rq5",
+    "title": "bolsa de viaje",
+    "brand": "adidas",
+    "cat": "acc",
+    "supplierId": "hipobuy",
+    "rating": 4.8,
+    "reviews": 0,
+    "price": 23.11,
+    "cost": 16.61,
+    "orig": null,
+    "grams": 250,
+    "mono": "BD",
+    "grad": [
+      "#1e293b",
+      "#0f172a"
+    ],
+    "deal": "none",
+    "complaints": 0,
+    "fit": "none",
+    "subcat": "travelbags",
+    "note": "",
+    "imgData": "imagenes/Accesorios  y Relojes/Accesorios/bolsa de Viaje/adidas/1939-2.jpg",
+    "colors": [
+      {
+        "label": "1111",
+        "img": "imagenes/Accesorios  y Relojes/Accesorios/bolsa de Viaje/adidas/1111-1.jpg"
+      },
+      {
+        "label": "1111",
+        "img": "imagenes/Accesorios  y Relojes/Accesorios/bolsa de Viaje/adidas/1111-2.jpg"
+      },
+      {
+        "label": "1111",
+        "img": "imagenes/Accesorios  y Relojes/Accesorios/bolsa de Viaje/adidas/1111-3.jpg"
+      },
+      {
+        "label": "1111",
+        "img": "imagenes/Accesorios  y Relojes/Accesorios/bolsa de Viaje/adidas/1111-4.jpg"
+      },
+      {
+        "label": "1111",
+        "img": "imagenes/Accesorios  y Relojes/Accesorios/bolsa de Viaje/adidas/1111-5.jpg"
+      },
+      {
+        "label": "1787",
+        "img": "imagenes/Accesorios  y Relojes/Accesorios/bolsa de Viaje/adidas/1787-1.jpg"
+      },
+      {
+        "label": "1787",
+        "img": "imagenes/Accesorios  y Relojes/Accesorios/bolsa de Viaje/adidas/1787-2.jpg"
+      },
+      {
+        "label": "1787",
+        "img": "imagenes/Accesorios  y Relojes/Accesorios/bolsa de Viaje/adidas/1787-3.jpg"
+      },
+      {
+        "label": "1787",
+        "img": "imagenes/Accesorios  y Relojes/Accesorios/bolsa de Viaje/adidas/1787-4.jpg"
+      },
+      {
+        "label": "1787",
+        "img": "imagenes/Accesorios  y Relojes/Accesorios/bolsa de Viaje/adidas/1787-5.jpg"
+      },
+      {
+        "label": "1855",
+        "img": "imagenes/Accesorios  y Relojes/Accesorios/bolsa de Viaje/adidas/1855-1.jpg"
+      },
+      {
+        "label": "1855",
+        "img": "imagenes/Accesorios  y Relojes/Accesorios/bolsa de Viaje/adidas/1855-2.jpg"
+      },
+      {
+        "label": "1855",
+        "img": "imagenes/Accesorios  y Relojes/Accesorios/bolsa de Viaje/adidas/1855-3.jpg"
+      },
+      {
+        "label": "1855",
+        "img": "imagenes/Accesorios  y Relojes/Accesorios/bolsa de Viaje/adidas/1855-4.jpg"
+      },
+      {
+        "label": "1939",
+        "img": "imagenes/Accesorios  y Relojes/Accesorios/bolsa de Viaje/adidas/1939-1.jpg"
+      },
+      {
+        "label": "1939",
+        "img": "imagenes/Accesorios  y Relojes/Accesorios/bolsa de Viaje/adidas/1939-2.jpg"
+      },
+      {
+        "label": "1939",
+        "img": "imagenes/Accesorios  y Relojes/Accesorios/bolsa de Viaje/adidas/1939-3.jpg"
+      },
+      {
+        "label": "1939",
+        "img": "imagenes/Accesorios  y Relojes/Accesorios/bolsa de Viaje/adidas/1939-4.jpg"
+      },
+      {
+        "label": "1939",
+        "img": "imagenes/Accesorios  y Relojes/Accesorios/bolsa de Viaje/adidas/1939-5.jpg"
+      },
+      {
+        "label": "1939",
+        "img": "imagenes/Accesorios  y Relojes/Accesorios/bolsa de Viaje/adidas/1939-6.jpg"
+      },
+      {
+        "label": "7816",
+        "img": "imagenes/Accesorios  y Relojes/Accesorios/bolsa de Viaje/adidas/7816-1.jpg"
+      },
+      {
+        "label": "7816",
+        "img": "imagenes/Accesorios  y Relojes/Accesorios/bolsa de Viaje/adidas/7816-2.jpg"
+      },
+      {
+        "label": "7816",
+        "img": "imagenes/Accesorios  y Relojes/Accesorios/bolsa de Viaje/adidas/7816-3.jpg"
+      },
+      {
+        "label": "7816",
+        "img": "imagenes/Accesorios  y Relojes/Accesorios/bolsa de Viaje/adidas/7816-4.jpg"
+      },
+      {
+        "label": "7816",
+        "img": "imagenes/Accesorios  y Relojes/Accesorios/bolsa de Viaje/adidas/7816-5.jpg"
+      }
+    ],
+    "shipOverride": null,
+    "supLink": "https://hipobuy.com/product/2/7444404750?inviteCode=1212",
+    "isCustom": true,
+    "dateAdded": 1790186930142
+  },
+  {
     "id": "cmuec3o7t",
     "title": "converse",
     "brand": "converse",
