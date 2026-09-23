@@ -23,6 +23,10 @@
   "imgData": "imagenes/zapatillas/converse/1.png",
   "colors": [
    {
+    "label": "1",
+    "img": "imagenes/zapatillas/converse/1.png"
+   },
+   {
     "label": "2",
     "img": "imagenes/zapatillas/converse/2.png"
    },
@@ -45,10 +49,6 @@
    {
     "label": "7",
     "img": "imagenes/zapatillas/converse/7.png"
-   },
-   {
-    "label": "1",
-    "img": "imagenes/zapatillas/converse/1.png"
    }
   ],
   "shipOverride": null,
