@@ -765,8 +765,26 @@
         "  CP y ciudad: " + ((g("fCp") && g("fCity")) ? g("fCp") + ", " + g("fCity") : (g("fCp") || g("fCity") || "(CP y ciudad)")),
         "  Teléfono: " + (g("fPhone") || "(tu móvil)"),
         "  Correo (para el tracking): " + (g("fEmail") || "(tu email)")
-      ].join("\n");
+      ].concat(g("fNote") ? ["  Nota: " + g("fNote")] : []).join("\n");
       return `TOP VALOR - PEDIDO\n\n${lines}\n\nSubtotal: ${fmt(sub)}\nEnv\u00edo (${STORE.noBox ? "SIN CAJA" : "CON CAJA"}): ${fmt(ship)}\nTOTAL (IVA incl.): ${fmt(total)}\n\n${shipBlock}\n\nMe pagas por Bizum ${BIZUM}\nGracias!`;
+    }
+
+    function shipErrors() {
+      const v = id => { const el = document.getElementById(id); return el ? el.value.trim() : ""; };
+      const errs = [];
+      if (v("fName").length < 3) errs.push("nombre");
+      if (v("fStreet").length < 5) errs.push("dirección");
+      if (!/^\d{5}$/.test(v("fCp"))) errs.push("CP (5 dígitos)");
+      if (v("fCity").length < 2) errs.push("ciudad");
+      if (!/^\d{9}$/.test(v("fPhone").replace(/\s|-/g, ""))) errs.push("teléfono (9 dígitos)");
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v("fEmail"))) errs.push("correo");
+      return errs;
+    }
+
+    function refreshErr() {
+      const errs = shipErrors();
+      const el = document.getElementById("shipErr");
+      if (el) el.textContent = errs.length ? "⚠️ Te falta: " + errs.join(" · ") : "";
     }
 
     $("#cartDrawer").innerHTML = `<h2 style="font-size:20px;margin-bottom:12px">Pedido listo · págame por Bizum</h2>
@@ -777,7 +795,7 @@
         <div class="step"><span class="n">4</span><span>Envío directo a tu casa · si algo falla, lo arreglo <b>yo</b></span></div>
       </div>
       <div class="ship-form">
-        <h4>Datos de envío</h4>
+        <h4>Datos de envío <span style="font-size:11px;color:var(--green)">(obligatorios)</span></h4>
         <div class="ship-grid">
           <input id="fName" class="full" placeholder="Nombre y apellidos" autocomplete="name">
           <input id="fStreet" class="full" placeholder="Dirección (calle y número)" autocomplete="street-address">
@@ -785,8 +803,10 @@
           <input id="fCity" placeholder="Ciudad" autocomplete="address-level2">
           <input id="fPhone" placeholder="Teléfono" autocomplete="tel">
           <input id="fEmail" placeholder="Correo (para el tracking)" autocomplete="email">
+          <input id="fNote" class="full" placeholder="Nota (opcional): entrega en portería, llamar al llegar...">
         </div>
-        <p class="ship-hint">El proveedor necesita estos datos para enviar directo a tu casa. También van incluidos en el resumen que copias.</p>
+        <p id="shipErr" style="font-size:12px;color:var(--accent2);margin:6px 0 0">⚠️ Te falta: nombre · dirección · CP (5 dígitos) · ciudad · teléfono (9 dígitos) · correo</p>
+        <p class="ship-hint">Nada se envía hasta que rellenes todo; el correo lo usaré para pasarte el tracking.</p>
       </div>
       <textarea readonly onclick="this.select()" class="order-note" rows="8" id="orderNote">${buildSummary()}</textarea>
       <p class="table-note" style="margin-top:8px">El resumen se actualiza solo al rellenar tus datos.</p>
@@ -797,15 +817,23 @@
     updateCart();
     renderGrid(); renderDeals();
 
-    ["fName", "fStreet", "fCp", "fCity", "fPhone", "fEmail"].forEach(id => {
+    ["fName", "fStreet", "fCp", "fCity", "fPhone", "fEmail", "fNote"].forEach(id => {
       document.getElementById(id).addEventListener("input", () => {
         document.getElementById("orderNote").value = buildSummary();
+        refreshErr();
       });
     });
+    refreshErr();
 
     $("#copyBtn").onclick = () => {
+      const errs = shipErrors();
       const t = document.getElementById("orderNote");
       t.select();
+      if (errs.length) {
+        refreshErr();
+        toast("Faltan datos de envío obligatorios: " + errs.join(", ") + ". Rellena el formulario.", false);
+        return;
+      }
       try { document.execCommand("copy"); } catch (e) { }
       toast("Resumen con tus datos copiado: pégalo en WhatsApp para mandármelo.", true);
     };
