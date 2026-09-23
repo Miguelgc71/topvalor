@@ -1,1228 +1,1419 @@
 [
- {
-  "id": "cmueb2kxi",
-  "title": "converse shoes",
-  "brand": "converse",
-  "cat": "shoes",
-  "supplierId": "hipobuy",
-  "rating": 4.8,
-  "reviews": 0,
-  "price": 29.4,
-  "cost": 21.13,
-  "orig": null,
-  "grams": 1000,
-  "mono": "CS",
-  "grad": [
-   "#1e293b",
-   "#0f172a"
-  ],
-  "deal": "none",
-  "complaints": 0,
-  "fit": "shoe",
-  "note": "",
-  "imgData": "imagenes/zapatillas/converse/1.png",
-  "colors": [
-   {
-    "label": "1",
-    "img": "imagenes/zapatillas/converse/1.png"
-   },
-   {
-    "label": "2",
-    "img": "imagenes/zapatillas/converse/2.png"
-   },
-   {
-    "label": "3",
-    "img": "imagenes/zapatillas/converse/3.png"
-   },
-   {
-    "label": "4",
-    "img": "imagenes/zapatillas/converse/4.png"
-   },
-   {
-    "label": "5",
-    "img": "imagenes/zapatillas/converse/5.png"
-   },
-   {
-    "label": "6",
-    "img": "imagenes/zapatillas/converse/6.png"
-   },
-   {
-    "label": "7",
-    "img": "imagenes/zapatillas/converse/7.png"
-   }
-  ],
-  "shipOverride": null,
-  "supLink": "https://hipobuy.com/product/2/7444424638?inviteCode=1212",
-  "isCustom": true,
-  "dateAdded": 1790180430684
- },
- {
-  "id": "cmucw9g4o",
-  "title": "cazadora north face",
-  "brand": "north face",
-  "cat": "outer",
-  "supplierId": "hipobuy",
-  "rating": 4.8,
-  "reviews": 0,
-  "price": 60.91,
-  "cost": 43.77,
-  "orig": null,
-  "grams": 1000,
-  "mono": "CN",
-  "grad": [
-   "#1e293b",
-   "#0f172a"
-  ],
-  "deal": "none",
-  "complaints": 0,
-  "fit": "top",
-  "note": "",
-  "imgData": "imagenes/cazadora/north_face/Black.png",
-  "colors": [
-   {
-    "label": "beige_white",
-    "img": "imagenes/cazadora/north_face/beige_white.png"
-   },
-   {
-    "label": "Black",
-    "img": "imagenes/cazadora/north_face/Black.png"
-   },
-   {
-    "label": "black_liner",
-    "img": "imagenes/cazadora/north_face/black_liner.png"
-   },
-   {
-    "label": "Green",
-    "img": "imagenes/cazadora/north_face/Green.png"
-   },
-   {
-    "label": "green_liner",
-    "img": "imagenes/cazadora/north_face/green_liner.png"
-   },
-   {
-    "label": "light_gray",
-    "img": "imagenes/cazadora/north_face/light_gray.png"
-   },
-   {
-    "label": "light_green",
-    "img": "imagenes/cazadora/north_face/light_green.png"
-   },
-   {
-    "label": "Navy_blue_liner",
-    "img": "imagenes/cazadora/north_face/Navy_blue_liner.png"
-   },
-   {
-    "label": "Pink",
-    "img": "imagenes/cazadora/north_face/Pink.png"
-   },
-   {
-    "label": "Pink_liner",
-    "img": "imagenes/cazadora/north_face/Pink_liner.png"
-   },
-   {
-    "label": "White",
-    "img": "imagenes/cazadora/north_face/White.png"
-   },
-   {
-    "label": "white_liner",
-    "img": "imagenes/cazadora/north_face/white_liner.png"
-   },
-   {
-    "label": "Yellow",
-    "img": "imagenes/cazadora/north_face/Yellow.png"
-   }
-  ],
-  "shipOverride": null,
-  "supLink": "https://hipobuy.com/product/2/7442615863?inviteCode=1212",
-  "isCustom": true,
-  "dateAdded": 1790094862824
- },
- {
-  "id": "cmubm4zbk",
-  "title": "gazelle",
-  "brand": "adidas",
-  "cat": "shoes",
-  "supplierId": "hipobuy",
-  "rating": 4.8,
-  "reviews": 0,
-  "price": 52.5,
-  "cost": 37.73,
-  "orig": null,
-  "grams": 1000,
-  "mono": "G",
-  "grad": [
-   "#1e293b",
-   "#0f172a"
-  ],
-  "deal": "none",
-  "complaints": 0,
-  "fit": "shoe",
-  "note": "",
-  "imgData": "imagenes/zapatillas/Adidas/gazelle/31.png",
-  "colors": [
-   {
-    "label": "01",
-    "img": "imagenes/zapatillas/Adidas/gazelle/01.png"
-   },
-   {
-    "label": "02",
-    "img": "imagenes/zapatillas/Adidas/gazelle/02.png"
-   },
-   {
-    "label": "03",
-    "img": "imagenes/zapatillas/Adidas/gazelle/03.png"
-   },
-   {
-    "label": "04",
-    "img": "imagenes/zapatillas/Adidas/gazelle/04.png"
-   },
-   {
-    "label": "05",
-    "img": "imagenes/zapatillas/Adidas/gazelle/05.png"
-   },
-   {
-    "label": "06",
-    "img": "imagenes/zapatillas/Adidas/gazelle/06.png"
-   },
-   {
-    "label": "07",
-    "img": "imagenes/zapatillas/Adidas/gazelle/07.png"
-   },
-   {
-    "label": "08",
-    "img": "imagenes/zapatillas/Adidas/gazelle/08.png"
-   },
-   {
-    "label": "09",
-    "img": "imagenes/zapatillas/Adidas/gazelle/09.png"
-   },
-   {
-    "label": "10",
-    "img": "imagenes/zapatillas/Adidas/gazelle/10.png"
-   },
-   {
-    "label": "11",
-    "img": "imagenes/zapatillas/Adidas/gazelle/11.png"
-   },
-   {
-    "label": "12",
-    "img": "imagenes/zapatillas/Adidas/gazelle/12.png"
-   },
-   {
-    "label": "13",
-    "img": "imagenes/zapatillas/Adidas/gazelle/13.png"
-   },
-   {
-    "label": "14",
-    "img": "imagenes/zapatillas/Adidas/gazelle/14.png"
-   },
-   {
-    "label": "15",
-    "img": "imagenes/zapatillas/Adidas/gazelle/15.png"
-   },
-   {
-    "label": "17",
-    "img": "imagenes/zapatillas/Adidas/gazelle/17.png"
-   },
-   {
-    "label": "18",
-    "img": "imagenes/zapatillas/Adidas/gazelle/18.png"
-   },
-   {
-    "label": "19",
-    "img": "imagenes/zapatillas/Adidas/gazelle/19.png"
-   },
-   {
-    "label": "20",
-    "img": "imagenes/zapatillas/Adidas/gazelle/20.png"
-   },
-   {
-    "label": "21",
-    "img": "imagenes/zapatillas/Adidas/gazelle/21.png"
-   },
-   {
-    "label": "22",
-    "img": "imagenes/zapatillas/Adidas/gazelle/22.png"
-   },
-   {
-    "label": "23",
-    "img": "imagenes/zapatillas/Adidas/gazelle/23.png"
-   },
-   {
-    "label": "24",
-    "img": "imagenes/zapatillas/Adidas/gazelle/24.png"
-   },
-   {
-    "label": "25",
-    "img": "imagenes/zapatillas/Adidas/gazelle/25.png"
-   },
-   {
-    "label": "26",
-    "img": "imagenes/zapatillas/Adidas/gazelle/26.png"
-   },
-   {
-    "label": "27",
-    "img": "imagenes/zapatillas/Adidas/gazelle/27.png"
-   },
-   {
-    "label": "28",
-    "img": "imagenes/zapatillas/Adidas/gazelle/28.png"
-   },
-   {
-    "label": "29",
-    "img": "imagenes/zapatillas/Adidas/gazelle/29.png"
-   },
-   {
-    "label": "31",
-    "img": "imagenes/zapatillas/Adidas/gazelle/31.png"
-   },
-   {
-    "label": "32",
-    "img": "imagenes/zapatillas/Adidas/gazelle/32.png"
-   },
-   {
-    "label": "33",
-    "img": "imagenes/zapatillas/Adidas/gazelle/33.png"
-   },
-   {
-    "label": "34",
-    "img": "imagenes/zapatillas/Adidas/gazelle/34.jpg"
-   },
-   {
-    "label": "35",
-    "img": "imagenes/zapatillas/Adidas/gazelle/35.png"
-   }
-  ],
-  "shipOverride": null,
-  "supLink": "https://hipobuy.com/product/2/7444398944?inviteCode=1212",
-  "isCustom": true,
-  "dateAdded": 1790017392081
- },
- {
-  "id": "cmucv9284",
-  "title": "nike 270",
-  "brand": "nike",
-  "cat": "shoes",
-  "supplierId": "hipobuy",
-  "rating": 4.8,
-  "reviews": 0,
-  "price": 48.31,
-  "cost": 34.72,
-  "orig": null,
-  "grams": 1000,
-  "mono": "N2",
-  "grad": [
-   "#1e293b",
-   "#0f172a"
-  ],
-  "deal": "none",
-  "complaints": 0,
-  "fit": "shoe",
-  "note": "",
-  "imgData": "imagenes/zapatillas/Nike/nike 270/10.jpg",
-  "colors": [
-   {
-    "label": "1",
-    "img": "imagenes/zapatillas/Nike/nike 270/1.jpg"
-   },
-   {
-    "label": "2",
-    "img": "imagenes/zapatillas/Nike/nike 270/2.jpg"
-   },
-   {
-    "label": "3",
-    "img": "imagenes/zapatillas/Nike/nike 270/3.jpg"
-   },
-   {
-    "label": "4",
-    "img": "imagenes/zapatillas/Nike/nike 270/4.jpg"
-   },
-   {
-    "label": "5",
-    "img": "imagenes/zapatillas/Nike/nike 270/5.jpg"
-   },
-   {
-    "label": "6",
-    "img": "imagenes/zapatillas/Nike/nike 270/6.jpg"
-   },
-   {
-    "label": "7",
-    "img": "imagenes/zapatillas/Nike/nike 270/7.jpg"
-   },
-   {
-    "label": "8",
-    "img": "imagenes/zapatillas/Nike/nike 270/8.jpg"
-   },
-   {
-    "label": "9",
-    "img": "imagenes/zapatillas/Nike/nike 270/9.jpg"
-   },
-   {
-    "label": "10",
-    "img": "imagenes/zapatillas/Nike/nike 270/10.jpg"
-   },
-   {
-    "label": "11",
-    "img": "imagenes/zapatillas/Nike/nike 270/11.jpg"
-   },
-   {
-    "label": "12",
-    "img": "imagenes/zapatillas/Nike/nike 270/12.jpg"
-   },
-   {
-    "label": "13",
-    "img": "imagenes/zapatillas/Nike/nike 270/13.jpg"
-   },
-   {
-    "label": "15",
-    "img": "imagenes/zapatillas/Nike/nike 270/15.jpg"
-   },
-   {
-    "label": "16",
-    "img": "imagenes/zapatillas/Nike/nike 270/16.jpg"
-   },
-   {
-    "label": "17",
-    "img": "imagenes/zapatillas/Nike/nike 270/17.jpg"
-   },
-   {
-    "label": "18",
-    "img": "imagenes/zapatillas/Nike/nike 270/18.jpg"
-   }
-  ],
-  "shipOverride": null,
-  "supLink": "https://hipobuy.com/product/2/7442580289?inviteCode=1212",
-  "isCustom": true,
-  "dateAdded": 1790093208996
- },
- {
-  "id": "cmubjmlmd",
-  "title": "camiseta termica nike",
-  "brand": "nike",
-  "cat": "top",
-  "supplierId": "hipobuy",
-  "rating": 4.8,
-  "reviews": 0,
-  "price": 12.31,
-  "cost": 8.85,
-  "orig": null,
-  "grams": 350,
-  "mono": "CT",
-  "grad": [
-   "#1e293b",
-   "#0f172a"
-  ],
-  "deal": "none",
-  "complaints": 0,
-  "fit": "top",
-  "note": "",
-  "imgData": "imagenes/camisetas/nike/camiseta_termica_nike/Black_old_long_sleeve.jpg",
-  "colors": [
-   {
-    "label": "Negra manga larga",
-    "img": "imagenes/camisetas/nike/camiseta_termica_nike/Black_Long_Sleeve_Large_Hook.jpg"
-   },
-   {
-    "label": "Negra manga corta",
-    "img": "imagenes/camisetas/nike/camiseta_termica_nike/Black_Short_Sleeve_Large_Hook.jpg"
-   },
-   {
-    "label": "Negra manga corta media",
-    "img": "imagenes/camisetas/nike/camiseta_termica_nike/Black_mid-hook_short_sleeve.jpg"
-   },
-   {
-    "label": "Negra manga larga clásica",
-    "img": "imagenes/camisetas/nike/camiseta_termica_nike/Black_old_long_sleeve.jpg"
-   },
-   {
-    "label": "Negra manga corta franja plata",
-    "img": "imagenes/camisetas/nike/camiseta_termica_nike/Black_short-sleeved_silver_strip.jpg"
-   },
-   {
-    "label": "Gris manga corta media",
-    "img": "imagenes/camisetas/nike/camiseta_termica_nike/Gray_medium_hook_short_sleeve.jpg"
-   },
-   {
-    "label": "Gris franja plata",
-    "img": "imagenes/camisetas/nike/camiseta_termica_nike/Grey_short-sleeved_silver_strip.jpg"
-   },
-   {
-    "label": "Blanca manga corta",
-    "img": "imagenes/camisetas/nike/camiseta_termica_nike/White_Hook_Short_Sleeve.jpg"
-   },
-   {
-    "label": "Blanca manga larga",
-    "img": "imagenes/camisetas/nike/camiseta_termica_nike/White_Long_Sleeve_Large_Hook.jpg"
-   },
-   {
-    "label": "Blanca manga corta grande",
-    "img": "imagenes/camisetas/nike/camiseta_termica_nike/White_Short_Sleeve_Large_Hook.jpg"
-   },
-   {
-    "label": "Blanca manga larga clásica",
-    "img": "imagenes/camisetas/nike/camiseta_termica_nike/White_old_long_sleeve.jpg"
-   },
-   {
-    "label": "Blanca manga corta franja plata",
-    "img": "imagenes/camisetas/nike/camiseta_termica_nike/White_short-sleeved_silver_strip.jpg"
-   }
-  ],
-  "shipOverride": null,
-  "supLink": "https://hipobuy.com/product/2/7478596371?inviteCode=1212",
-  "isCustom": true,
-  "dateAdded": 1790013983135
- },
- {
-  "id": "cmu2q7oer",
-  "title": "Air Force One",
-  "brand": "Nike",
-  "cat": "shoes",
-  "supplierId": "hipobuy",
-  "rating": 4.8,
-  "reviews": 0,
-  "price": 30.25,
-  "orig": null,
-  "grams": 1000,
-  "mono": "AF",
-  "grad": [
-   "#1e293b",
-   "#0f172a"
-  ],
-  "deal": "none",
-  "complaints": 0,
-  "fit": "shoe",
-  "note": "Nike Air Force One. Mira las 11 fotos y elige el color/combinación que más te guste.",
-  "imgData": "imagenes/zapatillas/Nike/Air Force uno/White_AF1.jpg",
-  "colors": [
-   {
-    "label": "Apricot Blue Spell",
-    "img": "imagenes/zapatillas/Nike/Air Force uno/apricot_blue_spell.jpg"
-   },
-   {
-    "label": "Black AF1",
-    "img": "imagenes/zapatillas/Nike/Air Force uno/Black_AF1.jpg"
-   },
-   {
-    "label": "Black and White Spelling",
-    "img": "imagenes/zapatillas/Nike/Air Force uno/Black_and_white_spelling.jpg"
-   },
-   {
-    "label": "Blue and White Spell",
-    "img": "imagenes/zapatillas/Nike/Air Force uno/blue_and_white_spell.jpg"
-   },
-   {
-    "label": "Dark Red and White Spell",
-    "img": "imagenes/zapatillas/Nike/Air Force uno/dark_red_and_white_spell.jpg"
-   },
-   {
-    "label": "Orange White Spell",
-    "img": "imagenes/zapatillas/Nike/Air Force uno/orange_white_spell.jpg"
-   },
-   {
-    "label": "Pink White Spell",
-    "img": "imagenes/zapatillas/Nike/Air Force uno/Pink_White_Spell.jpg"
-   },
-   {
-    "label": "Purple White Spell",
-    "img": "imagenes/zapatillas/Nike/Air Force uno/purple_white_spell.jpg"
-   },
-   {
-    "label": "Red and White Spell",
-    "img": "imagenes/zapatillas/Nike/Air Force uno/red_and_white_spell.jpg"
-   },
-   {
-    "label": "White AF1",
-    "img": "imagenes/zapatillas/Nike/Air Force uno/White_AF1.jpg"
-   },
-   {
-    "label": "Yellow and Green Spell",
-    "img": "imagenes/zapatillas/Nike/Air Force uno/yellow_and_green_spell.jpg"
-   }
-  ],
-  "shipOverride": null,
-  "supLink": "https://hipobuy.com/product/2/7442542749?inviteCode=1212",
-  "isCustom": true,
-  "dateAdded": 1789805355682,
-  "cost": 21.74
- },
- {
-  "id": "cmu2qq5ut",
-  "title": "Asics Gel NYC",
-  "brand": "Asics",
-  "cat": "shoes",
-  "supplierId": "hipobuy",
-  "rating": 4.8,
-  "reviews": 0,
-  "price": 53.56,
-  "orig": null,
-  "grams": 1000,
-  "mono": "AG",
-  "grad": [
-   "#1e293b",
-   "#0f172a"
-  ],
-  "deal": "none",
-  "complaints": 0,
-  "fit": "shoe",
-  "note": "Asics Gel NYC. Mira las 24 fotos y elige el color/combinación que más te guste.",
-  "imgData": "imagenes/zapatillas/Asics/Asics Gel/mov01.png",
-  "colors": [
-   {
-    "label": "01",
-    "img": "imagenes/zapatillas/Asics/Asics Gel/mov01.png"
-   },
-   {
-    "label": "02",
-    "img": "imagenes/zapatillas/Asics/Asics Gel/mov02.png"
-   },
-   {
-    "label": "03",
-    "img": "imagenes/zapatillas/Asics/Asics Gel/mov03.png"
-   },
-   {
-    "label": "04",
-    "img": "imagenes/zapatillas/Asics/Asics Gel/mov04.png"
-   },
-   {
-    "label": "05",
-    "img": "imagenes/zapatillas/Asics/Asics Gel/mov05.png"
-   },
-   {
-    "label": "06",
-    "img": "imagenes/zapatillas/Asics/Asics Gel/mov06.png"
-   },
-   {
-    "label": "07",
-    "img": "imagenes/zapatillas/Asics/Asics Gel/mov07.png"
-   },
-   {
-    "label": "08",
-    "img": "imagenes/zapatillas/Asics/Asics Gel/mov08.png"
-   },
-   {
-    "label": "09",
-    "img": "imagenes/zapatillas/Asics/Asics Gel/mov09.png"
-   },
-   {
-    "label": "10",
-    "img": "imagenes/zapatillas/Asics/Asics Gel/mov10.png"
-   },
-   {
-    "label": "11",
-    "img": "imagenes/zapatillas/Asics/Asics Gel/mov11.png"
-   },
-   {
-    "label": "12",
-    "img": "imagenes/zapatillas/Asics/Asics Gel/mov12.png"
-   },
-   {
-    "label": "13",
-    "img": "imagenes/zapatillas/Asics/Asics Gel/mov13.png"
-   },
-   {
-    "label": "14",
-    "img": "imagenes/zapatillas/Asics/Asics Gel/mov14.png"
-   },
-   {
-    "label": "15",
-    "img": "imagenes/zapatillas/Asics/Asics Gel/mov15.png"
-   },
-   {
-    "label": "16",
-    "img": "imagenes/zapatillas/Asics/Asics Gel/mov16.png"
-   },
-   {
-    "label": "17",
-    "img": "imagenes/zapatillas/Asics/Asics Gel/mov17.png"
-   },
-   {
-    "label": "18",
-    "img": "imagenes/zapatillas/Asics/Asics Gel/mov18.png"
-   },
-   {
-    "label": "19",
-    "img": "imagenes/zapatillas/Asics/Asics Gel/mov19.png"
-   },
-   {
-    "label": "20",
-    "img": "imagenes/zapatillas/Asics/Asics Gel/mov20.png"
-   },
-   {
-    "label": "21",
-    "img": "imagenes/zapatillas/Asics/Asics Gel/mov21.png"
-   },
-   {
-    "label": "22",
-    "img": "imagenes/zapatillas/Asics/Asics Gel/mov22.png"
-   },
-   {
-    "label": "23",
-    "img": "imagenes/zapatillas/Asics/Asics Gel/mov23.png"
-   },
-   {
-    "label": "24",
-    "img": "imagenes/zapatillas/Asics/Asics Gel/mov24.png"
-   }
-  ],
-  "shipOverride": null,
-  "supLink": "https://hipobuy.com/product/2/7444430516?inviteCode=1212",
-  "isCustom": true,
-  "dateAdded": 1789807400837,
-  "cost": 38.49
- },
- {
-  "id": "cmu2qwawz",
-  "title": "BAPE",
-  "brand": "Bapesta",
-  "cat": "shoes",
-  "supplierId": "hipobuy",
-  "rating": 4.8,
-  "reviews": 0,
-  "price": 79.8,
-  "orig": null,
-  "grams": 1000,
-  "mono": "B",
-  "grad": [
-   "#1e293b",
-   "#0f172a"
-  ],
-  "deal": "none",
-  "complaints": 0,
-  "fit": "shoe",
-  "note": "Bapesta. Mira las 30 fotos y elige el color/combinación que más te guste.",
-  "imgData": "imagenes/zapatillas/Bapesta/bapesta/mov01.jpg",
-  "colors": [
-   {
-    "label": "01",
-    "img": "imagenes/zapatillas/Bapesta/bapesta/mov01.jpg"
-   },
-   {
-    "label": "02",
-    "img": "imagenes/zapatillas/Bapesta/bapesta/mov02.jpg"
-   },
-   {
-    "label": "04",
-    "img": "imagenes/zapatillas/Bapesta/bapesta/mov04.jpg"
-   },
-   {
-    "label": "05",
-    "img": "imagenes/zapatillas/Bapesta/bapesta/mov05.jpg"
-   },
-   {
-    "label": "06",
-    "img": "imagenes/zapatillas/Bapesta/bapesta/mov06.jpg"
-   },
-   {
-    "label": "07",
-    "img": "imagenes/zapatillas/Bapesta/bapesta/mov07.jpg"
-   },
-   {
-    "label": "08",
-    "img": "imagenes/zapatillas/Bapesta/bapesta/mov08.jpg"
-   },
-   {
-    "label": "09",
-    "img": "imagenes/zapatillas/Bapesta/bapesta/mov09.jpg"
-   },
-   {
-    "label": "10",
-    "img": "imagenes/zapatillas/Bapesta/bapesta/mov10.jpg"
-   },
-   {
-    "label": "11",
-    "img": "imagenes/zapatillas/Bapesta/bapesta/mov11.jpg"
-   },
-   {
-    "label": "12",
-    "img": "imagenes/zapatillas/Bapesta/bapesta/mov12.jpg"
-   },
-   {
-    "label": "13",
-    "img": "imagenes/zapatillas/Bapesta/bapesta/mov13.jpg"
-   },
-   {
-    "label": "14",
-    "img": "imagenes/zapatillas/Bapesta/bapesta/mov14.jpg"
-   },
-   {
-    "label": "15",
-    "img": "imagenes/zapatillas/Bapesta/bapesta/mov15.jpg"
-   },
-   {
-    "label": "16",
-    "img": "imagenes/zapatillas/Bapesta/bapesta/mov16.jpg"
-   },
-   {
-    "label": "17",
-    "img": "imagenes/zapatillas/Bapesta/bapesta/mov17.jpg"
-   },
-   {
-    "label": "18",
-    "img": "imagenes/zapatillas/Bapesta/bapesta/mov18.jpg"
-   },
-   {
-    "label": "19",
-    "img": "imagenes/zapatillas/Bapesta/bapesta/mov19.jpg"
-   },
-   {
-    "label": "20",
-    "img": "imagenes/zapatillas/Bapesta/bapesta/mov20.jpg"
-   },
-   {
-    "label": "21",
-    "img": "imagenes/zapatillas/Bapesta/bapesta/mov21.jpg"
-   },
-   {
-    "label": "22",
-    "img": "imagenes/zapatillas/Bapesta/bapesta/mov22.jpg"
-   },
-   {
-    "label": "23",
-    "img": "imagenes/zapatillas/Bapesta/bapesta/mov23.jpg"
-   },
-   {
-    "label": "24",
-    "img": "imagenes/zapatillas/Bapesta/bapesta/mov24.jpg"
-   },
-   {
-    "label": "25",
-    "img": "imagenes/zapatillas/Bapesta/bapesta/mov25.png"
-   },
-   {
-    "label": "26",
-    "img": "imagenes/zapatillas/Bapesta/bapesta/mov26.png"
-   },
-   {
-    "label": "27",
-    "img": "imagenes/zapatillas/Bapesta/bapesta/mov27.jpg"
-   },
-   {
-    "label": "28",
-    "img": "imagenes/zapatillas/Bapesta/bapesta/mov28.jpg"
-   },
-   {
-    "label": "29",
-    "img": "imagenes/zapatillas/Bapesta/bapesta/mov29.jpg"
-   },
-   {
-    "label": "30",
-    "img": "imagenes/zapatillas/Bapesta/bapesta/mov30.jpg"
-   },
-   {
-    "label": "31",
-    "img": "imagenes/zapatillas/Bapesta/bapesta/mov31.jpg"
-   }
-  ],
-  "shipOverride": null,
-  "supLink": "https://hipobuy.com/product/2/7444396886?inviteCode=1212",
-  "isCustom": true,
-  "dateAdded": 1789807482916,
-  "cost": 57.35
- },
- {
-  "id": "samba0525",
-  "title": "Adidas Samba OG",
-  "brand": "Adidas",
-  "cat": "shoes",
-  "supplierId": "hipobuy",
-  "rating": 4.8,
-  "reviews": 0,
-  "price": 56.08,
-  "orig": null,
-  "grams": 1200,
-  "mono": "AS",
-  "grad": [
-   "#1e293b",
-   "#0f172a"
-  ],
-  "deal": "none",
-  "complaints": 0,
-  "fit": "shoe",
-  "note": "Adidas Samba OG. Mira las 22 fotos y elige el color/combinación que más te guste. Peso orientativo con caja 1,2 kg.",
-  "imgData": "imagenes/zapatillas/Adidas/pcitem1841939635-613e0000018e8b8bf24c0a20e2c5_1080_1080.jpg",
-  "colors": [
-   {
-    "label": "01",
-    "img": "imagenes/zapatillas/Adidas/samba/mov01.jpg"
-   },
-   {
-    "label": "04",
-    "img": "imagenes/zapatillas/Adidas/samba/mov04.jpg"
-   },
-   {
-    "label": "05",
-    "img": "imagenes/zapatillas/Adidas/samba/mov05.jpg"
-   },
-   {
-    "label": "06",
-    "img": "imagenes/zapatillas/Adidas/samba/mov06.jpg"
-   },
-   {
-    "label": "07",
-    "img": "imagenes/zapatillas/Adidas/samba/mov07.jpg"
-   },
-   {
-    "label": "08",
-    "img": "imagenes/zapatillas/Adidas/samba/mov08.jpg"
-   },
-   {
-    "label": "09",
-    "img": "imagenes/zapatillas/Adidas/samba/mov09.jpg"
-   },
-   {
-    "label": "10",
-    "img": "imagenes/zapatillas/Adidas/samba/mov10.jpg"
-   },
-   {
-    "label": "11",
-    "img": "imagenes/zapatillas/Adidas/samba/mov11.jpg"
-   },
-   {
-    "label": "12",
-    "img": "imagenes/zapatillas/Adidas/samba/mov12.jpg"
-   },
-   {
-    "label": "13",
-    "img": "imagenes/zapatillas/Adidas/samba/mov13.jpg"
-   },
-   {
-    "label": "14",
-    "img": "imagenes/zapatillas/Adidas/samba/mov14.jpg"
-   },
-   {
-    "label": "15",
-    "img": "imagenes/zapatillas/Adidas/samba/mov15.jpg"
-   },
-   {
-    "label": "16",
-    "img": "imagenes/zapatillas/Adidas/samba/mov16.jpg"
-   },
-   {
-    "label": "17",
-    "img": "imagenes/zapatillas/Adidas/samba/mov17.jpg"
-   },
-   {
-    "label": "18",
-    "img": "imagenes/zapatillas/Adidas/samba/mov18.jpg"
-   },
-   {
-    "label": "19",
-    "img": "imagenes/zapatillas/Adidas/samba/mov19.jpg"
-   },
-   {
-    "label": "20",
-    "img": "imagenes/zapatillas/Adidas/samba/mov20.jpg"
-   },
-   {
-    "label": "21",
-    "img": "imagenes/zapatillas/Adidas/samba/mov21.jpg"
-   },
-   {
-    "label": "22",
-    "img": "imagenes/zapatillas/Adidas/samba/mov22.jpg"
-   },
-   {
-    "label": "23",
-    "img": "imagenes/zapatillas/Adidas/samba/mov23.jpg"
-   },
-   {
-    "label": "24",
-    "img": "imagenes/zapatillas/Adidas/samba/mov24.jpg"
-   }
-  ],
-  "shipOverride": null,
-  "supLink": "https://hipobuy.com/product/2/7444424636?inviteCode=1212",
-  "isCustom": true,
-  "dateAdded": 1789807540139,
-  "cost": 40.3
- },
- {
-  "id": "cmu2tj5a8",
-  "title": "Air Jordan 5",
-  "brand": "Jordan/Nike",
-  "cat": "shoes",
-  "supplierId": "hipobuy",
-  "rating": 4.8,
-  "reviews": 0,
-  "price": 75.61,
-  "orig": null,
-  "grams": 1400,
-  "mono": "AJ5",
-  "grad": [
-   "#1e293b",
-   "#0f172a"
-  ],
-  "deal": "none",
-  "complaints": 0,
-  "fit": "shoe",
-  "note": "Air Jordan 5. Mira las 8 fotos y elige el color/combinación que más te guste.",
-  "imgData": "imagenes/zapatillas/Nike/Jordan 5/01.jpg",
-  "colors": [
-   {
-    "label": "01",
-    "img": "imagenes/zapatillas/Nike/Jordan 5/01.jpg"
-   },
-   {
-    "label": "02",
-    "img": "imagenes/zapatillas/Nike/Jordan 5/02.jpg"
-   },
-   {
-    "label": "03",
-    "img": "imagenes/zapatillas/Nike/Jordan 5/03.jpg"
-   },
-   {
-    "label": "04",
-    "img": "imagenes/zapatillas/Nike/Jordan 5/04.jpg"
-   },
-   {
-    "label": "05",
-    "img": "imagenes/zapatillas/Nike/Jordan 5/05.jpg"
-   },
-   {
-    "label": "06",
-    "img": "imagenes/zapatillas/Nike/Jordan 5/06.jpg"
-   },
-   {
-    "label": "07",
-    "img": "imagenes/zapatillas/Nike/Jordan 5/07.jpg"
-   },
-   {
-    "label": "08",
-    "img": "imagenes/zapatillas/Nike/Jordan 5/08.jpg"
-   }
-  ],
-  "shipOverride": null,
-  "supLink": "https://hipobuy.com/product/2/7444489812?inviteCode=1212",
-  "isCustom": true,
-  "dateAdded": 1789862400000,
-  "cost": 54.34
- },
- {
-  "id": "cmua40wsv",
-  "title": "Nike Jordan",
-  "brand": "Jordan 4 Retro",
-  "cat": "shoes",
-  "supplierId": "hipobuy",
-  "rating": 4.8,
-  "reviews": 0,
-  "price": 50.41,
-  "cost": 36.23,
-  "orig": null,
-  "grams": 1500,
-  "mono": "NJ",
-  "grad": [
-   "#1e293b",
-   "#0f172a"
-  ],
-  "deal": "none",
-  "complaints": 0,
-  "fit": "shoe",
-  "note": "",
-  "imgData": "imagenes/zapatillas/Nike/Jordan 4 retro/08.jpg",
-  "colors": [
-   {
-    "label": "01",
-    "img": "imagenes/zapatillas/Nike/Jordan 4 retro/01.jpg"
-   },
-   {
-    "label": "02",
-    "img": "imagenes/zapatillas/Nike/Jordan 4 retro/02.jpg"
-   },
-   {
-    "label": "03",
-    "img": "imagenes/zapatillas/Nike/Jordan 4 retro/03.jpg"
-   },
-   {
-    "label": "04",
-    "img": "imagenes/zapatillas/Nike/Jordan 4 retro/04.jpg"
-   },
-   {
-    "label": "05",
-    "img": "imagenes/zapatillas/Nike/Jordan 4 retro/05.jpg"
-   },
-   {
-    "label": "06",
-    "img": "imagenes/zapatillas/Nike/Jordan 4 retro/06.jpg"
-   },
-   {
-    "label": "07",
-    "img": "imagenes/zapatillas/Nike/Jordan 4 retro/07.jpg"
-   },
-   {
-    "label": "08",
-    "img": "imagenes/zapatillas/Nike/Jordan 4 retro/08.jpg"
-   },
-   {
-    "label": "09",
-    "img": "imagenes/zapatillas/Nike/Jordan 4 retro/09.jpg"
-   },
-   {
-    "label": "10",
-    "img": "imagenes/zapatillas/Nike/Jordan 4 retro/10.jpg"
-   },
-   {
-    "label": "11",
-    "img": "imagenes/zapatillas/Nike/Jordan 4 retro/11.jpg"
-   },
-   {
-    "label": "12",
-    "img": "imagenes/zapatillas/Nike/Jordan 4 retro/12.jpg"
-   },
-   {
-    "label": "13",
-    "img": "imagenes/zapatillas/Nike/Jordan 4 retro/13.jpg"
-   },
-   {
-    "label": "14",
-    "img": "imagenes/zapatillas/Nike/Jordan 4 retro/14.jpg"
-   },
-   {
-    "label": "15",
-    "img": "imagenes/zapatillas/Nike/Jordan 4 retro/15.jpg"
-   },
-   {
-    "label": "16",
-    "img": "imagenes/zapatillas/Nike/Jordan 4 retro/16.jpg"
-   },
-   {
-    "label": "17",
-    "img": "imagenes/zapatillas/Nike/Jordan 4 retro/17.png"
-   }
-  ],
-  "shipOverride": null,
-  "supLink": "https://hipobuy.com/product/2/7442416279?inviteCode=1212",
-  "isCustom": true,
-  "dateAdded": 1789926502927
- },
- {
-  "id": "cmua4klhc",
-  "title": "Pulsera Lacoste",
-  "brand": "Lacoste",
-  "cat": "acc",
-  "supplierId": "hipobuy",
-  "rating": 4.8,
-  "reviews": 0,
-  "price": 13.57,
-  "cost": 9.75,
-  "orig": null,
-  "grams": 300,
-  "mono": "PL",
-  "grad": [
-   "#1e293b",
-   "#0f172a"
-  ],
-  "deal": "none",
-  "complaints": 0,
-  "fit": "none",
-  "note": "",
-  "imgData": "imagenes/Accesorios  y Relojes/Accesorios/Pulseras/Lacoste/Silver_Crocodile_Strap_Bracelet.jpg",
-  "colors": [
-   {
-    "label": "Black_Carved_Strap_Bracelet",
-    "img": "imagenes/Accesorios  y Relojes/Accesorios/Pulseras/Lacoste/Black_Carved_Strap_Bracelet.jpg"
-   },
-   {
-    "label": "Black_Crocodile_Strap_Bracelet",
-    "img": "imagenes/Accesorios  y Relojes/Accesorios/Pulseras/Lacoste/Black_Crocodile_Strap_Bracelet.jpg"
-   },
-   {
-    "label": "Gold_Carved_Strap_Bracelet",
-    "img": "imagenes/Accesorios  y Relojes/Accesorios/Pulseras/Lacoste/Gold_Carved_Strap_Bracelet.jpg"
-   },
-   {
-    "label": "Gold_Crocodile_Strap_Bracelet",
-    "img": "imagenes/Accesorios  y Relojes/Accesorios/Pulseras/Lacoste/Gold_Crocodile_Strap_Bracelet.jpg"
-   },
-   {
-    "label": "Silver_Carved_Strap_Bracelet",
-    "img": "imagenes/Accesorios  y Relojes/Accesorios/Pulseras/Lacoste/Silver_Carved_Strap_Bracelet.jpg"
-   },
-   {
-    "label": "Silver_Crocodile_Strap_Bracelet",
-    "img": "imagenes/Accesorios  y Relojes/Accesorios/Pulseras/Lacoste/Silver_Crocodile_Strap_Bracelet.jpg"
-   }
-  ],
-  "shipOverride": null,
-  "supLink": "https://hipobuy.com/product/2/7493663648?inviteCode=1212",
-  "isCustom": true,
-  "dateAdded": 1789928076467,
-  "subcat": "bracelets"
- },
- {
-  "id": "cmubgxfhg",
-  "title": "camiseta de deportes nike",
-  "brand": "Nike",
-  "cat": "top",
-  "supplierId": "hipobuy",
-  "rating": 4.8,
-  "reviews": 0,
-  "price": 19.33,
-  "cost": 13.89,
-  "orig": null,
-  "grams": 350,
-  "mono": "CD",
-  "grad": [
-   "#1e293b",
-   "#0f172a"
-  ],
-  "deal": "none",
-  "complaints": 0,
-  "fit": "top",
-  "note": "Camiseta deporte Nike. Mira las 12 fotos y elige el color/combinación que más te guste.",
-  "imgData": "imagenes/camisetas/nike/camiseta_de_deporte_nike/05.png",
-  "colors": [
-   {
-    "label": "05",
-    "img": "imagenes/camisetas/nike/camiseta_de_deporte_nike/05.png"
-   },
-   {
-    "label": "06",
-    "img": "imagenes/camisetas/nike/camiseta_de_deporte_nike/06.png"
-   },
-   {
-    "label": "07",
-    "img": "imagenes/camisetas/nike/camiseta_de_deporte_nike/07.png"
-   },
-   {
-    "label": "08",
-    "img": "imagenes/camisetas/nike/camiseta_de_deporte_nike/08.png"
-   },
-   {
-    "label": "09",
-    "img": "imagenes/camisetas/nike/camiseta_de_deporte_nike/09.png"
-   },
-   {
-    "label": "10",
-    "img": "imagenes/camisetas/nike/camiseta_de_deporte_nike/10.png"
-   },
-   {
-    "label": "11",
-    "img": "imagenes/camisetas/nike/camiseta_de_deporte_nike/11.png"
-   },
-   {
-    "label": "12",
-    "img": "imagenes/camisetas/nike/camiseta_de_deporte_nike/12.png"
-   },
-   {
-    "label": "13",
-    "img": "imagenes/camisetas/nike/camiseta_de_deporte_nike/13.png"
-   },
-   {
-    "label": "14",
-    "img": "imagenes/camisetas/nike/camiseta_de_deporte_nike/14.png"
-   },
-   {
-    "label": "15",
-    "img": "imagenes/camisetas/nike/camiseta_de_deporte_nike/15.png"
-   },
-   {
-    "label": "16",
-    "img": "imagenes/camisetas/nike/camiseta_de_deporte_nike/16.png"
-   }
-  ],
-  "shipOverride": null,
-  "supLink": "https://hipobuy.com/product/2/7442540791?inviteCode=1212",
-  "isCustom": true,
-  "dateAdded": 1790008641701
- }
+  {
+    "id": "cmuec3o7t",
+    "title": "converse",
+    "brand": "converse",
+    "cat": "shoes",
+    "supplierId": "hipobuy",
+    "rating": 4.8,
+    "reviews": 0,
+    "price": 59.44,
+    "cost": 42.72,
+    "orig": null,
+    "grams": 1000,
+    "mono": "C",
+    "grad": [
+      "#1e293b",
+      "#0f172a"
+    ],
+    "deal": "none",
+    "complaints": 0,
+    "fit": "shoe",
+    "note": "",
+    "imgData": "imagenes/zapatillas/Asics/asics gel kajana/17.jpg",
+    "colors": [
+      {
+        "label": "1",
+        "img": "imagenes/zapatillas/Asics/asics gel kajana/1.jpg"
+      },
+      {
+        "label": "2",
+        "img": "imagenes/zapatillas/Asics/asics gel kajana/2.jpg"
+      },
+      {
+        "label": "3",
+        "img": "imagenes/zapatillas/Asics/asics gel kajana/3.jpg"
+      },
+      {
+        "label": "4",
+        "img": "imagenes/zapatillas/Asics/asics gel kajana/4.jpg"
+      },
+      {
+        "label": "5",
+        "img": "imagenes/zapatillas/Asics/asics gel kajana/5.jpg"
+      },
+      {
+        "label": "6",
+        "img": "imagenes/zapatillas/Asics/asics gel kajana/6.jpg"
+      },
+      {
+        "label": "7",
+        "img": "imagenes/zapatillas/Asics/asics gel kajana/7.jpg"
+      },
+      {
+        "label": "8",
+        "img": "imagenes/zapatillas/Asics/asics gel kajana/8.jpg"
+      },
+      {
+        "label": "9",
+        "img": "imagenes/zapatillas/Asics/asics gel kajana/9.jpg"
+      },
+      {
+        "label": "10",
+        "img": "imagenes/zapatillas/Asics/asics gel kajana/10.jpg"
+      },
+      {
+        "label": "11",
+        "img": "imagenes/zapatillas/Asics/asics gel kajana/11.jpg"
+      },
+      {
+        "label": "12",
+        "img": "imagenes/zapatillas/Asics/asics gel kajana/12.jpg"
+      },
+      {
+        "label": "13",
+        "img": "imagenes/zapatillas/Asics/asics gel kajana/13.jpg"
+      },
+      {
+        "label": "14",
+        "img": "imagenes/zapatillas/Asics/asics gel kajana/14.jpg"
+      },
+      {
+        "label": "15",
+        "img": "imagenes/zapatillas/Asics/asics gel kajana/15.jpg"
+      },
+      {
+        "label": "17",
+        "img": "imagenes/zapatillas/Asics/asics gel kajana/17.jpg"
+      },
+      {
+        "label": "18",
+        "img": "imagenes/zapatillas/Asics/asics gel kajana/18.jpg"
+      },
+      {
+        "label": "19",
+        "img": "imagenes/zapatillas/Asics/asics gel kajana/19.jpg"
+      },
+      {
+        "label": "20",
+        "img": "imagenes/zapatillas/Asics/asics gel kajana/20.jpg"
+      },
+      {
+        "label": "21",
+        "img": "imagenes/zapatillas/Asics/asics gel kajana/21.jpg"
+      },
+      {
+        "label": "22",
+        "img": "imagenes/zapatillas/Asics/asics gel kajana/22.jpg"
+      },
+      {
+        "label": "23",
+        "img": "imagenes/zapatillas/Asics/asics gel kajana/23.jpg"
+      },
+      {
+        "label": "24",
+        "img": "imagenes/zapatillas/Asics/asics gel kajana/24.jpg"
+      }
+    ],
+    "shipOverride": null,
+    "supLink": "https://hipobuy.com/product/2/7444480126?inviteCode=1212",
+    "isCustom": true,
+    "dateAdded": 1790181933402
+  },
+  {
+    "id": "cmuedqpou",
+    "title": "bolsa de deporte",
+    "brand": "nike",
+    "cat": "acc",
+    "supplierId": "hipobuy",
+    "rating": 4.8,
+    "reviews": 0,
+    "price": 20.8,
+    "cost": 14.95,
+    "orig": null,
+    "grams": 250,
+    "mono": "BD",
+    "grad": [
+      "#1e293b",
+      "#0f172a"
+    ],
+    "deal": "none",
+    "complaints": 0,
+    "fit": "none",
+    "subcat": "bags",
+    "note": "",
+    "imgData": "imagenes/Accesorios  y Relojes/Accesorios/bolsa de deporte/nike/0860-3_Black.png",
+    "colors": [
+      {
+        "label": "0022",
+        "img": "imagenes/Accesorios  y Relojes/Accesorios/bolsa de deporte/nike/0022-1_White.png"
+      },
+      {
+        "label": "0022",
+        "img": "imagenes/Accesorios  y Relojes/Accesorios/bolsa de deporte/nike/0022-3_Powder.png"
+      },
+      {
+        "label": "0022",
+        "img": "imagenes/Accesorios  y Relojes/Accesorios/bolsa de deporte/nike/0022-4_Green.png"
+      },
+      {
+        "label": "0860",
+        "img": "imagenes/Accesorios  y Relojes/Accesorios/bolsa de deporte/nike/0860-1_Green.png"
+      },
+      {
+        "label": "0860",
+        "img": "imagenes/Accesorios  y Relojes/Accesorios/bolsa de deporte/nike/0860-2_Red.png"
+      },
+      {
+        "label": "0860",
+        "img": "imagenes/Accesorios  y Relojes/Accesorios/bolsa de deporte/nike/0860-3_Black.png"
+      },
+      {
+        "label": "0860",
+        "img": "imagenes/Accesorios  y Relojes/Accesorios/bolsa de deporte/nike/0860-4_Blue.png"
+      },
+      {
+        "label": "150230",
+        "img": "imagenes/Accesorios  y Relojes/Accesorios/bolsa de deporte/nike/150230-1_Red.png"
+      },
+      {
+        "label": "150230",
+        "img": "imagenes/Accesorios  y Relojes/Accesorios/bolsa de deporte/nike/150230-2_White.png"
+      },
+      {
+        "label": "150230",
+        "img": "imagenes/Accesorios  y Relojes/Accesorios/bolsa de deporte/nike/150230-3_Black.png"
+      }
+    ],
+    "shipOverride": null,
+    "supLink": "https://hipobuy.com/product/2/7442526903?inviteCode=1212",
+    "isCustom": true,
+    "dateAdded": 1790184688014
+  },
+  {
+    "id": "cmueb2kxi",
+    "title": "converse shoes",
+    "brand": "converse",
+    "cat": "shoes",
+    "supplierId": "hipobuy",
+    "rating": 4.8,
+    "reviews": 0,
+    "price": 29.4,
+    "cost": 21.13,
+    "orig": null,
+    "grams": 1000,
+    "mono": "CS",
+    "grad": [
+      "#1e293b",
+      "#0f172a"
+    ],
+    "deal": "none",
+    "complaints": 0,
+    "fit": "shoe",
+    "note": "",
+    "imgData": "imagenes/zapatillas/converse/1.png",
+    "colors": [
+      {
+        "label": "1",
+        "img": "imagenes/zapatillas/converse/1.png"
+      },
+      {
+        "label": "2",
+        "img": "imagenes/zapatillas/converse/2.png"
+      },
+      {
+        "label": "3",
+        "img": "imagenes/zapatillas/converse/3.png"
+      },
+      {
+        "label": "4",
+        "img": "imagenes/zapatillas/converse/4.png"
+      },
+      {
+        "label": "5",
+        "img": "imagenes/zapatillas/converse/5.png"
+      },
+      {
+        "label": "6",
+        "img": "imagenes/zapatillas/converse/6.png"
+      },
+      {
+        "label": "7",
+        "img": "imagenes/zapatillas/converse/7.png"
+      }
+    ],
+    "shipOverride": null,
+    "supLink": "https://hipobuy.com/product/2/7444424638?inviteCode=1212",
+    "isCustom": true,
+    "dateAdded": 1790180430684
+  },
+  {
+    "id": "cmucw9g4o",
+    "title": "cazadora north face",
+    "brand": "north face",
+    "cat": "outer",
+    "supplierId": "hipobuy",
+    "rating": 4.8,
+    "reviews": 0,
+    "price": 60.91,
+    "cost": 43.77,
+    "orig": null,
+    "grams": 1000,
+    "mono": "CN",
+    "grad": [
+      "#1e293b",
+      "#0f172a"
+    ],
+    "deal": "none",
+    "complaints": 0,
+    "fit": "top",
+    "note": "",
+    "imgData": "imagenes/cazadora/north_face/Black.png",
+    "colors": [
+      {
+        "label": "beige_white",
+        "img": "imagenes/cazadora/north_face/beige_white.png"
+      },
+      {
+        "label": "Black",
+        "img": "imagenes/cazadora/north_face/Black.png"
+      },
+      {
+        "label": "black_liner",
+        "img": "imagenes/cazadora/north_face/black_liner.png"
+      },
+      {
+        "label": "Green",
+        "img": "imagenes/cazadora/north_face/Green.png"
+      },
+      {
+        "label": "green_liner",
+        "img": "imagenes/cazadora/north_face/green_liner.png"
+      },
+      {
+        "label": "light_gray",
+        "img": "imagenes/cazadora/north_face/light_gray.png"
+      },
+      {
+        "label": "light_green",
+        "img": "imagenes/cazadora/north_face/light_green.png"
+      },
+      {
+        "label": "Navy_blue_liner",
+        "img": "imagenes/cazadora/north_face/Navy_blue_liner.png"
+      },
+      {
+        "label": "Pink",
+        "img": "imagenes/cazadora/north_face/Pink.png"
+      },
+      {
+        "label": "Pink_liner",
+        "img": "imagenes/cazadora/north_face/Pink_liner.png"
+      },
+      {
+        "label": "White",
+        "img": "imagenes/cazadora/north_face/White.png"
+      },
+      {
+        "label": "white_liner",
+        "img": "imagenes/cazadora/north_face/white_liner.png"
+      },
+      {
+        "label": "Yellow",
+        "img": "imagenes/cazadora/north_face/Yellow.png"
+      }
+    ],
+    "shipOverride": null,
+    "supLink": "https://hipobuy.com/product/2/7442615863?inviteCode=1212",
+    "isCustom": true,
+    "dateAdded": 1790094862824
+  },
+  {
+    "id": "cmubm4zbk",
+    "title": "gazelle",
+    "brand": "adidas",
+    "cat": "shoes",
+    "supplierId": "hipobuy",
+    "rating": 4.8,
+    "reviews": 0,
+    "price": 52.5,
+    "cost": 37.73,
+    "orig": null,
+    "grams": 1000,
+    "mono": "G",
+    "grad": [
+      "#1e293b",
+      "#0f172a"
+    ],
+    "deal": "none",
+    "complaints": 0,
+    "fit": "shoe",
+    "note": "",
+    "imgData": "imagenes/zapatillas/Adidas/gazelle/31.png",
+    "colors": [
+      {
+        "label": "01",
+        "img": "imagenes/zapatillas/Adidas/gazelle/01.png"
+      },
+      {
+        "label": "02",
+        "img": "imagenes/zapatillas/Adidas/gazelle/02.png"
+      },
+      {
+        "label": "03",
+        "img": "imagenes/zapatillas/Adidas/gazelle/03.png"
+      },
+      {
+        "label": "04",
+        "img": "imagenes/zapatillas/Adidas/gazelle/04.png"
+      },
+      {
+        "label": "05",
+        "img": "imagenes/zapatillas/Adidas/gazelle/05.png"
+      },
+      {
+        "label": "06",
+        "img": "imagenes/zapatillas/Adidas/gazelle/06.png"
+      },
+      {
+        "label": "07",
+        "img": "imagenes/zapatillas/Adidas/gazelle/07.png"
+      },
+      {
+        "label": "08",
+        "img": "imagenes/zapatillas/Adidas/gazelle/08.png"
+      },
+      {
+        "label": "09",
+        "img": "imagenes/zapatillas/Adidas/gazelle/09.png"
+      },
+      {
+        "label": "10",
+        "img": "imagenes/zapatillas/Adidas/gazelle/10.png"
+      },
+      {
+        "label": "11",
+        "img": "imagenes/zapatillas/Adidas/gazelle/11.png"
+      },
+      {
+        "label": "12",
+        "img": "imagenes/zapatillas/Adidas/gazelle/12.png"
+      },
+      {
+        "label": "13",
+        "img": "imagenes/zapatillas/Adidas/gazelle/13.png"
+      },
+      {
+        "label": "14",
+        "img": "imagenes/zapatillas/Adidas/gazelle/14.png"
+      },
+      {
+        "label": "15",
+        "img": "imagenes/zapatillas/Adidas/gazelle/15.png"
+      },
+      {
+        "label": "17",
+        "img": "imagenes/zapatillas/Adidas/gazelle/17.png"
+      },
+      {
+        "label": "18",
+        "img": "imagenes/zapatillas/Adidas/gazelle/18.png"
+      },
+      {
+        "label": "19",
+        "img": "imagenes/zapatillas/Adidas/gazelle/19.png"
+      },
+      {
+        "label": "20",
+        "img": "imagenes/zapatillas/Adidas/gazelle/20.png"
+      },
+      {
+        "label": "21",
+        "img": "imagenes/zapatillas/Adidas/gazelle/21.png"
+      },
+      {
+        "label": "22",
+        "img": "imagenes/zapatillas/Adidas/gazelle/22.png"
+      },
+      {
+        "label": "23",
+        "img": "imagenes/zapatillas/Adidas/gazelle/23.png"
+      },
+      {
+        "label": "24",
+        "img": "imagenes/zapatillas/Adidas/gazelle/24.png"
+      },
+      {
+        "label": "25",
+        "img": "imagenes/zapatillas/Adidas/gazelle/25.png"
+      },
+      {
+        "label": "26",
+        "img": "imagenes/zapatillas/Adidas/gazelle/26.png"
+      },
+      {
+        "label": "27",
+        "img": "imagenes/zapatillas/Adidas/gazelle/27.png"
+      },
+      {
+        "label": "28",
+        "img": "imagenes/zapatillas/Adidas/gazelle/28.png"
+      },
+      {
+        "label": "29",
+        "img": "imagenes/zapatillas/Adidas/gazelle/29.png"
+      },
+      {
+        "label": "31",
+        "img": "imagenes/zapatillas/Adidas/gazelle/31.png"
+      },
+      {
+        "label": "32",
+        "img": "imagenes/zapatillas/Adidas/gazelle/32.png"
+      },
+      {
+        "label": "33",
+        "img": "imagenes/zapatillas/Adidas/gazelle/33.png"
+      },
+      {
+        "label": "34",
+        "img": "imagenes/zapatillas/Adidas/gazelle/34.jpg"
+      },
+      {
+        "label": "35",
+        "img": "imagenes/zapatillas/Adidas/gazelle/35.png"
+      }
+    ],
+    "shipOverride": null,
+    "supLink": "https://hipobuy.com/product/2/7444398944?inviteCode=1212",
+    "isCustom": true,
+    "dateAdded": 1790017392081
+  },
+  {
+    "id": "cmucv9284",
+    "title": "nike 270",
+    "brand": "nike",
+    "cat": "shoes",
+    "supplierId": "hipobuy",
+    "rating": 4.8,
+    "reviews": 0,
+    "price": 48.31,
+    "cost": 34.72,
+    "orig": null,
+    "grams": 1000,
+    "mono": "N2",
+    "grad": [
+      "#1e293b",
+      "#0f172a"
+    ],
+    "deal": "none",
+    "complaints": 0,
+    "fit": "shoe",
+    "note": "",
+    "imgData": "imagenes/zapatillas/Nike/nike 270/10.jpg",
+    "colors": [
+      {
+        "label": "1",
+        "img": "imagenes/zapatillas/Nike/nike 270/1.jpg"
+      },
+      {
+        "label": "2",
+        "img": "imagenes/zapatillas/Nike/nike 270/2.jpg"
+      },
+      {
+        "label": "3",
+        "img": "imagenes/zapatillas/Nike/nike 270/3.jpg"
+      },
+      {
+        "label": "4",
+        "img": "imagenes/zapatillas/Nike/nike 270/4.jpg"
+      },
+      {
+        "label": "5",
+        "img": "imagenes/zapatillas/Nike/nike 270/5.jpg"
+      },
+      {
+        "label": "6",
+        "img": "imagenes/zapatillas/Nike/nike 270/6.jpg"
+      },
+      {
+        "label": "7",
+        "img": "imagenes/zapatillas/Nike/nike 270/7.jpg"
+      },
+      {
+        "label": "8",
+        "img": "imagenes/zapatillas/Nike/nike 270/8.jpg"
+      },
+      {
+        "label": "9",
+        "img": "imagenes/zapatillas/Nike/nike 270/9.jpg"
+      },
+      {
+        "label": "10",
+        "img": "imagenes/zapatillas/Nike/nike 270/10.jpg"
+      },
+      {
+        "label": "11",
+        "img": "imagenes/zapatillas/Nike/nike 270/11.jpg"
+      },
+      {
+        "label": "12",
+        "img": "imagenes/zapatillas/Nike/nike 270/12.jpg"
+      },
+      {
+        "label": "13",
+        "img": "imagenes/zapatillas/Nike/nike 270/13.jpg"
+      },
+      {
+        "label": "15",
+        "img": "imagenes/zapatillas/Nike/nike 270/15.jpg"
+      },
+      {
+        "label": "16",
+        "img": "imagenes/zapatillas/Nike/nike 270/16.jpg"
+      },
+      {
+        "label": "17",
+        "img": "imagenes/zapatillas/Nike/nike 270/17.jpg"
+      },
+      {
+        "label": "18",
+        "img": "imagenes/zapatillas/Nike/nike 270/18.jpg"
+      }
+    ],
+    "shipOverride": null,
+    "supLink": "https://hipobuy.com/product/2/7442580289?inviteCode=1212",
+    "isCustom": true,
+    "dateAdded": 1790093208996
+  },
+  {
+    "id": "cmubjmlmd",
+    "title": "camiseta termica nike",
+    "brand": "nike",
+    "cat": "top",
+    "supplierId": "hipobuy",
+    "rating": 4.8,
+    "reviews": 0,
+    "price": 12.31,
+    "cost": 8.85,
+    "orig": null,
+    "grams": 350,
+    "mono": "CT",
+    "grad": [
+      "#1e293b",
+      "#0f172a"
+    ],
+    "deal": "none",
+    "complaints": 0,
+    "fit": "top",
+    "note": "",
+    "imgData": "imagenes/camisetas/nike/camiseta_termica_nike/Black_old_long_sleeve.jpg",
+    "colors": [
+      {
+        "label": "Negra manga larga",
+        "img": "imagenes/camisetas/nike/camiseta_termica_nike/Black_Long_Sleeve_Large_Hook.jpg"
+      },
+      {
+        "label": "Negra manga corta",
+        "img": "imagenes/camisetas/nike/camiseta_termica_nike/Black_Short_Sleeve_Large_Hook.jpg"
+      },
+      {
+        "label": "Negra manga corta media",
+        "img": "imagenes/camisetas/nike/camiseta_termica_nike/Black_mid-hook_short_sleeve.jpg"
+      },
+      {
+        "label": "Negra manga larga clásica",
+        "img": "imagenes/camisetas/nike/camiseta_termica_nike/Black_old_long_sleeve.jpg"
+      },
+      {
+        "label": "Negra manga corta franja plata",
+        "img": "imagenes/camisetas/nike/camiseta_termica_nike/Black_short-sleeved_silver_strip.jpg"
+      },
+      {
+        "label": "Gris manga corta media",
+        "img": "imagenes/camisetas/nike/camiseta_termica_nike/Gray_medium_hook_short_sleeve.jpg"
+      },
+      {
+        "label": "Gris franja plata",
+        "img": "imagenes/camisetas/nike/camiseta_termica_nike/Grey_short-sleeved_silver_strip.jpg"
+      },
+      {
+        "label": "Blanca manga corta",
+        "img": "imagenes/camisetas/nike/camiseta_termica_nike/White_Hook_Short_Sleeve.jpg"
+      },
+      {
+        "label": "Blanca manga larga",
+        "img": "imagenes/camisetas/nike/camiseta_termica_nike/White_Long_Sleeve_Large_Hook.jpg"
+      },
+      {
+        "label": "Blanca manga corta grande",
+        "img": "imagenes/camisetas/nike/camiseta_termica_nike/White_Short_Sleeve_Large_Hook.jpg"
+      },
+      {
+        "label": "Blanca manga larga clásica",
+        "img": "imagenes/camisetas/nike/camiseta_termica_nike/White_old_long_sleeve.jpg"
+      },
+      {
+        "label": "Blanca manga corta franja plata",
+        "img": "imagenes/camisetas/nike/camiseta_termica_nike/White_short-sleeved_silver_strip.jpg"
+      }
+    ],
+    "shipOverride": null,
+    "supLink": "https://hipobuy.com/product/2/7478596371?inviteCode=1212",
+    "isCustom": true,
+    "dateAdded": 1790013983135
+  },
+  {
+    "id": "cmu2q7oer",
+    "title": "Air Force One",
+    "brand": "Nike",
+    "cat": "shoes",
+    "supplierId": "hipobuy",
+    "rating": 4.8,
+    "reviews": 0,
+    "price": 30.25,
+    "orig": null,
+    "grams": 1000,
+    "mono": "AF",
+    "grad": [
+      "#1e293b",
+      "#0f172a"
+    ],
+    "deal": "none",
+    "complaints": 0,
+    "fit": "shoe",
+    "note": "Nike Air Force One. Mira las 11 fotos y elige el color/combinación que más te guste.",
+    "imgData": "imagenes/zapatillas/Nike/Air Force uno/White_AF1.jpg",
+    "colors": [
+      {
+        "label": "Apricot Blue Spell",
+        "img": "imagenes/zapatillas/Nike/Air Force uno/apricot_blue_spell.jpg"
+      },
+      {
+        "label": "Black AF1",
+        "img": "imagenes/zapatillas/Nike/Air Force uno/Black_AF1.jpg"
+      },
+      {
+        "label": "Black and White Spelling",
+        "img": "imagenes/zapatillas/Nike/Air Force uno/Black_and_white_spelling.jpg"
+      },
+      {
+        "label": "Blue and White Spell",
+        "img": "imagenes/zapatillas/Nike/Air Force uno/blue_and_white_spell.jpg"
+      },
+      {
+        "label": "Dark Red and White Spell",
+        "img": "imagenes/zapatillas/Nike/Air Force uno/dark_red_and_white_spell.jpg"
+      },
+      {
+        "label": "Orange White Spell",
+        "img": "imagenes/zapatillas/Nike/Air Force uno/orange_white_spell.jpg"
+      },
+      {
+        "label": "Pink White Spell",
+        "img": "imagenes/zapatillas/Nike/Air Force uno/Pink_White_Spell.jpg"
+      },
+      {
+        "label": "Purple White Spell",
+        "img": "imagenes/zapatillas/Nike/Air Force uno/purple_white_spell.jpg"
+      },
+      {
+        "label": "Red and White Spell",
+        "img": "imagenes/zapatillas/Nike/Air Force uno/red_and_white_spell.jpg"
+      },
+      {
+        "label": "White AF1",
+        "img": "imagenes/zapatillas/Nike/Air Force uno/White_AF1.jpg"
+      },
+      {
+        "label": "Yellow and Green Spell",
+        "img": "imagenes/zapatillas/Nike/Air Force uno/yellow_and_green_spell.jpg"
+      }
+    ],
+    "shipOverride": null,
+    "supLink": "https://hipobuy.com/product/2/7442542749?inviteCode=1212",
+    "isCustom": true,
+    "dateAdded": 1789805355682,
+    "cost": 21.74
+  },
+  {
+    "id": "cmu2qq5ut",
+    "title": "Asics Gel NYC",
+    "brand": "Asics",
+    "cat": "shoes",
+    "supplierId": "hipobuy",
+    "rating": 4.8,
+    "reviews": 0,
+    "price": 53.56,
+    "orig": null,
+    "grams": 1000,
+    "mono": "AG",
+    "grad": [
+      "#1e293b",
+      "#0f172a"
+    ],
+    "deal": "none",
+    "complaints": 0,
+    "fit": "shoe",
+    "note": "Asics Gel NYC. Mira las 24 fotos y elige el color/combinación que más te guste.",
+    "imgData": "imagenes/zapatillas/Asics/Asics Gel/mov01.png",
+    "colors": [
+      {
+        "label": "01",
+        "img": "imagenes/zapatillas/Asics/Asics Gel/mov01.png"
+      },
+      {
+        "label": "02",
+        "img": "imagenes/zapatillas/Asics/Asics Gel/mov02.png"
+      },
+      {
+        "label": "03",
+        "img": "imagenes/zapatillas/Asics/Asics Gel/mov03.png"
+      },
+      {
+        "label": "04",
+        "img": "imagenes/zapatillas/Asics/Asics Gel/mov04.png"
+      },
+      {
+        "label": "05",
+        "img": "imagenes/zapatillas/Asics/Asics Gel/mov05.png"
+      },
+      {
+        "label": "06",
+        "img": "imagenes/zapatillas/Asics/Asics Gel/mov06.png"
+      },
+      {
+        "label": "07",
+        "img": "imagenes/zapatillas/Asics/Asics Gel/mov07.png"
+      },
+      {
+        "label": "08",
+        "img": "imagenes/zapatillas/Asics/Asics Gel/mov08.png"
+      },
+      {
+        "label": "09",
+        "img": "imagenes/zapatillas/Asics/Asics Gel/mov09.png"
+      },
+      {
+        "label": "10",
+        "img": "imagenes/zapatillas/Asics/Asics Gel/mov10.png"
+      },
+      {
+        "label": "11",
+        "img": "imagenes/zapatillas/Asics/Asics Gel/mov11.png"
+      },
+      {
+        "label": "12",
+        "img": "imagenes/zapatillas/Asics/Asics Gel/mov12.png"
+      },
+      {
+        "label": "13",
+        "img": "imagenes/zapatillas/Asics/Asics Gel/mov13.png"
+      },
+      {
+        "label": "14",
+        "img": "imagenes/zapatillas/Asics/Asics Gel/mov14.png"
+      },
+      {
+        "label": "15",
+        "img": "imagenes/zapatillas/Asics/Asics Gel/mov15.png"
+      },
+      {
+        "label": "16",
+        "img": "imagenes/zapatillas/Asics/Asics Gel/mov16.png"
+      },
+      {
+        "label": "17",
+        "img": "imagenes/zapatillas/Asics/Asics Gel/mov17.png"
+      },
+      {
+        "label": "18",
+        "img": "imagenes/zapatillas/Asics/Asics Gel/mov18.png"
+      },
+      {
+        "label": "19",
+        "img": "imagenes/zapatillas/Asics/Asics Gel/mov19.png"
+      },
+      {
+        "label": "20",
+        "img": "imagenes/zapatillas/Asics/Asics Gel/mov20.png"
+      },
+      {
+        "label": "21",
+        "img": "imagenes/zapatillas/Asics/Asics Gel/mov21.png"
+      },
+      {
+        "label": "22",
+        "img": "imagenes/zapatillas/Asics/Asics Gel/mov22.png"
+      },
+      {
+        "label": "23",
+        "img": "imagenes/zapatillas/Asics/Asics Gel/mov23.png"
+      },
+      {
+        "label": "24",
+        "img": "imagenes/zapatillas/Asics/Asics Gel/mov24.png"
+      }
+    ],
+    "shipOverride": null,
+    "supLink": "https://hipobuy.com/product/2/7444430516?inviteCode=1212",
+    "isCustom": true,
+    "dateAdded": 1789807400837,
+    "cost": 38.49
+  },
+  {
+    "id": "cmu2qwawz",
+    "title": "BAPE",
+    "brand": "Bapesta",
+    "cat": "shoes",
+    "supplierId": "hipobuy",
+    "rating": 4.8,
+    "reviews": 0,
+    "price": 79.8,
+    "orig": null,
+    "grams": 1000,
+    "mono": "B",
+    "grad": [
+      "#1e293b",
+      "#0f172a"
+    ],
+    "deal": "none",
+    "complaints": 0,
+    "fit": "shoe",
+    "note": "Bapesta. Mira las 30 fotos y elige el color/combinación que más te guste.",
+    "imgData": "imagenes/zapatillas/Bapesta/bapesta/mov01.jpg",
+    "colors": [
+      {
+        "label": "01",
+        "img": "imagenes/zapatillas/Bapesta/bapesta/mov01.jpg"
+      },
+      {
+        "label": "02",
+        "img": "imagenes/zapatillas/Bapesta/bapesta/mov02.jpg"
+      },
+      {
+        "label": "04",
+        "img": "imagenes/zapatillas/Bapesta/bapesta/mov04.jpg"
+      },
+      {
+        "label": "05",
+        "img": "imagenes/zapatillas/Bapesta/bapesta/mov05.jpg"
+      },
+      {
+        "label": "06",
+        "img": "imagenes/zapatillas/Bapesta/bapesta/mov06.jpg"
+      },
+      {
+        "label": "07",
+        "img": "imagenes/zapatillas/Bapesta/bapesta/mov07.jpg"
+      },
+      {
+        "label": "08",
+        "img": "imagenes/zapatillas/Bapesta/bapesta/mov08.jpg"
+      },
+      {
+        "label": "09",
+        "img": "imagenes/zapatillas/Bapesta/bapesta/mov09.jpg"
+      },
+      {
+        "label": "10",
+        "img": "imagenes/zapatillas/Bapesta/bapesta/mov10.jpg"
+      },
+      {
+        "label": "11",
+        "img": "imagenes/zapatillas/Bapesta/bapesta/mov11.jpg"
+      },
+      {
+        "label": "12",
+        "img": "imagenes/zapatillas/Bapesta/bapesta/mov12.jpg"
+      },
+      {
+        "label": "13",
+        "img": "imagenes/zapatillas/Bapesta/bapesta/mov13.jpg"
+      },
+      {
+        "label": "14",
+        "img": "imagenes/zapatillas/Bapesta/bapesta/mov14.jpg"
+      },
+      {
+        "label": "15",
+        "img": "imagenes/zapatillas/Bapesta/bapesta/mov15.jpg"
+      },
+      {
+        "label": "16",
+        "img": "imagenes/zapatillas/Bapesta/bapesta/mov16.jpg"
+      },
+      {
+        "label": "17",
+        "img": "imagenes/zapatillas/Bapesta/bapesta/mov17.jpg"
+      },
+      {
+        "label": "18",
+        "img": "imagenes/zapatillas/Bapesta/bapesta/mov18.jpg"
+      },
+      {
+        "label": "19",
+        "img": "imagenes/zapatillas/Bapesta/bapesta/mov19.jpg"
+      },
+      {
+        "label": "20",
+        "img": "imagenes/zapatillas/Bapesta/bapesta/mov20.jpg"
+      },
+      {
+        "label": "21",
+        "img": "imagenes/zapatillas/Bapesta/bapesta/mov21.jpg"
+      },
+      {
+        "label": "22",
+        "img": "imagenes/zapatillas/Bapesta/bapesta/mov22.jpg"
+      },
+      {
+        "label": "23",
+        "img": "imagenes/zapatillas/Bapesta/bapesta/mov23.jpg"
+      },
+      {
+        "label": "24",
+        "img": "imagenes/zapatillas/Bapesta/bapesta/mov24.jpg"
+      },
+      {
+        "label": "25",
+        "img": "imagenes/zapatillas/Bapesta/bapesta/mov25.png"
+      },
+      {
+        "label": "26",
+        "img": "imagenes/zapatillas/Bapesta/bapesta/mov26.png"
+      },
+      {
+        "label": "27",
+        "img": "imagenes/zapatillas/Bapesta/bapesta/mov27.jpg"
+      },
+      {
+        "label": "28",
+        "img": "imagenes/zapatillas/Bapesta/bapesta/mov28.jpg"
+      },
+      {
+        "label": "29",
+        "img": "imagenes/zapatillas/Bapesta/bapesta/mov29.jpg"
+      },
+      {
+        "label": "30",
+        "img": "imagenes/zapatillas/Bapesta/bapesta/mov30.jpg"
+      },
+      {
+        "label": "31",
+        "img": "imagenes/zapatillas/Bapesta/bapesta/mov31.jpg"
+      }
+    ],
+    "shipOverride": null,
+    "supLink": "https://hipobuy.com/product/2/7444396886?inviteCode=1212",
+    "isCustom": true,
+    "dateAdded": 1789807482916,
+    "cost": 57.35
+  },
+  {
+    "id": "samba0525",
+    "title": "Adidas Samba OG",
+    "brand": "Adidas",
+    "cat": "shoes",
+    "supplierId": "hipobuy",
+    "rating": 4.8,
+    "reviews": 0,
+    "price": 56.08,
+    "orig": null,
+    "grams": 1200,
+    "mono": "AS",
+    "grad": [
+      "#1e293b",
+      "#0f172a"
+    ],
+    "deal": "none",
+    "complaints": 0,
+    "fit": "shoe",
+    "note": "Adidas Samba OG. Mira las 22 fotos y elige el color/combinación que más te guste. Peso orientativo con caja 1,2 kg.",
+    "imgData": "imagenes/zapatillas/Adidas/pcitem1841939635-613e0000018e8b8bf24c0a20e2c5_1080_1080.jpg",
+    "colors": [
+      {
+        "label": "01",
+        "img": "imagenes/zapatillas/Adidas/samba/mov01.jpg"
+      },
+      {
+        "label": "04",
+        "img": "imagenes/zapatillas/Adidas/samba/mov04.jpg"
+      },
+      {
+        "label": "05",
+        "img": "imagenes/zapatillas/Adidas/samba/mov05.jpg"
+      },
+      {
+        "label": "06",
+        "img": "imagenes/zapatillas/Adidas/samba/mov06.jpg"
+      },
+      {
+        "label": "07",
+        "img": "imagenes/zapatillas/Adidas/samba/mov07.jpg"
+      },
+      {
+        "label": "08",
+        "img": "imagenes/zapatillas/Adidas/samba/mov08.jpg"
+      },
+      {
+        "label": "09",
+        "img": "imagenes/zapatillas/Adidas/samba/mov09.jpg"
+      },
+      {
+        "label": "10",
+        "img": "imagenes/zapatillas/Adidas/samba/mov10.jpg"
+      },
+      {
+        "label": "11",
+        "img": "imagenes/zapatillas/Adidas/samba/mov11.jpg"
+      },
+      {
+        "label": "12",
+        "img": "imagenes/zapatillas/Adidas/samba/mov12.jpg"
+      },
+      {
+        "label": "13",
+        "img": "imagenes/zapatillas/Adidas/samba/mov13.jpg"
+      },
+      {
+        "label": "14",
+        "img": "imagenes/zapatillas/Adidas/samba/mov14.jpg"
+      },
+      {
+        "label": "15",
+        "img": "imagenes/zapatillas/Adidas/samba/mov15.jpg"
+      },
+      {
+        "label": "16",
+        "img": "imagenes/zapatillas/Adidas/samba/mov16.jpg"
+      },
+      {
+        "label": "17",
+        "img": "imagenes/zapatillas/Adidas/samba/mov17.jpg"
+      },
+      {
+        "label": "18",
+        "img": "imagenes/zapatillas/Adidas/samba/mov18.jpg"
+      },
+      {
+        "label": "19",
+        "img": "imagenes/zapatillas/Adidas/samba/mov19.jpg"
+      },
+      {
+        "label": "20",
+        "img": "imagenes/zapatillas/Adidas/samba/mov20.jpg"
+      },
+      {
+        "label": "21",
+        "img": "imagenes/zapatillas/Adidas/samba/mov21.jpg"
+      },
+      {
+        "label": "22",
+        "img": "imagenes/zapatillas/Adidas/samba/mov22.jpg"
+      },
+      {
+        "label": "23",
+        "img": "imagenes/zapatillas/Adidas/samba/mov23.jpg"
+      },
+      {
+        "label": "24",
+        "img": "imagenes/zapatillas/Adidas/samba/mov24.jpg"
+      }
+    ],
+    "shipOverride": null,
+    "supLink": "https://hipobuy.com/product/2/7444424636?inviteCode=1212",
+    "isCustom": true,
+    "dateAdded": 1789807540139,
+    "cost": 40.3
+  },
+  {
+    "id": "cmu2tj5a8",
+    "title": "Air Jordan 5",
+    "brand": "Jordan/Nike",
+    "cat": "shoes",
+    "supplierId": "hipobuy",
+    "rating": 4.8,
+    "reviews": 0,
+    "price": 75.61,
+    "orig": null,
+    "grams": 1400,
+    "mono": "AJ5",
+    "grad": [
+      "#1e293b",
+      "#0f172a"
+    ],
+    "deal": "none",
+    "complaints": 0,
+    "fit": "shoe",
+    "note": "Air Jordan 5. Mira las 8 fotos y elige el color/combinación que más te guste.",
+    "imgData": "imagenes/zapatillas/Nike/Jordan 5/01.jpg",
+    "colors": [
+      {
+        "label": "01",
+        "img": "imagenes/zapatillas/Nike/Jordan 5/01.jpg"
+      },
+      {
+        "label": "02",
+        "img": "imagenes/zapatillas/Nike/Jordan 5/02.jpg"
+      },
+      {
+        "label": "03",
+        "img": "imagenes/zapatillas/Nike/Jordan 5/03.jpg"
+      },
+      {
+        "label": "04",
+        "img": "imagenes/zapatillas/Nike/Jordan 5/04.jpg"
+      },
+      {
+        "label": "05",
+        "img": "imagenes/zapatillas/Nike/Jordan 5/05.jpg"
+      },
+      {
+        "label": "06",
+        "img": "imagenes/zapatillas/Nike/Jordan 5/06.jpg"
+      },
+      {
+        "label": "07",
+        "img": "imagenes/zapatillas/Nike/Jordan 5/07.jpg"
+      },
+      {
+        "label": "08",
+        "img": "imagenes/zapatillas/Nike/Jordan 5/08.jpg"
+      }
+    ],
+    "shipOverride": null,
+    "supLink": "https://hipobuy.com/product/2/7444489812?inviteCode=1212",
+    "isCustom": true,
+    "dateAdded": 1789862400000,
+    "cost": 54.34
+  },
+  {
+    "id": "cmua40wsv",
+    "title": "Nike Jordan",
+    "brand": "Jordan 4 Retro",
+    "cat": "shoes",
+    "supplierId": "hipobuy",
+    "rating": 4.8,
+    "reviews": 0,
+    "price": 50.41,
+    "cost": 36.23,
+    "orig": null,
+    "grams": 1500,
+    "mono": "NJ",
+    "grad": [
+      "#1e293b",
+      "#0f172a"
+    ],
+    "deal": "none",
+    "complaints": 0,
+    "fit": "shoe",
+    "note": "",
+    "imgData": "imagenes/zapatillas/Nike/Jordan 4 retro/08.jpg",
+    "colors": [
+      {
+        "label": "01",
+        "img": "imagenes/zapatillas/Nike/Jordan 4 retro/01.jpg"
+      },
+      {
+        "label": "02",
+        "img": "imagenes/zapatillas/Nike/Jordan 4 retro/02.jpg"
+      },
+      {
+        "label": "03",
+        "img": "imagenes/zapatillas/Nike/Jordan 4 retro/03.jpg"
+      },
+      {
+        "label": "04",
+        "img": "imagenes/zapatillas/Nike/Jordan 4 retro/04.jpg"
+      },
+      {
+        "label": "05",
+        "img": "imagenes/zapatillas/Nike/Jordan 4 retro/05.jpg"
+      },
+      {
+        "label": "06",
+        "img": "imagenes/zapatillas/Nike/Jordan 4 retro/06.jpg"
+      },
+      {
+        "label": "07",
+        "img": "imagenes/zapatillas/Nike/Jordan 4 retro/07.jpg"
+      },
+      {
+        "label": "08",
+        "img": "imagenes/zapatillas/Nike/Jordan 4 retro/08.jpg"
+      },
+      {
+        "label": "09",
+        "img": "imagenes/zapatillas/Nike/Jordan 4 retro/09.jpg"
+      },
+      {
+        "label": "10",
+        "img": "imagenes/zapatillas/Nike/Jordan 4 retro/10.jpg"
+      },
+      {
+        "label": "11",
+        "img": "imagenes/zapatillas/Nike/Jordan 4 retro/11.jpg"
+      },
+      {
+        "label": "12",
+        "img": "imagenes/zapatillas/Nike/Jordan 4 retro/12.jpg"
+      },
+      {
+        "label": "13",
+        "img": "imagenes/zapatillas/Nike/Jordan 4 retro/13.jpg"
+      },
+      {
+        "label": "14",
+        "img": "imagenes/zapatillas/Nike/Jordan 4 retro/14.jpg"
+      },
+      {
+        "label": "15",
+        "img": "imagenes/zapatillas/Nike/Jordan 4 retro/15.jpg"
+      },
+      {
+        "label": "16",
+        "img": "imagenes/zapatillas/Nike/Jordan 4 retro/16.jpg"
+      },
+      {
+        "label": "17",
+        "img": "imagenes/zapatillas/Nike/Jordan 4 retro/17.png"
+      }
+    ],
+    "shipOverride": null,
+    "supLink": "https://hipobuy.com/product/2/7442416279?inviteCode=1212",
+    "isCustom": true,
+    "dateAdded": 1789926502927
+  },
+  {
+    "id": "cmua4klhc",
+    "title": "Pulsera Lacoste",
+    "brand": "Lacoste",
+    "cat": "acc",
+    "supplierId": "hipobuy",
+    "rating": 4.8,
+    "reviews": 0,
+    "price": 13.57,
+    "cost": 9.75,
+    "orig": null,
+    "grams": 300,
+    "mono": "PL",
+    "grad": [
+      "#1e293b",
+      "#0f172a"
+    ],
+    "deal": "none",
+    "complaints": 0,
+    "fit": "none",
+    "note": "",
+    "imgData": "imagenes/Accesorios  y Relojes/Accesorios/Pulseras/Lacoste/Silver_Crocodile_Strap_Bracelet.jpg",
+    "colors": [
+      {
+        "label": "Black_Carved_Strap_Bracelet",
+        "img": "imagenes/Accesorios  y Relojes/Accesorios/Pulseras/Lacoste/Black_Carved_Strap_Bracelet.jpg"
+      },
+      {
+        "label": "Black_Crocodile_Strap_Bracelet",
+        "img": "imagenes/Accesorios  y Relojes/Accesorios/Pulseras/Lacoste/Black_Crocodile_Strap_Bracelet.jpg"
+      },
+      {
+        "label": "Gold_Carved_Strap_Bracelet",
+        "img": "imagenes/Accesorios  y Relojes/Accesorios/Pulseras/Lacoste/Gold_Carved_Strap_Bracelet.jpg"
+      },
+      {
+        "label": "Gold_Crocodile_Strap_Bracelet",
+        "img": "imagenes/Accesorios  y Relojes/Accesorios/Pulseras/Lacoste/Gold_Crocodile_Strap_Bracelet.jpg"
+      },
+      {
+        "label": "Silver_Carved_Strap_Bracelet",
+        "img": "imagenes/Accesorios  y Relojes/Accesorios/Pulseras/Lacoste/Silver_Carved_Strap_Bracelet.jpg"
+      },
+      {
+        "label": "Silver_Crocodile_Strap_Bracelet",
+        "img": "imagenes/Accesorios  y Relojes/Accesorios/Pulseras/Lacoste/Silver_Crocodile_Strap_Bracelet.jpg"
+      }
+    ],
+    "shipOverride": null,
+    "supLink": "https://hipobuy.com/product/2/7493663648?inviteCode=1212",
+    "isCustom": true,
+    "dateAdded": 1789928076467,
+    "subcat": "bracelets"
+  },
+  {
+    "id": "cmubgxfhg",
+    "title": "camiseta de deportes nike",
+    "brand": "Nike",
+    "cat": "top",
+    "supplierId": "hipobuy",
+    "rating": 4.8,
+    "reviews": 0,
+    "price": 19.33,
+    "cost": 13.89,
+    "orig": null,
+    "grams": 350,
+    "mono": "CD",
+    "grad": [
+      "#1e293b",
+      "#0f172a"
+    ],
+    "deal": "none",
+    "complaints": 0,
+    "fit": "top",
+    "note": "Camiseta deporte Nike. Mira las 12 fotos y elige el color/combinación que más te guste.",
+    "imgData": "imagenes/camisetas/nike/camiseta_de_deporte_nike/05.png",
+    "colors": [
+      {
+        "label": "05",
+        "img": "imagenes/camisetas/nike/camiseta_de_deporte_nike/05.png"
+      },
+      {
+        "label": "06",
+        "img": "imagenes/camisetas/nike/camiseta_de_deporte_nike/06.png"
+      },
+      {
+        "label": "07",
+        "img": "imagenes/camisetas/nike/camiseta_de_deporte_nike/07.png"
+      },
+      {
+        "label": "08",
+        "img": "imagenes/camisetas/nike/camiseta_de_deporte_nike/08.png"
+      },
+      {
+        "label": "09",
+        "img": "imagenes/camisetas/nike/camiseta_de_deporte_nike/09.png"
+      },
+      {
+        "label": "10",
+        "img": "imagenes/camisetas/nike/camiseta_de_deporte_nike/10.png"
+      },
+      {
+        "label": "11",
+        "img": "imagenes/camisetas/nike/camiseta_de_deporte_nike/11.png"
+      },
+      {
+        "label": "12",
+        "img": "imagenes/camisetas/nike/camiseta_de_deporte_nike/12.png"
+      },
+      {
+        "label": "13",
+        "img": "imagenes/camisetas/nike/camiseta_de_deporte_nike/13.png"
+      },
+      {
+        "label": "14",
+        "img": "imagenes/camisetas/nike/camiseta_de_deporte_nike/14.png"
+      },
+      {
+        "label": "15",
+        "img": "imagenes/camisetas/nike/camiseta_de_deporte_nike/15.png"
+      },
+      {
+        "label": "16",
+        "img": "imagenes/camisetas/nike/camiseta_de_deporte_nike/16.png"
+      }
+    ],
+    "shipOverride": null,
+    "supLink": "https://hipobuy.com/product/2/7442540791?inviteCode=1212",
+    "isCustom": true,
+    "dateAdded": 1790008641701
+  }
 ]
