@@ -168,7 +168,7 @@
 
     const subWrap = $("#subcatFilters");
     const subStart = filters.cat ? PRODUCTS.filter(p => p.cat === filters.cat && p.subcat) : [];
-    const subAvail = [...new Set(subStart.map(p => p.subcat))];
+    const subAvail = filters.cat === "acc" ? SUBCATS.map(s => s.id) : [...new Set(subStart.map(p => p.subcat))];
     subWrap.style.display = subAvail.length ? "" : "none";
     if (subAvail.length) {
       subWrap.innerHTML = `<button class="chip ${!filters.subcat ? "active" : ""}" data-sub="">Todas</button>` +
