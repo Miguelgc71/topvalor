@@ -55,6 +55,7 @@ const CATEGORIES = [
 const SUBCATS = [
   { id: "bracelets", label: "Pulseras" },
   { id: "bags",      label: "Bolsas de deporte" },
+  { id: "travelbags", label: "Bolsas de viaje" },
   { id: "watches",   label: "Relojes" },
   { id: "caps",      label: "Gorras" },
 ];
