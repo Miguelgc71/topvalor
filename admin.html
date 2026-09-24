@@ -237,6 +237,22 @@
       <div id="prodList" class="prod-list"><p style="color:var(--muted);font-size:13px">Aún no hay productos personalizados.</p></div>
     </div>
 
+    <!-- PEDIDOS -->
+    <div class="form-card">
+      <h3>Pedidos de clientes (<span id="ordCount">0</span>)</h3>
+      <p style="font-size:12px;color:var(--muted);margin-bottom:12px">Pega aquí el mensaje que te manda el cliente (el «TOP VALOR - PEDIDO») y parsea. Obtienes cada artículo con su botón «Abrir en Hipobuy» (la ficha exacta del encargo), la ficha de envío para pegarla, la cantidad editable y la nota de caja/sin caja. <b>Solo lo ves tú: el cliente nunca ve Hipobuy.</b></p>
+      <div class="field" style="margin-bottom:8px">
+        <label>Mensaje del cliente</label>
+        <textarea id="ordRaw" rows="9" placeholder="TOP VALOR - PEDIDO&#10;1. bolsa de viaje · 23,11 €&#10;..."></textarea>
+      </div>
+      <div class="action-bar" style="flex-wrap:wrap">
+        <button class="btn btn-primary" id="ordParseBtn">Parsear pedido</button>
+        <button class="btn btn-ghost" id="ordClearBtn">Vaciar campo</button>
+      </div>
+      <div id="ordStatus" class="status" style="margin-top:6px"></div>
+      <div id="ordList" style="margin-top:10px"></div>
+    </div>
+
     <!-- PRICE REVIEW -->
     <div class="form-card">
       <h3>Revisar precios</h3>
@@ -299,6 +315,6 @@
 </div>
 
 <script src="js/data.js?v=20260920k"></script>
-<script src="js/admin.js?v=20260920j"></script>
+<script src="js/admin.js?v=20260920l"></script>
 </body>
 </html>

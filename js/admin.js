@@ -672,4 +672,240 @@
     }
     st.textContent = "Fotos subidas: " + done + (fail ? " · con error: " + fail : "") + ". Añadidas como colores del producto. Revisa el formulario y pulsa «Publicar producto» y luego «Publicar en GitHub ahora». Espera ~1 min y recarga con Ctrl+F5.";
   };
+
+  // ---------- PEDIDOS DE CLIENTES ----------
+  const ORDERS_KEY = "tv_orders";
+  let orders = [];
+  try { orders = JSON.parse(localStorage.getItem(ORDERS_KEY) || "[]"); } catch (e) { orders = []; }
+  const ORDER_STATES = [
+    { id: "recibido", label: "Recibido" },
+    { id: "encargado", label: "Encargado" },
+    { id: "pagado", label: "Pagado al proveedor" },
+    { id: "tracking", label: "Tracking enviado" },
+    { id: "entregado", label: "Entregado" }
+  ];
+
+  function ordEsc(s) { return String(s == null ? "" : s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
+  function ordMon(s) {
+    if (s == null || s === "") return null;
+    let x = String(s).trim().replace(/\s/g, "");
+    if (!/^[\d.,\-]+$/.test(x)) return null;
+    if (x.includes(",") && x.includes(".")) x = x.replace(/\./g, "").replace(",", ".");
+    else if (x.includes(",")) x = x.replace(",", ".");
+    const n = parseFloat(x);
+    return isNaN(n) ? null : n;
+  }
+  function ordNorm(s) {
+    return String(s || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, "");
+  }
+  function ordFind(title) {
+    const t = ordNorm(title);
+    return custom.find(p => ordNorm(p.title) === t) ||
+      custom.find(p => ordNorm(p.title).includes(t) || t.includes(ordNorm(p.title))) || null;
+  }
+  function ordSave() {
+    localStorage.setItem(ORDERS_KEY, JSON.stringify(orders));
+    const el = $("#ordCount");
+    if (el) el.textContent = orders.length;
+  }
+  function ordCopy(txt) {
+    const ta = document.createElement("textarea");
+    ta.value = txt;
+    ta.style.position = "fixed";
+    ta.style.opacity = "0";
+    document.body.appendChild(ta);
+    ta.select();
+    try { document.execCommand("copy"); } catch (e) { }
+    document.body.removeChild(ta);
+  }
+
+  function parseOrderText(raw) {
+    const items = [];
+    const cust = { name: "", street: "", cpCity: "", phone: "", email: "", note: "" };
+    let shipMode = "CON CAJA", shipAmt = null, total = null;
+    let inShip = false;
+    for (const rl of String(raw || "").split("\n")) {
+      const line = rl.replace(/\s+/g, " ").trim();
+      if (!line) continue;
+      if (line === "ENV\u00cdO A:") { inShip = true; continue; }
+      if (inShip) {
+        const m = line.match(/^([\wáéíóúüñÁÉÍÓÚÜÑ\s()–\-]+):\s*(.*)$/);
+        if (m) {
+          const k = m[1].trim().toLowerCase(), v = m[2].trim();
+          if (v && /nombre/.test(k)) cust.name = v;
+          else if (v && /direcci/.test(k)) cust.street = v;
+          else if (v && (/cp/.test(k) || /ciudad/.test(k))) cust.cpCity = v;
+          else if (v && /tel/.test(k)) cust.phone = v;
+          else if (v && (/correo/.test(k) || /tracking/.test(k))) cust.email = v;
+          else if (v && /nota/.test(k)) cust.note = v;
+        }
+        continue;
+      }
+      let m = line.match(/^Env\u00edo \(((?:CON|SIN) CAJA)\)(?:\s*:\s*([\d.,]+)\s*€)?/u);
+      if (m) { shipMode = m[1]; shipAmt = m[2] != null ? ordMon(m[2]) : null; continue; }
+      m = line.match(/^TOTAL\b/);
+      if (m) { const t = line.match(/([\d.,]+)\s*€/u); total = t ? ordMon(t[1]) : null; continue; }
+      m = line.match(/^(\d+)\.\s+(.+)$/);
+      if (m) {
+        const seg = m[2];
+        let price = null, rest = seg;
+        const pm = seg.match(/^(.*?)\s*·\s*([\d.,]+)\s*€\s*$/u);
+        if (pm) { rest = pm[1].trim(); price = ordMon(pm[2]); }
+        let size = null;
+        const ts = " · talla ";
+        const tIdx = rest.indexOf(ts);
+        if (tIdx >= 0) {
+          const after = rest.slice(tIdx + ts.length);
+          const sepIdx = after.indexOf(" · ");
+          size = (sepIdx >= 0 ? after.slice(0, sepIdx) : after).trim();
+          rest = rest.slice(0, tIdx) + (sepIdx >= 0 ? " · " + after.slice(sepIdx + 3) : "");
+        }
+        const parts = rest.split("·").map(x => x.trim());
+        const title = parts.shift();
+        const color = parts.join(" · ");
+        const found = ordFind(title);
+        const last = items[items.length - 1];
+        if (last && last.title === title && last.size === size && last.color === color &&
+            last.unit === price && last.productId === (found ? found.id : null)) last.qty++;
+        else items.push({ title, size, color, unit: price, qty: 1, done: false, productId: found ? found.id : null });
+      }
+    }
+    return { items, cust, shipMode, shipAmt, total };
+  }
+
+  function orderShipText(o) {
+    const c = o.cust;
+    const block = [];
+    if (o.shipMode) block.push(o.shipMode === "SIN CAJA" ? "SIN caja (quitar cajas)" : "CON caja");
+    if (c.name) block.push("Nombre: " + c.name);
+    if (c.street) block.push("Dirección: " + c.street);
+    if (c.cpCity) block.push("CP y ciudad: " + c.cpCity);
+    if (c.phone) block.push("Teléfono: " + c.phone);
+    if (c.email) block.push("Correo (para el tracking): " + c.email);
+    if (c.note) block.push("Nota: " + c.note);
+    return "FICHA DE ENV\u00cdO\n" + block.join("\n");
+  }
+
+  function renderOrders() {
+    const wrap = $("#ordList");
+    if (!wrap) return;
+    if (!orders.length) {
+      wrap.innerHTML = `<p style="font-size:13px;color:var(--muted)">Aún no hay pedidos. Pega el mensaje del cliente arriba y pulsa «Parsear pedido».</p>`;
+      return;
+    }
+    wrap.innerHTML = orders.slice().reverse().map(o => {
+      const unMatched = o.items.some(it => !it.productId);
+      const st = (ORDER_STATES.find(s => s.id === o.status) || ORDER_STATES[0]).label;
+      const itemsHtml = o.items.map((it, i) => {
+        const p = custom.find(x => x.id === it.productId);
+        const link = p && p.supLink
+          ? `<a class="btn btn-green" style="flex:0;margin:4px;text-decoration:none" href="${ordEsc(p.supLink)}" target="_blank" rel="noopener">Abrir en Hipobuy</a>`
+          : "";
+        const pick = p ? "" :
+          `<select data-pick="${i}" style="flex:1 1 120px;min-width:0">
+             <option value="">— elegir producto —</option>
+             ${custom.map(c => `<option value="${ordEsc(c.id)}">${ordEsc(c.title)}</option>`).join("")}
+           </select>`;
+        return `<div class="ord-item" style="border:1px solid var(--border);border-radius:8px;padding:8px;margin-bottom:6px">
+          <div style="display:flex;gap:8px;align-items:flex-start;flex-wrap:wrap">
+            <label style="display:flex;gap:10px;flex:1 1 100%;cursor:pointer">
+              <input type="checkbox" data-done="${i}" ${it.done ? "checked" : ""} style="accent-color:var(--green);width:17px;height:17px;margin-top:2px">
+              <span style="flex:1">
+                <b style="font-size:13px">${ordEsc(it.title)}</b>
+                <br><span style="font-size:12px;color:var(--muted)">${it.size ? "talla " + ordEsc(it.size) : "sin talla"}${it.color ? " · " + ordEsc(it.color) : ""}${it.unit != null ? " · " + fmt(it.unit) : ""}</span>
+              </span>
+            </label>
+            <span style="display:flex;gap:6px;align-items:center;padding-top:2px">
+              <span style="font-size:12px;color:var(--muted)">x</span>
+              <input type="number" min="1" value="${it.qty}" data-qty="${i}" style="width:52px;text-align:center">
+            </span>
+          </div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap">${link}${pick}</div>
+        </div>`;
+      }).join("");
+      return `<div class="ord-card" data-oid="${o.id}" style="border:1px solid var(--border);border-radius:10px;padding:10px;margin-bottom:12px;border-left:3px solid ${o.status === "recibido" ? "var(--accent)" : o.status === "entregado" ? "var(--green)" : "var(--border)"}">
+        <div style="display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;align-items:center">
+          <b style="font-size:13px">${o.ts ? new Date(o.ts).toLocaleString("es-ES", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" }) : ""} · ${o.total != null ? fmt(o.total) : "—"}</b>
+          <button class="btn btn-ghost" data-del="${o.id}" style="flex:0;padding:4px 10px">Eliminar</button>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:6px;align-items:center">
+          <label style="font-size:12px;color:var(--muted)">Estado:</label>
+          <select data-status="${o.id}" style="flex:1 1 170px">
+            ${ORDER_STATES.map(s => `<option value="${s.id}" ${o.status === s.id ? "selected" : ""}>${s.label}</option>`).join("")}
+          </select>
+        </div>
+        ${o.shipMode === "SIN CAJA" ? `<p style="font-size:12px;color:var(--accent2);margin:6px 0 0">📦 SIN CAJA: recuerda pedir a los agentes que quiten las cajas.</p>` : ""}
+        ${o.cust.name || o.cust.cpCity ? `<p style="font-size:12px;color:var(--muted);margin:6px 0 0">${ordEsc(o.cust.name)}${o.cust.cpCity ? " · " + ordEsc(o.cust.cpCity) : ""}${o.cust.phone ? " · " + ordEsc(o.cust.phone) : ""}</p>` : ""}
+        ${itemsHtml}
+        ${unMatched ? `<p style="font-size:12px;color:var(--accent2);margin:6px 0 0">⚠️ Algún artículo no está enlazado (no coincide con tus productos). Elige uno abajo o créalo en «Mis productos» para que aparezca el botón de Hipobuy.</p>` : ""}
+        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px">
+          <button class="btn btn-green" data-ship="${o.id}">Copiar ficha de envío</button>
+        </div>
+      </div>`;
+    }).join("");
+
+    $$("[data-done]", wrap).forEach(cb => cb.onchange = (e) => {
+      const card = e.target.closest(".ord-card"); if (!card) return;
+      const o = orders.find(x => x.id === card.dataset.oid); if (!o) return;
+      o.items[Number(e.target.dataset.done)].done = e.target.checked;
+      ordSave();
+    });
+    $$("[data-qty]", wrap).forEach(inp => inp.onchange = (e) => {
+      const card = e.target.closest(".ord-card"); if (!card) return;
+      const o = orders.find(x => x.id === card.dataset.oid); if (!o) return;
+      const v = Math.max(1, parseInt(e.target.value, 10) || 1);
+      o.items[Number(e.target.dataset.qty)].qty = v;
+      e.target.value = v;
+      ordSave();
+    });
+    $$("[data-pick]", wrap).forEach(sel => sel.onchange = (e) => {
+      const card = e.target.closest(".ord-card"); if (!card) return;
+      const o = orders.find(x => x.id === card.dataset.oid); if (!o) return;
+      o.items[Number(e.target.dataset.pick)].productId = e.target.value || null;
+      ordSave();
+      renderOrders();
+    });
+    $$("[data-status]", wrap).forEach(sel => sel.onchange = (e) => {
+      const o = orders.find(x => x.id === e.target.dataset.status); if (!o) return;
+      o.status = e.target.value;
+      ordSave();
+      renderOrders();
+    });
+    $$("[data-ship]", wrap).forEach(b => b.onclick = (e) => {
+      const o = orders.find(x => x.id === e.target.dataset.ship); if (!o) return;
+      ordCopy(orderShipText(o));
+      const st = $("#ordStatus");
+      st.textContent = "Ficha de envío copiada: pégala en el encargo de Hipobuy.";
+      st.style.color = "var(--green)";
+      setTimeout(() => { st.textContent = ""; }, 4000);
+    });
+    $$("[data-del]", wrap).forEach(b => b.onclick = (e) => {
+      if (!confirm("¿Eliminar este pedido?")) return;
+      orders = orders.filter(x => x.id !== e.target.dataset.del);
+      ordSave();
+      renderOrders();
+    });
+  }
+
+  $("#ordParseBtn").onclick = () => {
+    const parsed = parseOrderText($("#ordRaw").value);
+    const st = $("#ordStatus");
+    if (!parsed.items.length) {
+      st.textContent = "No encontré artículos: el mensaje debe tener líneas «1. producto · precio €». Revisa lo pegado.";
+      st.style.color = "var(--accent2)";
+      return;
+    }
+    orders.push({ id: "o" + Date.now().toString(36), ts: Date.now(), status: "recibido", ...parsed });
+    ordSave();
+    renderOrders();
+    const units = parsed.items.reduce((a, i) => a + i.qty, 0);
+    st.textContent = "Pedido guardado: " + parsed.items.length + " artículo(s) · " + units + " unidad(es). Abre cada uno en Hipobuy desde su botón y márcalo «✓» cuando lo encargues.";
+    st.style.color = "var(--green)";
+    $("#ordRaw").value = "";
+  };
+  $("#ordClearBtn").onclick = () => {
+    $("#ordRaw").value = "";
+    $("#ordStatus").textContent = "";
+  };
+  renderOrders();
 })();
