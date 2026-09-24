@@ -882,6 +882,11 @@
         <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px">
           <button class="btn btn-green" data-ship="${o.id}">Copiar ficha de envío</button>
         </div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;align-items:center">
+          <input data-trk="${o.id}" value="${ordEsc(o.tracking || "")}" placeholder="Nº de seguimiento (p. ej. LP00123456789...)..." style="flex:1 1 200px;min-width:0">
+          <button class="btn btn-primary" data-sendtrk="${o.id}" style="${o.tracking ? "" : "opacity:.6"}">Enviar tracking</button>
+        </div>
+        <p style="font-size:11px;color:var(--muted);margin:6px 0 0">«Enviar tracking» copia el mensaje con el enlace de 17track listo para pegar en WhatsApp, y marca el pedido como «Tracking enviado».</p>
       </div>`;
     }).join("");
 
@@ -919,6 +924,27 @@
       st.textContent = "Ficha de envío copiada: pégala en el encargo de Hipobuy.";
       st.style.color = "var(--green)";
       setTimeout(() => { st.textContent = ""; }, 4000);
+    });
+    $$("[data-trk]", wrap).forEach(inp => inp.onchange = (e) => {
+      const o = orders.find(x => x.id === e.target.dataset.trk); if (!o) return;
+      o.tracking = e.target.value.trim();
+      ordSave();
+    });
+    $$("[data-sendtrk]", wrap).forEach(b => b.onclick = (e) => {
+      const o = orders.find(x => x.id === e.target.dataset.sendtrk); if (!o) return;
+      const st = $("#ordStatus");
+      if (!o.tracking) {
+        st.textContent = "Escribe primero el nº de seguimiento en el campo de arriba.";
+        st.style.color = "var(--accent2)";
+        return;
+      }
+      const msg = "TOP VALOR — TU ENV\u00cdO 🚚\n\n\u00a1Hola " + (o.cust.name || "") + "!\nTu pedido ya está en camino y tiene número de seguimiento.\n\n\ud83d\udd0e Nº de seguimiento: " + o.tracking + "\n\ud83d\udccd Sigue tu paquete: https://t.17track.net/esp#nums=" + o.tracking + "\n\n\u00a1Gracias por comprar en Top Valor!";
+      ordCopy(msg);
+      o.status = "tracking";
+      ordSave();
+      renderOrders();
+      st.textContent = "Mensaje de tracking copiado: pégalo en WhatsApp y mándale el enlace al cliente. Pedido marcado como «Tracking enviado».";
+      st.style.color = "var(--green)";
     });
     $$("[data-del]", wrap).forEach(b => b.onclick = (e) => {
       if (!confirm("¿Eliminar este pedido?")) return;
