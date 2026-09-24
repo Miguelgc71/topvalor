@@ -938,7 +938,7 @@
         st.style.color = "var(--accent2)";
         return;
       }
-      const msg = "TOP VALOR — TU ENV\u00cdO 🚚\n\n\u00a1Hola " + (o.cust.name || "") + "!\nTu pedido ya está en camino y tiene número de seguimiento.\n\n\ud83d\udd0e Nº de seguimiento: " + o.tracking + "\n\ud83d\udccd Sigue tu paquete: https://t.17track.net/esp#nums=" + o.tracking + "\n\n\u00a1Gracias por comprar en Top Valor!";
+      const msg = "TOP VALOR — TU ENV\u00cdO 🚚\n\n\u00a1Hola " + (o.cust.name || "") + "!\nTu pedido ya está en camino y tiene número de seguimiento.\n\n\ud83d\udd0e Nº de seguimiento: " + o.tracking + "\n\ud83d\udccd Sigue tu paquete: https://www.17track.net/en?nums=" + o.tracking + "\n\n\u00a1Gracias por comprar en Top Valor!";
       ordCopy(msg);
       o.status = "tracking";
       ordSave();
