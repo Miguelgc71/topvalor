@@ -677,6 +677,7 @@
   const ORDERS_KEY = "tv_orders";
   let orders = [];
   try { orders = JSON.parse(localStorage.getItem(ORDERS_KEY) || "[]"); } catch (e) { orders = []; }
+  let pubs = [];
   const ORDER_STATES = [
     { id: "recibido", label: "Recibido" },
     { id: "encargado", label: "Encargado" },
@@ -698,10 +699,25 @@
   function ordNorm(s) {
     return String(s || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, "");
   }
-  function ordFind(title) {
+  function ordFind(title, unit) {
     const t = ordNorm(title);
-    return custom.find(p => ordNorm(p.title) === t) ||
-      custom.find(p => ordNorm(p.title).includes(t) || t.includes(ordNorm(p.title))) || null;
+    let cands = [];
+    for (const p of custom) if (p && ordNorm(p.title) === t) cands.push(p);
+    for (const p of pubs) if (p && ordNorm(p.title) === t) cands.push(p);
+    if (!cands.length) for (const p of custom) if (p && (ordNorm(p.title).includes(t) || t.includes(ordNorm(p.title)))) cands.push(p);
+    if (!cands.length) for (const p of pubs) if (p && (ordNorm(p.title).includes(t) || t.includes(ordNorm(p.title)))) cands.push(p);
+    if (unit != null) {
+      if (!cands.length) {
+        for (const p of custom) if (p && p.price != null && Math.abs(p.price - unit) < 0.011) cands.push(p);
+        for (const p of pubs) if (p && p.price != null && Math.abs(p.price - unit) < 0.011) cands.push(p);
+      } else {
+        const byPrice = cands.filter(p => p && p.price != null && Math.abs(p.price - unit) < 0.011);
+        if (byPrice.length) cands = byPrice;
+      }
+    }
+    const mine = cands.filter(p => custom.some(c => c.id === p.id));
+    if (mine.length) return mine[0];
+    return cands[0] || null;
   }
   function ordSave() {
     localStorage.setItem(ORDERS_KEY, JSON.stringify(orders));
@@ -762,12 +778,17 @@
         }
         const parts = rest.split("·").map(x => x.trim());
         const title = parts.shift();
-        const color = parts.join(" · ");
-        const found = ordFind(title);
+        let modelo = null, colParts = [];
+        for (const pr of parts) {
+          if (!modelo && /^\d+$/.test(pr)) { modelo = pr; continue; }
+          if (pr) colParts.push(pr);
+        }
+        const color = colParts.join(" · ");
+        const found = ordFind(title, price);
         const last = items[items.length - 1];
         if (last && last.title === title && last.size === size && last.color === color &&
-            last.unit === price && last.productId === (found ? found.id : null)) last.qty++;
-        else items.push({ title, size, color, unit: price, qty: 1, done: false, productId: found ? found.id : null });
+            last.modelo === modelo && last.unit === price && last.productId === (found ? found.id : null)) last.qty++;
+        else items.push({ title, size, color, modelo, unit: price, qty: 1, done: false, productId: found ? found.id : null });
       }
     }
     return { items, cust, shipMode, shipAmt, total };
@@ -796,23 +817,27 @@
     wrap.innerHTML = orders.slice().reverse().map(o => {
       const unMatched = o.items.some(it => !it.productId);
       const st = (ORDER_STATES.find(s => s.id === o.status) || ORDER_STATES[0]).label;
+      const pool = [];
+      const seen = {};
+      for (const c of custom) if (c && !seen[c.id]) { seen[c.id] = 1; pool.push({ ...c, _src: "tuyo" }); }
+      for (const p of pubs) if (p && !seen[p.id]) { seen[p.id] = 1; pool.push({ ...p, _src: "catálogo" }); }
       const itemsHtml = o.items.map((it, i) => {
-        const p = custom.find(x => x.id === it.productId);
+        const p = custom.find(x => x.id === it.productId) || pubs.find(x => x.id === it.productId);
         const link = p && p.supLink
           ? `<a class="btn btn-green" style="flex:0;margin:4px;text-decoration:none" href="${ordEsc(p.supLink)}" target="_blank" rel="noopener">Abrir en Hipobuy</a>`
           : "";
         const pick = p ? "" :
-          `<select data-pick="${i}" style="flex:1 1 120px;min-width:0">
+          `<select data-pick="${i}" style="flex:1 1 140px;min-width:0">
              <option value="">— elegir producto —</option>
-             ${custom.map(c => `<option value="${ordEsc(c.id)}">${ordEsc(c.title)}</option>`).join("")}
+             ${pool.map(c => `<option value="${ordEsc(c.id)}">${ordEsc(c.title)}${c._src === "catálogo" ? " (catálogo)" : ""}${c.price != null ? " · " + fmt(c.price) : ""}</option>`).join("")}
            </select>`;
         return `<div class="ord-item" style="border:1px solid var(--border);border-radius:8px;padding:8px;margin-bottom:6px">
           <div style="display:flex;gap:8px;align-items:flex-start;flex-wrap:wrap">
             <label style="display:flex;gap:10px;flex:1 1 100%;cursor:pointer">
               <input type="checkbox" data-done="${i}" ${it.done ? "checked" : ""} style="accent-color:var(--green);width:17px;height:17px;margin-top:2px">
               <span style="flex:1">
-                <b style="font-size:13px">${ordEsc(it.title)}</b>
-                <br><span style="font-size:12px;color:var(--muted)">${it.size ? "talla " + ordEsc(it.size) : "sin talla"}${it.color ? " · " + ordEsc(it.color) : ""}${it.unit != null ? " · " + fmt(it.unit) : ""}</span>
+                <b style="font-size:13px">${ordEsc(it.title)}${it.modelo ? ` <span style="color:var(--accent);font-size:12px">ref. ${ordEsc(it.modelo)}</span>` : ""}</b>
+                <br><span style="font-size:12px;color:var(--muted)">${it.size ? "talla " + ordEsc(it.size) : "sin talla"}${it.color ? " · " + ordEsc(it.color) : ""}${it.unit != null ? " · " + fmt(it.unit) : ""}${p ? " · ✅ " + (custom.some(c => c.id === p.id) ? "enlazado" : "enlazado (catálogo)") : ""}</span>
               </span>
             </label>
             <span style="display:flex;gap:6px;align-items:center;padding-top:2px">
@@ -908,4 +933,17 @@
     $("#ordStatus").textContent = "";
   };
   renderOrders();
+
+  function loadPubProducts() {
+    fetch("data/productos.json", { cache: "no-store" })
+      .then(r => r.ok ? r.json() : null)
+      .catch(() => null)
+      .then(j => {
+        if (Array.isArray(j) && j.length) {
+          pubs = j;
+          renderOrders();
+        }
+      });
+  }
+  loadPubProducts();
 })();
