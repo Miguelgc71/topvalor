@@ -789,6 +789,10 @@
           if (pr) colParts.push(pr);
         }
         const color = colParts.join(" · ");
+        if (!modelo) {
+          const mm0 = color.match(/^(\d{2,6})[-_\s]/);
+          if (mm0) modelo = mm0[1];
+        }
         const found = ordFind(title, price, modelo);
         const last = items[items.length - 1];
         if (last && last.title === title && last.size === size && last.color === color &&
@@ -834,6 +838,8 @@
         const variants = (p && it.modelo && Array.isArray(p.colors) && p.colors.length)
           ? p.colors.filter(c => ordNorm(String(c.label || "")).startsWith(ordNorm(it.modelo)))
           : [];
+        const vNames = variants.map(v => ordNorm(String((v.img || "").split("/").pop().replace(/\.[^.]+$/, ""))));
+        const exactPick = it.color && vNames.includes(ordNorm(it.color));
         const pick = p ? "" :
           `<select data-pick="${i}" style="flex:1 1 140px;min-width:0">
              <option value="">— elegir producto —</option>
@@ -847,6 +853,7 @@
                 <b style="font-size:13px">${ordEsc(it.title)}${it.modelo ? ` <span style="color:var(--accent);font-size:12px">ref. ${ordEsc(it.modelo)}</span>` : ""}</b>
                 <br><span style="font-size:12px;color:var(--muted)">${it.size ? "talla " + ordEsc(it.size) : "sin talla"}${it.color ? " · " + ordEsc(it.color) : ""}${it.unit != null ? " · " + fmt(it.unit) : ""}${p ? " · ✅ " + (custom.some(c => c.id === p.id) ? "enlazado" : "enlazado (catálogo)") : ""}</span>
                 ${variants.length ? `<br><span style="font-size:11px;color:var(--green)">📷 variantes ${ordEsc(it.modelo)}: ${variants.map(v => ordEsc((v.img || "").split("/").pop().replace(/\.[^.]+$/, ""))).join(" · ")}</span>` : ""}
+                ${exactPick ? `<br><b style="color:var(--green)">✔ Pedir exactamente: ${ordEsc(it.color)}</b>` : ""}
               </span>
             </label>
             <span style="display:flex;gap:6px;align-items:center;padding-top:2px">

@@ -663,7 +663,8 @@
       return;
     }
     const selColor = s.color ? s.color.label : null;
-    STORE.cart.push({ id: p.id, mono: p.mono, grad: p.grad, title: p.title, supplier: p.supplierId, size: fitInfo(p) ? s.size : null, color: selColor, unit: eff.price, ship });
+    const selImg = s.color && s.color.img ? String(s.color.img).split("/").pop().replace(/\.[^.]+$/, "") : null;
+    STORE.cart.push({ id: p.id, mono: p.mono, grad: p.grad, title: p.title, supplier: p.supplierId, size: fitInfo(p) ? s.size : null, color: selColor, cimg: selImg, unit: eff.price, ship });
     if (p.deal === "flash") s.sold++;
     if (p.deal === "earlybird") s.earlySold = Math.min(p.early.quota, s.earlySold + 1);
     toast("Añadido al carrito:" + (fitInfo(p) ? " talla " + s.size : "") + (selColor ? " · " + selColor : "") + " · " + fmt(eff.price + ship), true);
@@ -704,7 +705,7 @@
       ${items.length === 0 ? "<p style='color:var(--muted)'>Vacío. Toca \u201cVer \u00b7 elegir talla\u201d y eliges un producto.</p>" : items.map((i, idx) => `
         <div class="cart-row">
           <div class="cr-img" style="background:linear-gradient(135deg,${i.grad[0]},${i.grad[1]})"><span class="mono">${i.mono}</span></div>
-          <div><b>${i.title}</b><br><span style="color:var(--muted);font-size:12px">${i.size ? "talla " + i.size : ""}${i.color ? " · " + i.color : ""} · ${fmt(i.unit)}</span></div>
+          <div><b>${i.title}</b><br><span style="color:var(--muted);font-size:12px">${i.size ? "talla " + i.size : ""}${i.color ? " · " + i.color : ""}${i.cimg && i.cimg !== i.color ? " · variante " + i.cimg : ""} · ${fmt(i.unit)}</span></div>
           <button class="cr-x" data-rm="${idx}">&times;</button>
         </div>`).join("")}
       ${items.length ? boxModeHtml() + `<div class="cart-total">
@@ -754,7 +755,7 @@
     const ship = groupedShip();
     const total = sub + ship;
     const items = STORE.cart;
-    const lines = items.map((i, idx) => `${idx + 1}. ${i.title}${i.size ? " · talla " + i.size : ""}${i.color ? " · " + i.color : ""} · ${fmt(i.unit)}`).join("\n");
+    const lines = items.map((i, idx) => `${idx + 1}. ${i.title}${i.size ? " · talla " + i.size : ""}${(i.color || i.cimg) ? " · " + (i.cimg || i.color) : ""} · ${fmt(i.unit)}`).join("\n");
 
     function buildSummary() {
       const g = v => { const el = document.getElementById(v); return el ? el.value.trim() : ""; };
