@@ -803,6 +803,20 @@
     return { items, cust, shipMode, shipAmt, total };
   }
 
+  function orderTrackMsg(o) {
+    return "TOP VALOR — TU ENV\u00cdO 🚚\n\n\u00a1Hola " + (o.cust.name || "") + "!\nTu pedido ya está en camino y tiene número de seguimiento.\n\n\ud83d\udd0e Nº de seguimiento: " + o.tracking + "\n\ud83d\udccd Sigue tu paquete: https://www.17track.net/en?nums=" + o.tracking + "\n\n\u00a1Gracias por comprar en Top Valor!";
+  }
+
+  function waNumber(raw) {
+    let n = String(raw || "").replace(/[\s\-()]/g, "");
+    if (!n) return null;
+    if (n.startsWith("+")) n = n.slice(1);
+    else if (n.startsWith("00")) n = n.slice(2);
+    else if (/^\d{9}$/.test(n)) n = "34" + n;
+    n = n.replace(/\D/g, "");
+    return n || null;
+  }
+
   function orderShipText(o) {
     const c = o.cust;
     const block = [];
@@ -883,10 +897,14 @@
           <button class="btn btn-green" data-ship="${o.id}">Copiar ficha de envío</button>
         </div>
         <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;align-items:center">
-          <input data-trk="${o.id}" value="${ordEsc(o.tracking || "")}" placeholder="Nº de seguimiento (p. ej. LP00123456789...)..." style="flex:1 1 200px;min-width:0">
+          <input data-trk="${o.id}" value="${ordEsc(o.tracking || "")}" placeholder="Nº de seguimiento (p. ej. LP00123456789)..." style="flex:1 1 180px;min-width:0">
           <button class="btn btn-primary" data-sendtrk="${o.id}" style="${o.tracking ? "" : "opacity:.6"}">Enviar tracking</button>
         </div>
-        <p style="font-size:11px;color:var(--muted);margin:6px 0 0">«Enviar tracking» copia el mensaje con el enlace de 17track listo para pegar en WhatsApp, y marca el pedido como «Tracking enviado».</p>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;margin:6px 0 0;align-items:center">
+          <input data-ph="${o.id}" value="${ordEsc(o.waPhone || waNumber(o.cust.phone) || "")}" placeholder="Móvil WhatsApp del cliente (ej. 34666666666)..." style="flex:1 1 180px;min-width:0">
+          <button class="btn btn-green" data-wa="${o.id}" style="${o.tracking && waNumber(o.cust.phone) ? "" : "opacity:.6"}">Enviar por WhatsApp</button>
+        </div>
+        <p style="font-size:11px;color:var(--muted);margin:6px 0 0">«Enviar tracking» copia el mensaje (WhatsApp, correo...). «Enviar por WhatsApp» abre la conversación del cliente con el mensaje ya escrito: solo te queda pulsar Enviar. El teléfono se rellena solo con el prefijo 34 si el cliente puso 9 dígitos; corrígelo si hace falta.</p>
       </div>`;
     }).join("");
 
@@ -930,6 +948,12 @@
       o.tracking = e.target.value.trim();
       ordSave();
     });
+    $$("[data-ph]", wrap).forEach(inp => inp.onchange = (e) => {
+      const o = orders.find(x => x.id === e.target.dataset.ph); if (!o) return;
+      o.waPhone = e.target.value.trim();
+      ordSave();
+      renderOrders();
+    });
     $$("[data-sendtrk]", wrap).forEach(b => b.onclick = (e) => {
       const o = orders.find(x => x.id === e.target.dataset.sendtrk); if (!o) return;
       const st = $("#ordStatus");
@@ -938,12 +962,30 @@
         st.style.color = "var(--accent2)";
         return;
       }
-      const msg = "TOP VALOR — TU ENV\u00cdO 🚚\n\n\u00a1Hola " + (o.cust.name || "") + "!\nTu pedido ya está en camino y tiene número de seguimiento.\n\n\ud83d\udd0e Nº de seguimiento: " + o.tracking + "\n\ud83d\udccd Sigue tu paquete: https://www.17track.net/en?nums=" + o.tracking + "\n\n\u00a1Gracias por comprar en Top Valor!";
-      ordCopy(msg);
+      ordCopy(orderTrackMsg(o));
       o.status = "tracking";
       ordSave();
-      renderOrders();
-      st.textContent = "Mensaje de tracking copiado: pégalo en WhatsApp y mándale el enlace al cliente. Pedido marcado como «Tracking enviado».";
+      st.textContent = "Mensaje de tracking copiado: pégalo en WhatsApp o correo y envíalo. Pedido marcado como «Tracking enviado».";
+      st.style.color = "var(--green)";
+    });
+    $$("[data-wa]", wrap).forEach(b => b.onclick = (e) => {
+      const o = orders.find(x => x.id === e.target.dataset.wa); if (!o) return;
+      const st = $("#ordStatus");
+      if (!o.tracking) {
+        st.textContent = "Escribe primero el nº de seguimiento.";
+        st.style.color = "var(--accent2)";
+        return;
+      }
+      const ph = waNumber(o.waPhone || o.cust.phone);
+      if (!ph) {
+        st.textContent = "Falta un teléfono válido del cliente (formato internacional, ej. 34666666666) para abrir WhatsApp.";
+        st.style.color = "var(--accent2)";
+        return;
+      }
+      window.open("https://wa.me/" + ph + "?text=" + encodeURIComponent(orderTrackMsg(o)), "_blank", "noopener");
+      o.status = "tracking";
+      ordSave();
+      st.textContent = "Abierto WhatsApp con el mensaje escrito: revísalo y pulsa Enviar. Pedido marcado como «Tracking enviado».";
       st.style.color = "var(--green)";
     });
     $$("[data-del]", wrap).forEach(b => b.onclick = (e) => {
