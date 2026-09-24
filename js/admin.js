@@ -699,18 +699,23 @@
   function ordNorm(s) {
     return String(s || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, "");
   }
-  function ordFind(title, unit) {
+  function ordFind(title, unit, modelo) {
     const t = ordNorm(title);
-    let cands = [];
-    for (const p of custom) if (p && ordNorm(p.title) === t) cands.push(p);
-    for (const p of pubs) if (p && ordNorm(p.title) === t) cands.push(p);
-    if (!cands.length) for (const p of custom) if (p && (ordNorm(p.title).includes(t) || t.includes(ordNorm(p.title)))) cands.push(p);
-    if (!cands.length) for (const p of pubs) if (p && (ordNorm(p.title).includes(t) || t.includes(ordNorm(p.title)))) cands.push(p);
+    const mm = modelo ? ordNorm(modelo) : "";
+    const pool = [];
+    const seen = {};
+    for (const c of custom) if (c && !seen[c.id]) { seen[c.id] = 1; pool.push(c); }
+    for (const p of pubs) if (p && !seen[p.id]) { seen[p.id] = 1; pool.push(p); }
+    let cands = pool.filter(p => p && ordNorm(p.title) === t);
+    if (!cands.length) cands = pool.filter(p => p && (ordNorm(p.title).includes(t) || t.includes(ordNorm(p.title))));
+    if (!cands.length) cands = pool.slice();
+    if (mm && cands.length > 1) {
+      const byModel = cands.filter(p => (p.colors || []).some(c => ordNorm(String(c.label || "")).startsWith(mm)));
+      if (byModel.length) cands = byModel;
+    }
     if (unit != null) {
-      if (!cands.length) {
-        for (const p of custom) if (p && p.price != null && Math.abs(p.price - unit) < 0.011) cands.push(p);
-        for (const p of pubs) if (p && p.price != null && Math.abs(p.price - unit) < 0.011) cands.push(p);
-      } else {
+      if (!cands.length) cands = pool.filter(p => p && p.price != null && Math.abs(p.price - unit) < 0.011);
+      else {
         const byPrice = cands.filter(p => p && p.price != null && Math.abs(p.price - unit) < 0.011);
         if (byPrice.length) cands = byPrice;
       }
@@ -784,7 +789,7 @@
           if (pr) colParts.push(pr);
         }
         const color = colParts.join(" · ");
-        const found = ordFind(title, price);
+        const found = ordFind(title, price, modelo);
         const last = items[items.length - 1];
         if (last && last.title === title && last.size === size && last.color === color &&
             last.modelo === modelo && last.unit === price && last.productId === (found ? found.id : null)) last.qty++;
@@ -826,6 +831,9 @@
         const link = p && p.supLink
           ? `<a class="btn btn-green" style="flex:0;margin:4px;text-decoration:none" href="${ordEsc(p.supLink)}" target="_blank" rel="noopener">Abrir en Hipobuy</a>`
           : "";
+        const variants = (p && it.modelo && Array.isArray(p.colors) && p.colors.length)
+          ? p.colors.filter(c => ordNorm(String(c.label || "")).startsWith(ordNorm(it.modelo)))
+          : [];
         const pick = p ? "" :
           `<select data-pick="${i}" style="flex:1 1 140px;min-width:0">
              <option value="">— elegir producto —</option>
@@ -838,6 +846,7 @@
               <span style="flex:1">
                 <b style="font-size:13px">${ordEsc(it.title)}${it.modelo ? ` <span style="color:var(--accent);font-size:12px">ref. ${ordEsc(it.modelo)}</span>` : ""}</b>
                 <br><span style="font-size:12px;color:var(--muted)">${it.size ? "talla " + ordEsc(it.size) : "sin talla"}${it.color ? " · " + ordEsc(it.color) : ""}${it.unit != null ? " · " + fmt(it.unit) : ""}${p ? " · ✅ " + (custom.some(c => c.id === p.id) ? "enlazado" : "enlazado (catálogo)") : ""}</span>
+                ${variants.length ? `<br><span style="font-size:11px;color:var(--green)">📷 variantes ${ordEsc(it.modelo)}: ${variants.map(v => ordEsc((v.img || "").split("/").pop().replace(/\.[^.]+$/, ""))).join(" · ")}</span>` : ""}
               </span>
             </label>
             <span style="display:flex;gap:6px;align-items:center;padding-top:2px">
@@ -935,9 +944,9 @@
   renderOrders();
 
   function loadPubProducts() {
-    fetch("data/productos.json", { cache: "no-store" })
-      .then(r => r.ok ? r.json() : null)
-      .catch(() => null)
+    const tryFetch = u => fetch(u, { cache: "no-store" }).then(r => r.ok ? r.json() : null).catch(() => null);
+    Promise.resolve().then(() => tryFetch("data/productos.json"))
+      .then(j => Array.isArray(j) && j.length ? j : tryFetch("https://raw.githubusercontent.com/" + encodeURIComponent(($("#ghUser") && $("#ghUser").value.trim()) || "Miguelgc71") + "/" + encodeURIComponent(($("#ghRepo") && $("#ghRepo").value.trim()) || "topvalor") + "/main/data/productos.json"))
       .then(j => {
         if (Array.isArray(j) && j.length) {
           pubs = j;
