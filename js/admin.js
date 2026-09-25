@@ -838,7 +838,7 @@
         if (last && last.title === title && last.size === size && last.color === color &&
             last.modelo === modelo && last.unit === price && last.code === code &&
             last.productId === (found ? found.id : null)) last.qty++;
-        else items.push({ title, size, color, modelo, code, unit: price, qty: 1, done: false, productId: found ? found.id : null });
+        else items.push({ title, size, color, modelo, code, unit: price, qty: 1, done: false, arrived: false, productId: found ? found.id : null });
       }
     }
     return { items, cust, shipMode, shipAmt, total, subAmt, msgRef };
@@ -856,6 +856,51 @@
     else if (/^\d{9}$/.test(n)) n = "34" + n;
     n = n.replace(/\D/g, "");
     return n || null;
+  }
+
+  async function ordAutoCheck() {
+    const pending = orders.filter(o => String(o.status || "recibido") === "tracking" && o.tracking);
+    const st = $("#ordStatus");
+    if (!pending.length) {
+      if (st) { st.textContent = "No hay pedidos «Enviados» con número de seguimiento para revisar."; st.style.color = "var(--accent)"; setTimeout(() => { st.textContent = ""; }, 4000); }
+      return;
+    }
+    const btn = $("[data-checktrk]");
+    if (btn) btn.disabled = true;
+    if (st) { st.textContent = `Revisando tracking de ${pending.length} pedido(s)...`; st.style.color = "var(--accent)"; }
+    const prox = [
+      { name: "allorigins", fn: async u => { const r = await fetch("https://api.allorigins.win/get?url=" + encodeURIComponent(u)); if (!r.ok) throw 0; const j = await r.json(); return String(j.contents || ""); } },
+      { name: "corsproxy", fn: async u => { const r = await fetch("https://corsproxy.io/?url=" + encodeURIComponent(u)); if (!r.ok) throw 0; return await r.text(); } }
+    ];
+    let done = 0, transit = 0; const fail = [];
+    for (const o of pending) {
+      let finished = null;
+      for (const px of prox) {
+        try {
+          const html = await px.fn("https://www.17track.net/en?nums=" + encodeURIComponent(o.tracking));
+          finished = /delivered/i.test(html);
+          break;
+        } catch (err) { }
+      }
+      if (finished === null) { fail.push(o); continue; }
+      if (finished) {
+        o.status = "entregado";
+        (o.items || []).forEach(it => it.arrived = true);
+        done++;
+      } else transit++;
+    }
+    ordSave();
+    if (btn) btn.disabled = false;
+    if (st) {
+      st.style.color = "var(--green)";
+      const links = fail.map(f => "https://www.17track.net/en?nums=" + encodeURIComponent(f.tracking));
+      let msg = done ? `✅ ${done} pedido(s) marcado(s) como Entregado.` : "Sin novedades: ninguno muestra «Entregado/Delivered».";
+      if (transit) msg += ` ${transit} en tránsito.`;
+      if (fail.length) msg += ` ⚠️ ${fail.length} sin comprobar (17track bloquea la consulta automática): ${links.join(" ")}`;
+      st.textContent = msg;
+      setTimeout(() => { st.textContent = ""; }, 12000);
+    }
+    renderOrders();
   }
 
   function orderShipText(o) {
@@ -879,6 +924,7 @@
     if (fwrap) {
       fwrap.innerHTML = ORD_FILTERS.map(f =>
         `<button class="btn" data-filt="${f.id}" style="flex:0;padding:5px 12px;${f.id === ordFilter ? "background:var(--accent);color:#fff;border-color:var(--accent);font-weight:600" : ""}">${f.label} (${cnt(f.id)})</button>`).join("") +
+        (cnt("tracking") ? `<button class="btn btn-green" data-checktrk="1" style="flex:0;padding:5px 12px">🔎 Revisar tracking (auto)</button>` : "") +
         (cnt("entregado") ? `<button class="btn btn-ghost" data-vac="1" style="flex:0;padding:5px 12px">Vaciar entregados</button>` : "");
       $$("[data-filt]", fwrap).forEach(b => b.onclick = (e) => {
         ordFilter = e.target.dataset.filt;
@@ -896,6 +942,8 @@
           renderOrders();
         }
       };
+      const ck = $("[data-checktrk]", fwrap);
+      if (ck) ck.onclick = ordAutoCheck;
     }
     if (!orders.length) {
       wrap.innerHTML = `<p style="font-size:13px;color:var(--muted)">Aún no hay pedidos. Pega el mensaje del cliente arriba y pulsa «Parsear pedido».</p>`;
@@ -940,6 +988,7 @@
                 ${variants.length ? `<br><span style="font-size:11px;color:var(--green)">📷 variantes ${ordEsc(it.modelo)}: ${variants.map(v => ordEsc((v.img || "").split("/").pop().replace(/\.[^.]+$/, ""))).join(" · ")}</span>` : ""}
                 ${exactPick ? `<br><b style="color:var(--green)">✔ Pedir exactamente: ${ordEsc(it.color)}</b>` : ""}
                 ${it._ok === 0 ? `<br><span style="font-size:11px;color:var(--accent2)">⚠️ esta línea fue editada (código de integridad no coincide)</span>` : ""}
+                <br><label style="font-size:11px;display:inline-flex;gap:5px;align-items:center;margin-top:3px;cursor:pointer"><input type="checkbox" data-arr="${i}" ${it.arrived ? "checked" : ""} style="accent-color:var(--green);width:14px;height:14px"> llegó</label>
               </span>
             </label>
             <span style="display:flex;gap:6px;align-items:center;padding-top:2px">
@@ -966,6 +1015,8 @@
         </div>
         ${o.shipMode === "SIN CAJA" ? `<p style="font-size:12px;color:var(--accent2);margin:6px 0 0">📦 SIN CAJA: recuerda pedir a los agentes que quiten las cajas.</p>` : ""}
         ${o.cust.name || o.cust.cpCity ? `<p style="font-size:12px;color:var(--muted);margin:6px 0 0">${ordEsc(o.cust.name)}${o.cust.cpCity ? " · " + ordEsc(o.cust.cpCity) : ""}${o.cust.phone ? " · " + ordEsc(o.cust.phone) : ""}</p>` : ""}
+        ${o.items.length ? `<p style="font-size:12px;color:var(--muted);margin:6px 0 0">📦 ${o.items.filter(it => it.arrived).length}/${o.items.length} artículos llegados${o.items.some(it => !it.arrived) ? " · algunos aún por llegar: el pedido se queda como Enviado" : ""}</p>` : ""}
+        ${o.items.length && o.items.every(it => it.arrived) && String(o.status || "recibido") !== "entregado" ? `<button class="btn btn-green" data-finished="${o.id}" style="flex:0;margin-top:6px">Todas las piezas llegadas → marcar Entregado</button>` : ""}
         ${itemsHtml}
         ${unMatched ? `<p style="font-size:12px;color:var(--accent2);margin:6px 0 0">⚠️ Algún artículo no está enlazado (no coincide con tus productos). Elige uno abajo o créalo en «Mis productos» para que aparezca el botón de Hipobuy.</p>` : ""}
         <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px">
@@ -1007,6 +1058,19 @@
     $$("[data-status]", wrap).forEach(sel => sel.onchange = (e) => {
       const o = orders.find(x => x.id === e.target.dataset.status); if (!o) return;
       o.status = e.target.value;
+      ordSave();
+      renderOrders();
+    });
+    $$("[data-arr]", wrap).forEach(cb => cb.onchange = (e) => {
+      const card = e.target.closest(".ord-card"); if (!card) return;
+      const o = orders.find(x => x.id === card.dataset.oid); if (!o) return;
+      o.items[Number(e.target.dataset.arr)].arrived = e.target.checked;
+      ordSave();
+      renderOrders();
+    });
+    $$("[data-finished]", wrap).forEach(b => b.onclick = (e) => {
+      const o = orders.find(x => x.id === e.target.dataset.finished); if (!o) return;
+      o.status = "entregado";
       ordSave();
       renderOrders();
     });
