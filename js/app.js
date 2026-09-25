@@ -923,7 +923,7 @@
     ST[p.id] = s;
   }
 
-  fetch("data/productos.json?v=3")
+  fetch("data/productos.json?v=4", { cache: "no-store" })
     .then(r => { if (!r.ok) throw 0; return r.json(); })
     .catch(() => [])
     .then(arr => {
