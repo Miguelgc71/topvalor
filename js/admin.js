@@ -685,6 +685,15 @@
     { id: "tracking", label: "Tracking enviado" },
     { id: "entregado", label: "Entregado" }
   ];
+  const ORD_FILTERS = [
+    { id: "todos", label: "Todos" },
+    { id: "recibido", label: "Pendientes de encargar" },
+    { id: "encargado", label: "Encargados" },
+    { id: "pagado", label: "Pagados" },
+    { id: "tracking", label: "Enviados" },
+    { id: "entregado", label: "Entregados" }
+  ];
+  let ordFilter = (localStorage.getItem("tv_ord_filter") || "todos");
 
   function ordEsc(s) { return String(s == null ? "" : s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
   function ordMon(s) {
@@ -865,11 +874,40 @@
   function renderOrders() {
     const wrap = $("#ordList");
     if (!wrap) return;
+    const fwrap = $("#ordFilter");
+    const cnt = f => orders.filter(o => f === "todos" ? true : String(o.status || "recibido") === f).length;
+    if (fwrap) {
+      fwrap.innerHTML = ORD_FILTERS.map(f =>
+        `<button class="btn" data-filt="${f.id}" style="flex:0;padding:5px 12px;${f.id === ordFilter ? "background:var(--accent);color:#fff;border-color:var(--accent);font-weight:600" : ""}">${f.label} (${cnt(f.id)})</button>`).join("") +
+        (cnt("entregado") ? `<button class="btn btn-ghost" data-vac="1" style="flex:0;padding:5px 12px">Vaciar entregados</button>` : "");
+      $$("[data-filt]", fwrap).forEach(b => b.onclick = (e) => {
+        ordFilter = e.target.dataset.filt;
+        try { localStorage.setItem("tv_ord_filter", ordFilter); } catch (err) { }
+        renderOrders();
+      });
+      const vac = $("[data-vac]", fwrap);
+      if (vac) vac.onclick = () => {
+        const n = cnt("entregado");
+        if (n && confirm(`¿Vaciar ${n} pedido(s) entregado(s)? Se eliminan de la lista (ya no podrás verlos).`)) {
+          orders = orders.filter(o => String(o.status || "recibido") !== "entregado");
+          ordSave();
+          const st = $("#ordStatus");
+          if (st) { st.textContent = n + " pedido(s) entregado(s) eliminados."; st.style.color = "var(--green)"; setTimeout(() => { st.textContent = ""; }, 4000); }
+          renderOrders();
+        }
+      };
+    }
     if (!orders.length) {
       wrap.innerHTML = `<p style="font-size:13px;color:var(--muted)">Aún no hay pedidos. Pega el mensaje del cliente arriba y pulsa «Parsear pedido».</p>`;
       return;
     }
-    wrap.innerHTML = orders.slice().reverse().map(o => {
+    const filtName = (ORD_FILTERS.find(f => f.id === ordFilter) || ORD_FILTERS[0]).label;
+    const vis = orders.filter(o => ordFilter === "todos" ? true : String(o.status || "recibido") === ordFilter);
+    if (!vis.length) {
+      wrap.innerHTML = `<p style="font-size:13px;color:var(--muted)">No hay pedidos en «${filtName}».</p>`;
+      return;
+    }
+    wrap.innerHTML = vis.slice().reverse().map(o => {
       const v = orderVerdict(o);
       const unMatched = o.items.some(it => !it.productId);
       const st = (ORDER_STATES.find(s => s.id === o.status) || ORDER_STATES[0]).label;
