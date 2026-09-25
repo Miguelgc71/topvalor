@@ -710,9 +710,8 @@
     order: { title: "🛒 Hacer un pedido", hints: ["Pega el mensaje del cliente (WhatsApp) y pulsa «Parsear pedido»."], show: ["secOrders"] },
     track: { title: "📦 Pedidos en curso", hints: ["Filtro «Enviados»: envíales el tracking que falte y pulsa «Revisar tracking (auto)» para pasar a Entregado. Nada se queda pendiente."], show: ["secOrders"] },
     incid: { title: "⚠️ Incidencias", hints: ["Filtro «Entregados»: si el cliente reclama, pulsa «Registrar incidencia» y anótala."], show: ["secOrders"] },
-    products: { title: "👜 Añadir / editar productos", hints: ["Nuevo producto o toca uno para editarlo. Estima el precio con la calculadora integrada."], show: ["formCard", "secList"] },
+    products: { title: "👜 Productos y publicar", hints: ["1) Crea el producto (nombre, marca, enlace Hipobuy, precio) y guárdalo con «Publicar producto»: se queda en Mis productos sin salir a la web todavía. 2) Sube sus fotos: Carpeta destino + fotos + «Subir fotos al repo». 3) Cuando tengas varios listos, una sola vez: «Exportar JSON» → «Sincronizar con repo» → «Publicar en GitHub ahora»."], show: ["formCard", "secList", "secUp", "secPub"] },
     prices: { title: "💰 Revisar precios", hints: ["Abre el enlace del proveedor, anota el coste nuevo y guarda: el precio de venta se recalcula solo."], show: ["secPrices"] },
-    publish: { title: "🚀 Publicar / subir fotos", hints: ["Publica el catálogo en la web («Publicar en GitHub ahora») o sube fotos al repo."], show: ["secPub", "secUp"] },
     all: { title: "📄 Ver todo", hints: [], show: ["formCard", "secList", "secOrders", "secPrices", "secPub", "secUp", "secStats"] }
   };
   let guideSel = (localStorage.getItem("tv_guide_sel") || "home");
@@ -732,9 +731,8 @@
       ["order", "🛒 Hacer un pedido"],
       ["track", "📦 Pedidos en curso"],
       ["incid", "⚠️ Incidencias"],
-      ["products", "👜 Productos"],
+      ["products", "👜 Productos y publicar"],
       ["prices", "💰 Precios"],
-      ["publish", "🚀 Publicar"],
       ["all", "📄 Todo"]
     ];
     bar.innerHTML =

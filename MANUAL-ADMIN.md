@@ -79,7 +79,9 @@ Abre el panel y te aparece **«👋 ¿Qué quieres hacer hoy?»** con atajos. El
 - **🛒 Hacer un pedido** → se enfoca el pegado del mensaje del cliente y el filtro se pone en "Pendientes de encargar".
 - **📦 Pedidos en curso** → filtro "Enviados": aquí se gestiona tracking y llegadas. Nada queda pendiente.
 - **⚠️ Incidencias** → filtro "Entregados": para anotar y cerrar reclamaciones de clientes.
-- **👜 Productos / 💰 Precios / 🚀 Publicar** → esas secciones.
+- **👜 Productos y publicar** → toda la secuencia en una sola pantalla: formulario del producto → Mis productos → **Subir fotos al repo** → **Publicar en GitHub**. Haz y guarda los productos con «Publicar producto» (quedan en Mis productos); cuando tengas varios listos pulsa una sola vez **Exportar JSON → Sincronizar con repo → Publicar en GitHub ahora**.
+- **💰 Precios** → revisar costes nuevos y guardar.
+- **📄 Todo** → ver todas las secciones del panel.
 
 ### 4.1 Recibir e interpretar el pedido
 El cliente hace su pedido en la web y pulsa **"Pedir por Bizum"**: la app genera el mensaje **"TOP VALOR - PEDIDO"** con sus datos, e incluye **códigos de integridad**: cada línea lleva `[XXX]` (3 letras/números) y al final una línea `REF: XXXXXX`.
