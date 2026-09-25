@@ -694,6 +694,15 @@
     { id: "entregado", label: "Entregados" }
   ];
   let ordFilter = (localStorage.getItem("tv_ord_filter") || "todos");
+  let ORD_SUPPLIERS = (() => { try { const v = localStorage.getItem("tv_ord_suppliers"); if (v) { const a = JSON.parse(v); if (Array.isArray(a) && a.length) return a.map(x => String(x).trim()).filter(Boolean); } } catch (e) { } return SUPPLIERS.map(s => s.name); })();
+  function ordAmt(x) { return x == null || isNaN(x) ? "" : Number(x).toFixed(2).replace(".", ","); }
+  function ordSupFromLink(url) {
+    const u = String(url || "").toLowerCase();
+    const byName = ORD_SUPPLIERS.find(s => u.includes(s.toLowerCase()));
+    if (byName) return byName;
+    const s = SUPPLIERS.find(x => u.includes(String(x.id || "").toLowerCase()));
+    return s ? s.name : "";
+  }
 
   function ordEsc(s) { return String(s == null ? "" : s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
   function ordMon(s) {
@@ -857,7 +866,7 @@
         if (last && last.title === title && last.size === size && last.color === color &&
             last.modelo === modelo && last.unit === price && last.code === code &&
             last.productId === (found ? found.id : null)) last.qty++;
-        else items.push({ title, size, color, modelo, code, unit: price, qty: 1, done: false, arrived: false, productId: found ? found.id : null });
+        else items.push({ title, size, color, modelo, code, unit: price, qty: 1, done: false, arrived: false, productId: found ? found.id : null, sup: found ? ordSupFromLink(found.supLink) : "" });
       }
     }
     return { items, cust, shipMode, shipAmt, total, subAmt, msgRef };
@@ -935,16 +944,37 @@
     return "FICHA DE ENV\u00cdO\n" + block.join("\n");
   }
 
+  function orderSupText(o) {
+    const g = {};
+    (o.items || []).forEach(it => { const k = ((it.sup || "").trim() || "Sin proveedor"); (g[k] = g[k] || []).push(it); });
+    const out = ["PROVEEDORES — PEDIDO" + (o.ts ? " (" + new Date(o.ts).toLocaleString("es-ES", { day: "2-digit", month: "2-digit" }) + ")" : ""), ""];
+    const subtot = (its) => its.reduce((a, x) => a + (Number(x.unit) || 0) * (x.qty || 1), 0);
+    Object.keys(g).forEach(k => {
+      const its = g[k];
+      out.push("Proveedor: " + k);
+      its.forEach(x => out.push("- " + (x.qty > 1 ? x.qty + "x " : "") + x.title + (x.size ? " · talla " + x.size : "") + (x.color ? " · " + x.color : "") + " · " + fmt(x.unit)));
+      out.push("  ➜ Subtotal " + k + ": " + fmt(subtot(its)));
+      out.push("");
+    });
+    out.push("TOTAL: " + fmt(subtot(o.items || [])));
+    return out.join("\n");
+  }
+
   function renderOrders() {
     const wrap = $("#ordList");
     if (!wrap) return;
     const fwrap = $("#ordFilter");
     const cnt = f => orders.filter(o => f === "todos" ? true : String(o.status || "recibido") === f).length;
     if (fwrap) {
+      const sumPaid = orders.reduce((a, o) => a + (Number(o.paid) || 0), 0);
+      const sumCost = orders.reduce((a, o) => a + (Number(o.cost) || 0), 0);
       fwrap.innerHTML = ORD_FILTERS.map(f =>
         `<button class="btn" data-filt="${f.id}" style="flex:0;padding:5px 12px;${f.id === ordFilter ? "background:var(--accent);color:#fff;border-color:var(--accent);font-weight:600" : ""}">${f.label} (${cnt(f.id)})</button>`).join("") +
+        (orders.length ? `<button class="btn btn-ghost" data-vacall="1" style="flex:0;padding:5px 12px">Vaciar todos</button>` : "") +
         (cnt("tracking") ? `<button class="btn btn-green" data-checktrk="1" style="flex:0;padding:5px 12px">🔎 Revisar tracking (auto)</button>` : "") +
-        (cnt("entregado") ? `<button class="btn btn-ghost" data-vac="1" style="flex:0;padding:5px 12px">Vaciar entregados</button>` : "");
+        (cnt("entregado") ? `<button class="btn btn-ghost" data-vac="1" style="flex:0;padding:5px 12px">Vaciar entregados</button>` : "") +
+        `<span style="flex:1 1 100%;font-size:12px;color:var(--muted)">💰 Total Bizum: <b>${fmt(sumPaid)}</b> · Coste encargos: <b>${fmt(sumCost)}</b> · Margen: <b style="color:${sumPaid - sumCost >= 0 ? "var(--green)" : "var(--accent2)"}">${fmt(sumPaid - sumCost)}</b></span>` +
+        `<span style="flex:1 1 100%;display:flex;gap:6px;align-items:center"><input id="supInput" value="${ordEsc(ORD_SUPPLIERS.join(", "))}" style="flex:1 1 220px;min-width:0" placeholder="Proveedores, separados por coma (p. ej. Hipobuy, Kakobuy, Taobao)"><button class="btn btn-ghost" data-supsave="1" style="flex:0">Guardar proveedores</button></span>`;
       $$("[data-filt]", fwrap).forEach(b => b.onclick = (e) => {
         ordFilter = e.target.dataset.filt;
         try { localStorage.setItem("tv_ord_filter", ordFilter); } catch (err) { }
@@ -961,8 +991,27 @@
           renderOrders();
         }
       };
+      const vaca = $("[data-vacall]", fwrap);
+      if (vaca) vaca.onclick = () => {
+        if (orders.length && confirm(`¿Borrar TODOS los pedidos (${orders.length})? No se podrán recuperar.`)) {
+          orders = [];
+          ordSave();
+          renderOrders();
+        }
+      };
       const ck = $("[data-checktrk]", fwrap);
       if (ck) ck.onclick = ordAutoCheck;
+      const supBtn = $("[data-supsave]", fwrap);
+      if (supBtn) supBtn.onclick = () => {
+        const inp = $("#supInput");
+        if (!inp) return;
+        ORD_SUPPLIERS = inp.value.split(/[,;\n]/).map(s => s.trim()).filter(Boolean);
+        if (!ORD_SUPPLIERS.length) ORD_SUPPLIERS = ["Hipobuy"];
+        try { localStorage.setItem("tv_ord_suppliers", JSON.stringify(ORD_SUPPLIERS)); } catch (err) { }
+        const st = $("#ordStatus");
+        if (st) { st.textContent = "Proveedores guardados: " + ORD_SUPPLIERS.join(", "); st.style.color = "var(--green)"; setTimeout(() => { st.textContent = ""; }, 4000); }
+        renderOrders();
+      };
     }
     if (!orders.length) {
       wrap.innerHTML = `<p style="font-size:13px;color:var(--muted)">Aún no hay pedidos. Pega el mensaje del cliente arriba y pulsa «Parsear pedido».</p>`;
@@ -976,6 +1025,7 @@
     }
     wrap.innerHTML = vis.slice().reverse().map(o => {
       const v = orderVerdict(o);
+      const margin = (Number(o.paid) || 0) - (Number(o.cost) || 0);
       const unMatched = o.items.some(it => !it.productId);
       const st = (ORDER_STATES.find(s => s.id === o.status) || ORDER_STATES[0]).label;
       const pool = [];
@@ -997,6 +1047,7 @@
              <option value="">— elegir producto —</option>
              ${pool.map(c => `<option value="${ordEsc(c.id)}">${ordEsc(c.title)}${c._src === "catálogo" ? " (catálogo)" : ""}${c.price != null ? " · " + fmt(c.price) : ""}</option>`).join("")}
            </select>`;
+        const supSelect = `<select data-sup="${i}" style="flex:1 1 120px;min-width:0"><option value="">— proveedor —</option>${ORD_SUPPLIERS.map(s => `<option value="${ordEsc(s)}" ${it.sup === s ? "selected" : ""}>${ordEsc(s)}</option>`).join("")}</select>`;
         return `<div class="ord-item" style="border:1px solid var(--border);border-radius:8px;padding:8px;margin-bottom:6px">
           <div style="display:flex;gap:8px;align-items:flex-start;flex-wrap:wrap">
             <label style="display:flex;gap:10px;flex:1 1 100%;cursor:pointer">
@@ -1015,7 +1066,7 @@
               <input type="number" min="1" value="${it.qty}" data-qty="${i}" style="width:52px;text-align:center">
             </span>
           </div>
-          <div style="display:flex;gap:6px;flex-wrap:wrap">${link}${pick}</div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap">${link}${pick}${supSelect}</div>
         </div>`;
       }).join("");
       return `<div class="ord-card" data-oid="${o.id}" style="border:1px solid var(--border);border-radius:10px;padding:10px;margin-bottom:12px;border-left:3px solid ${o.status === "recibido" ? "var(--accent)" : o.status === "entregado" ? "var(--green)" : "var(--border)"}">
@@ -1044,6 +1095,7 @@
         ${unMatched ? `<p style="font-size:12px;color:var(--accent2);margin:6px 0 0">⚠️ Algún artículo no está enlazado (no coincide con tus productos). Elige uno abajo o créalo en «Mis productos» para que aparezca el botón de Hipobuy.</p>` : ""}
         <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px">
           <button class="btn btn-green" data-ship="${o.id}">Copiar ficha de envío</button>
+          <button class="btn btn-primary" data-group="${o.id}">📦 Agrupar por proveedor</button>
         </div>
         <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;align-items:center">
           <input data-trk="${o.id}" value="${ordEsc(o.tracking || "")}" placeholder="Nº de seguimiento (p. ej. LP00123456789)..." style="flex:1 1 180px;min-width:0">
@@ -1052,6 +1104,11 @@
         <div style="display:flex;gap:6px;flex-wrap:wrap;margin:6px 0 0;align-items:center">
           <input data-ph="${o.id}" value="${ordEsc(o.waPhone || waNumber(o.cust.phone) || "")}" placeholder="Móvil WhatsApp del cliente (ej. 34666666666)..." style="flex:1 1 180px;min-width:0">
           <button class="btn btn-green" data-wa="${o.id}" style="${o.tracking && waNumber(o.cust.phone) ? "" : "opacity:.6"}">Enviar por WhatsApp</button>
+        </div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;margin:6px 0 0;align-items:center">
+          <input data-paid="${o.id}" value="${ordAmt(o.paid)}" placeholder="Bizum recibido (€)..." inputmode="decimal" style="flex:1 1 150px;min-width:0">
+          <input data-cost="${o.id}" value="${ordAmt(o.cost)}" placeholder="Coste encargo (€)..." inputmode="decimal" style="flex:1 1 150px;min-width:0">
+          <b style="font-size:12px;color:${margin >= 0 ? "var(--green)" : "var(--accent2)"}">💰 Margen real: ${o.paid != null && o.cost != null ? fmt(margin) : "rellena Bizum y coste"}</b>
         </div>
         <p style="font-size:11px;color:var(--muted);margin:6px 0 0">«Enviar tracking» copia el mensaje (WhatsApp, correo...). «Enviar por WhatsApp» abre la conversación del cliente con el mensaje ya escrito: solo te queda pulsar Enviar. El teléfono se rellena solo con el prefijo 34 si el cliente puso 9 dígitos; corrígelo si hace falta.</p>
       </div>`;
@@ -1074,7 +1131,12 @@
     $$("[data-pick]", wrap).forEach(sel => sel.onchange = (e) => {
       const card = e.target.closest(".ord-card"); if (!card) return;
       const o = orders.find(x => x.id === card.dataset.oid); if (!o) return;
-      o.items[Number(e.target.dataset.pick)].productId = e.target.value || null;
+      const it = o.items[Number(e.target.dataset.pick)];
+      it.productId = e.target.value || null;
+      if (it.productId) {
+        const pr = custom.find(x => x.id === it.productId) || pubs.find(x => x.id === it.productId);
+        it.sup = pr ? ordSupFromLink(pr.supLink) : it.sup;
+      }
       ordSave();
       renderOrders();
     });
@@ -1090,6 +1152,32 @@
       o.items[Number(e.target.dataset.arr)].arrived = e.target.checked;
       ordSave();
       renderOrders();
+    });
+    $$("[data-sup]", wrap).forEach(sel => sel.onchange = (e) => {
+      const card = e.target.closest(".ord-card"); if (!card) return;
+      const o = orders.find(x => x.id === card.dataset.oid); if (!o) return;
+      o.items[Number(e.target.dataset.sup)].sup = e.target.value;
+      ordSave();
+    });
+    $$("[data-paid]", wrap).forEach(inp => inp.onchange = (e) => {
+      const o = orders.find(x => x.id === e.target.dataset.paid); if (!o) return;
+      o.paid = (e.target.value.trim() === "") ? null : ordMon(e.target.value);
+      ordSave();
+      renderOrders();
+    });
+    $$("[data-cost]", wrap).forEach(inp => inp.onchange = (e) => {
+      const o = orders.find(x => x.id === e.target.dataset.cost); if (!o) return;
+      o.cost = (e.target.value.trim() === "") ? null : ordMon(e.target.value);
+      ordSave();
+      renderOrders();
+    });
+    $$("[data-group]", wrap).forEach(b => b.onclick = (e) => {
+      const o = orders.find(x => x.id === e.target.dataset.group); if (!o) return;
+      ordCopy(orderSupText(o));
+      const st = $("#ordStatus");
+      st.textContent = "Resumen por proveedor copiado: pégaselo a cada agente (Hipobuy, Kakobuy, ...).";
+      st.style.color = "var(--green)";
+      setTimeout(() => { st.textContent = ""; }, 6000);
     });
     $$("[data-finished]", wrap).forEach(b => b.onclick = (e) => {
       const o = orders.find(x => x.id === e.target.dataset.finished); if (!o) return;
