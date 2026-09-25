@@ -131,8 +131,8 @@
   },
   {
     "id": "cmuec3o7t",
-    "title": "converse",
-    "brand": "converse",
+    "title": "asics",
+    "brand": "asics",
     "cat": "shoes",
     "supplierId": "hipobuy",
     "rating": 4.8,
@@ -141,7 +141,7 @@
     "cost": 42.72,
     "orig": null,
     "grams": 1000,
-    "mono": "C",
+    "mono": "A",
     "grad": [
       "#1e293b",
       "#0f172a"
@@ -248,7 +248,7 @@
     "shipOverride": null,
     "supLink": "https://hipobuy.com/product/2/7444480126?inviteCode=1212",
     "isCustom": true,
-    "dateAdded": 1790181933402
+    "dateAdded": 1790349437460
   },
   {
     "id": "cmuedqpou",
