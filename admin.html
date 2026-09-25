@@ -79,6 +79,7 @@
   <div id="adminView" class="hidden">
     <div class="admin-title">Panel de administración</div>
     <div class="admin-sub">Añade, edita o quita productos de tu app. Se guardan en tu navegador.</div>
+    <div id="guideBar"></div>
 
     <!-- NEW PRODUCT FORM -->
     <div class="form-card" id="formCard">
@@ -232,13 +233,13 @@
     </div>
 
     <!-- PRODUCT LIST -->
-    <div class="form-card">
+    <div class="form-card" id="secList">
       <h3>Mis productos (<span id="prodCount">0</span>)</h3>
       <div id="prodList" class="prod-list"><p style="color:var(--muted);font-size:13px">Aún no hay productos personalizados.</p></div>
     </div>
 
     <!-- PEDIDOS -->
-    <div class="form-card">
+    <div class="form-card" id="secOrders">
       <h3>Pedidos de clientes (<span id="ordCount">0</span>)</h3>
       <p style="font-size:12px;color:var(--muted);margin-bottom:12px">Pega aquí el mensaje que te manda el cliente (el «TOP VALOR - PEDIDO») y parsea. Obtienes cada artículo con su botón «Abrir en Hipobuy» (la ficha exacta del encargo), la ficha de envío para pegarla, la cantidad editable y la nota de caja/sin caja. <b>Solo lo ves tú: el cliente nunca ve Hipobuy.</b></p>
       <div class="field" style="margin-bottom:8px">
@@ -255,7 +256,7 @@
     </div>
 
     <!-- PRICE REVIEW -->
-    <div class="form-card">
+    <div class="form-card" id="secPrices">
       <h3>Revisar precios</h3>
       <p style="font-size:12px;color:var(--muted);margin-bottom:12px">Comprueba el coste de cada artículo. Abre el enlace del proveedor, pon el <b>coste nuevo</b> (o déjalo igual) y guarda: el precio de venta se recalcula solo con tu margen (15% + IVA).</p>
       <div class="action-bar" style="flex-wrap:wrap">
@@ -268,7 +269,7 @@
     </div>
 
     <!-- EXPORT / IMPORT / PUBLISH -->
-    <div class="form-card">
+    <div class="form-card" id="secPub">
       <h3>Publicar en la web (GitHub Pages)</h3>
       <p style="font-size:12px;color:var(--muted);margin-bottom:12px">Con un solo clic sube tus productos a <code>data/productos.json</code> del repositorio y la web queda actualizada en segundos (sin necesidad de <code>subir.bat</code>).</p>
       <div class="action-bar" style="flex-wrap:wrap">
@@ -292,7 +293,7 @@
     </div>
 
     <!-- UPLOAD PHOTOS -->
-    <div class="form-card">
+    <div class="form-card" id="secUp">
       <h3>Subir fotos al repositorio</h3>
       <p style="font-size:12px;color:var(--muted);margin-bottom:12px">Sube las fotos a una carpeta de <code>imagenes/...</code> del repo (equivale a <code>git add/commit/push</code>, por la API). Luego usa exactamente esas rutas en «Imagen del producto» y en los colores. <b>Publicar solo sube el JSON, no las fotos: este botón es el que sube las fotos.</b></p>
       <div class="field"><label>Carpeta destino (ruta relativa, sin C: ni tienda/)</label><input id="upFolder" placeholder="imagenes/zapatillas/Nike/Jordan 5"></div>
@@ -306,7 +307,7 @@
     </div>
 
     <!-- QUICK STATS -->
-    <div class="form-card">
+    <div class="form-card" id="secStats">
       <h3>Resumen</h3>
       <div id="statsBox" style="font-size:13px;color:var(--muted)">Cargando...</div>
     </div>
@@ -316,6 +317,6 @@
 </div>
 
 <script src="js/data.js?v=20260920k"></script>
-<script src="js/admin.js?v=20260920u"></script>
+<script src="js/admin.js?v=20260925v"></script>
 </body>
 </html>

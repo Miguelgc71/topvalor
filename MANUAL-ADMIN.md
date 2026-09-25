@@ -2,7 +2,7 @@
 
 Este panel (admin.html) es **solo para ti**. El cliente nunca ve Hipobuy, ni los enlaces de encargo, ni este panel.
 
-> Actualización 25/09/2026: incluye **Fase 5** (margen real por pedido y agrupar por proveedor), filtros de pedidos, revisión automática de tracking, aviso de pedido no válido y los controles de entrega.
+> Actualización 25/09/2026: incluye **modo guía** (atendrás cada tarea paso a paso sin distracciones), **pedidos anulados**, **varios envíos/trackings por pedido** e **incidencias**. Fase 5 (margen real y agrupar por proveedor), filtros, revisión automática de tracking y aviso de pedido no válido ya incluidos desde las versiones anteriores.
 
 ---
 
@@ -74,10 +74,19 @@ En la lista "Mis productos", botón **Eliminar** del producto. Complementa borra
 
 ## 4. Pedidos de clientes
 
+### 4.0 Modo guía
+Abre el panel y te aparece **«👋 ¿Qué quieres hacer hoy?»** con atajos. Elige uno y el panel **te muestra solo lo necesario** para esa tarea (sin ruido). Para verlo todo de nuevo pulsa **«📄 Todo»**.
+- **🛒 Hacer un pedido** → se enfoca el pegado del mensaje del cliente y el filtro se pone en "Pendientes de encargar".
+- **📦 Pedidos en curso** → filtro "Enviados": aquí se gestiona tracking y llegadas. Nada queda pendiente.
+- **⚠️ Incidencias** → filtro "Entregados": para anotar y cerrar reclamaciones de clientes.
+- **👜 Productos / 💰 Precios / 🚀 Publicar** → esas secciones.
+
 ### 4.1 Recibir e interpretar el pedido
 El cliente hace su pedido en la web y pulsa **"Pedir por Bizum"**: la app genera el mensaje **"TOP VALOR - PEDIDO"** con sus datos, e incluye **códigos de integridad**: cada línea lleva `[XXX]` (3 letras/números) y al final una línea `REF: XXXXXX`.
 
 Cuando te llegue (WhatsApp), **pégalo en "Mensaje del cliente"** y pulsa **"Parsear pedido"**.
+
+Cada pedido muestra además una **barra de pasos** (Enlazar → Encargar → Pagar → Tracking → Entregado) que te dice en qué momento está y qué toca hacer ahora.
 
 ### 4.2 Comprobar la integridad (importante)
 La tarjeta del pedido te dice el estado de la verificación:
@@ -86,9 +95,10 @@ La tarjeta del pedido te dice el estado de la verificación:
 - **⚠️ El REF no cuadra** — el mensaje fue **editado** (precios, cantidades, envío...). Puede identificar las **líneas afectadas**. **No encargues** un pedido editado.
 - **Sin REF** — mensaje antiguo (versión previa a Fase 4): revísalo tú a mano.
 
-**Si es inválido (⚠️):**
+**Si es inválido (⚠️):** se **bloquea todo el encargo** (no hay botón de Hipobuy, ni elegir producto, ni proveedor) y solo quedan estas acciones:
 - **"📋 Copiar aviso al cliente"**: copia un escrito que explica que el pedido no es válido, **qué se ha detectado que se modificó**, que no se realizará, y cómo arreglarlo. Válido para correo o WhatsApp.
 - **"🚨 WhatsApp: pedido no válido"**: abre el chat del cliente con ese mensaje listo para enviar.
+- **"🚫 Anular pedido"**: lo archiva como **Anulado** (no se encargará nunca). Lo verás en el filtro **«Anulados»**; puedes desanularlo o eliminarlo.
 
 Regla: **nunca se procesa un pedido editado, ni aunque ya hayan hecho el Bizum**. El aviso incluye: "si ya me hiciste Bizum, te lo devuelvo o lo aplicamos al pedido correcto cuando lo hagas de nuevo".
 
@@ -105,21 +115,29 @@ Botones por pedido:
 
 ### 4.4 Estados del pedido
 Recibido → Encargado → Pagado al proveedor → **Tracking enviado** → **Entregado**.
-- Al poner el nº de seguimiento y pulsar **"Enviar tracking"**, se copia el mensaje de seguimiento (17track) y el pedido pasa a **"Tracking enviado"** automáticamente. El teléfono ya preparado para WhatsApp con el prefijo +34.
-- **Entrega parcial**: cada artículo tiene su checkbox **"llegó"**. Mientras quede alguno sin marcar, el pedido se queda como Enviado y se indica cuántas piezas han llegado. Cuando marcas la última aparece **"Todas las piezas llegadas → marcar Entregado"**.
-- **Entregado**: cuando el paquete está entregado (lo ves en 17track poniendo "Delivered" o te lo confirma el cliente), marca el pedido como Entregado.
+- El **tracking se introduce justo al hacer el envío** (no se queda pendiente). Rellena el nº de seguimiento y pulsa **"Enviar tracking"**: se copia el mensaje (17track) y el pedido pasa a **"Tracking enviado"** automáticamente. El teléfono es la app del cliente con el prefijo +34.
+- **Varios envíos por pedido**: si el agente envía por partes, pulsa **"+ otro envío"** y se crea **Envío 1/2**, **Envío 2/2**, etc. Cada envío tiene su nº de seguimiento y su checkbox **"llegó"**.
+- **El pedido pasa a Entregado solo cuando han llegado TODOS los envíos.** Si alguno está en camino, se queda como Enviado y verás "🚚 Envíos: X/Y llegaron".
+- **Entrega parcial de artículos**: el checkbox **"llegó"** de cada artículo también marca piezas. Cuando marcas la última aparece **"Todas las piezas llegadas → marcar Entregado"**.
 
 ### 4.5 Revisar tracking automático
-Botón **"🔎 Revisar tracking (auto)"** (aparece si hay Enviados):
-- Consulta 17track de todos los Enviados; si pone **Delivered**, los pasa a **Entregado** solo.
+Botón **"🔎 Revisar tracking (auto)"**:
+- Consulta 17track de todos los envíos pendientes de los pedidos Enviados; si pone **Delivered**, marca ese envío como **"llegó"**. Cuando todos los envíos de un pedido han llegado, lo pasa a **Entregado** solo.
 - 17track a veces bloquea la consulta automática: en ese caso **no falla en silencio**, te dice cuáles no pudo comprobar y te da el enlace directo. Compruébalos tú.
 
-### 4.6 Filtros y limpieza
-Chips con contador: **Todos / Pendientes de encargar (Recibido) / Encargados / Pagados / Enviados / Entregados**.
+### 4.6 Incidencias
+Si el cliente reclama (no llegó, defectuoso, ...):
+- En la tarjeta del pedido pulsa **"⚠️ Registrar incidencia"** y anota el motivo. Queda marcada en el pedido en rojo.
+- Cuando se resuelva, **"Cerrar incidencia"** la quita.
+- La gestión completa (con importe, quién paga, estado) está en valoración para versiones futuras: por ahora se anota como nota.
+
+### 4.7 Filtros y limpieza
+Chips con contador: **Todos / Pendientes de encargar (Recibido) / Encargados / Pagados / Enviados / Entregados / Anulados**.
 - **"Vaciar entregados"**: borra los pedidos marcados como Entregado (pide confirmación).
 - **"Vaciar todos"**: borra todos los pedidos de una vez (pide confirmación). El historial de pedidos vive solo en tu navegador; no vuelve atrás.
+- **Anulados** guarda el registro de los pedidos que no se encargaron (invalidados) por si necesitas consultarlos. Para quitarlos, Elimínalos uno a uno.
 
-### 4.7 Margen real (Fase 5)
+### 4.8 Margen real (Fase 5)
 En la parte inferior de cada pedido:
 - **Bizum recibido (€)**: lo que el cliente te ha pagado.
 - **Coste encargo (€)**: lo que te ha cobrado el/los agente/s.
@@ -139,6 +157,9 @@ Arriba, junto a los filtros, verás los **totales** de todos los pedidos: Total 
 ## 6. Preguntas frecuentes
 
 - **¿Cómo sé que se lo han entregado?** Por el tracking (17track pone "Delivered") o por confirmación del cliente. Como no hay aviso automático gratis, usa el botón "🔎 Revisar tracking" o ábrelo tú y marca Entregado.
+- **El pedido llegó por partes (2+ envíos).** Usa "+ otro envío" para crear Envío 1/2, 2/2... El pedido solo pasa a Entregado cuando TODOS los envíos tienen "llegó" marcado.
+- **El cliente reclama que no le llegó.** En "Enviados" o "Entregados" del pedido usa "⚠️ Registrar incidencia" y déjalo anotado; cierra la incidencia cuando se resuelva.
+- **Pedido inválido que no se encargará.** Usa "🚫 Anular pedido": queda archivado en el filtro "Anulados" sin riesgo de encargarlo por error.
 - **Lo mandó editado + ya hizo Bizum.** No encargues. Envía el aviso de pedido no válido (tiene la instrucción de devolver/aplicar el Bizum) y pide un pedido nuevo correcto.
 - **Antes de tocar nada nuevo, actualiza con Ctrl+F5** para cargar la última versión del panel.
 - **El panel parece lento o con caché vieja** → prueba Ctrl+F5 o borra el almacenamiento del sitio en el navegador.

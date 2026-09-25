@@ -677,6 +677,15 @@
   const ORDERS_KEY = "tv_orders";
   let orders = [];
   try { orders = JSON.parse(localStorage.getItem(ORDERS_KEY) || "[]"); } catch (e) { orders = []; }
+  (orders || []).forEach(o => {
+    o.items = Array.isArray(o.items) ? o.items : [];
+    if (!Array.isArray(o.tracks)) {
+      o.tracks = [];
+      if (o.tracking) o.tracks.push({ tracking: String(o.tracking).trim(), arrived: false });
+      o.tracking = (o.tracks[0] && o.tracks[0].tracking) || "";
+      if (!o.tracks.length) delete o.tracking;
+    }
+  });
   let pubs = [];
   const ORDER_STATES = [
     { id: "recibido", label: "Recibido" },
@@ -691,8 +700,58 @@
     { id: "encargado", label: "Encargados" },
     { id: "pagado", label: "Pagados" },
     { id: "tracking", label: "Enviados" },
-    { id: "entregado", label: "Entregados" }
+    { id: "entregado", label: "Entregados" },
+    { id: "anulado", label: "Anulados" }
   ];
+  function ordState(o) { return o.cancelled ? "anulado" : (String(o.status || "recibido")); }
+  const SECS = ["formCard", "secList", "secOrders", "secPrices", "secPub", "secUp", "secStats"];
+  const GUIDE = {
+    home: { title: "👋 ¿Qué quieres hacer hoy?", hints: [], show: [] },
+    order: { title: "🛒 Hacer un pedido", hints: ["Pega el mensaje del cliente (WhatsApp) y pulsa «Parsear pedido»."], show: ["secOrders"] },
+    track: { title: "📦 Pedidos en curso", hints: ["Filtro «Enviados»: envíales el tracking que falte y pulsa «Revisar tracking (auto)» para pasar a Entregado. Nada se queda pendiente."], show: ["secOrders"] },
+    incid: { title: "⚠️ Incidencias", hints: ["Filtro «Entregados»: si el cliente reclama, pulsa «Registrar incidencia» y anótala."], show: ["secOrders"] },
+    products: { title: "👜 Añadir / editar productos", hints: ["Nuevo producto o toca uno para editarlo. Estima el precio con la calculadora integrada."], show: ["formCard", "secList"] },
+    prices: { title: "💰 Revisar precios", hints: ["Abre el enlace del proveedor, anota el coste nuevo y guarda: el precio de venta se recalcula solo."], show: ["secPrices"] },
+    publish: { title: "🚀 Publicar / subir fotos", hints: ["Publica el catálogo en la web («Publicar en GitHub ahora») o sube fotos al repo."], show: ["secPub", "secUp"] },
+    all: { title: "📄 Ver todo", hints: [], show: ["formCard", "secList", "secOrders", "secPrices", "secPub", "secUp", "secStats"] }
+  };
+  let guideSel = (localStorage.getItem("tv_guide_sel") || "home");
+  function applyGuide() {
+    const g = GUIDE[guideSel] || GUIDE.home;
+    SECS.forEach(id => { const el = document.getElementById(id); if (el) el.style.display = (g.show.includes(id) ? "" : "none"); });
+    if (guideSel === "order") ordFilter = "recibido";
+    if (guideSel === "track") ordFilter = "tracking";
+    if (guideSel === "incid") ordFilter = "entregado";
+    try { localStorage.setItem("tv_guide_sel", guideSel); } catch (err) { }
+  }
+  function renderGuide() {
+    const bar = $("#guideBar");
+    if (!bar) return;
+    const g = GUIDE[guideSel] || GUIDE.home;
+    const tiles = [
+      ["order", "🛒 Hacer un pedido"],
+      ["track", "📦 Pedidos en curso"],
+      ["incid", "⚠️ Incidencias"],
+      ["products", "👜 Productos"],
+      ["prices", "💰 Precios"],
+      ["publish", "🚀 Publicar"],
+      ["all", "📄 Todo"]
+    ];
+    bar.innerHTML =
+      `<div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px">` +
+      tiles.map(t => `<button class="btn" data-guide="${t[0]}" style="flex:0;padding:8px 14px;${guideSel === t[0] ? "background:var(--accent);color:#fff;border-color:var(--accent);font-weight:700" : ""}">${t[1]}</button>`).join("") +
+      `</div>` +
+      `<div style="background:#0b0e13;border:1px solid var(--line);border-radius:10px;padding:10px 14px;font-size:13px;color:var(--text);margin-bottom:18px">
+        <b>${g.title}</b>
+        ${g.hints.length ? `<ul style="margin:6px 0 0 18px;padding:0">${g.hints.map(h => `<li style="font-size:12px;color:var(--muted);margin:3px 0">${h}</li>`).join("")}</ul>` : `<p style="font-size:12px;color:var(--muted);margin:6px 0 0">Elige un atajo arriba: te muestro solo lo que necesitas para esa tarea.</p>`}
+      </div>`;
+    $$("[data-guide]", bar).forEach(b => b.onclick = (e) => {
+      guideSel = e.target.dataset.guide;
+      applyGuide();
+      renderGuide();
+      if (guideSel === "order") { const r = $("#ordRaw"); if (r) r.focus(); }
+    });
+  }
   let ordFilter = (localStorage.getItem("tv_ord_filter") || "todos");
   let ORD_SUPPLIERS = (() => { try { const v = localStorage.getItem("tv_ord_suppliers"); if (v) { const a = JSON.parse(v); if (Array.isArray(a) && a.length) return a.map(x => String(x).trim()).filter(Boolean); } } catch (e) { } return SUPPLIERS.map(s => s.name); })();
   function ordAmt(x) { return x == null || isNaN(x) ? "" : Number(x).toFixed(2).replace(".", ","); }
@@ -873,7 +932,15 @@
   }
 
   function orderTrackMsg(o) {
-    return "TOP VALOR — TU ENV\u00cdO 🚚\n\n\u00a1Hola " + (o.cust.name || "") + "!\nTu pedido ya está en camino y tiene número de seguimiento.\n\n\ud83d\udd0e Nº de seguimiento: " + o.tracking + "\n\ud83d\udccd Sigue tu paquete: https://www.17track.net/en?nums=" + o.tracking + "\n\n\u00a1Gracias por comprar en Top Valor!";
+    const envs = (o.tracks || []).filter(t => t.tracking);
+    let trackTxt;
+    if (envs.length > 1) {
+      trackTxt = envs.map((t, i) => (i + 1) + "/" + envs.length + ": " + t.tracking).join("\n");
+    } else {
+      trackTxt = (envs[0] && envs[0].tracking) || o.tracking || "";
+    }
+    const links = envs.map(t => "https://www.17track.net/en?nums=" + encodeURIComponent(t.tracking)).join("\n");
+    return "TOP VALOR — TU ENV\u00cdO 🚚\n\n\u00a1Hola " + (o.cust.name || "") + "!\nTu pedido ya está en camino y tiene número de seguimiento.\n\n\ud83d\udd0e Nº de seguimiento:\n" + trackTxt + "\n\ud83d\udccd Sigue tu paquete:\n" + links + "\n\n\u00a1Gracias por comprar en Top Valor!";
   }
 
   function waNumber(raw) {
@@ -887,42 +954,48 @@
   }
 
   async function ordAutoCheck() {
-    const pending = orders.filter(o => String(o.status || "recibido") === "tracking" && o.tracking);
+    const pending = orders.filter(o => ordState(o) === "tracking" && (o.tracks || []).some(t => t.tracking && !t.arrived));
     const st = $("#ordStatus");
     if (!pending.length) {
-      if (st) { st.textContent = "No hay pedidos «Enviados» con número de seguimiento para revisar."; st.style.color = "var(--accent)"; setTimeout(() => { st.textContent = ""; }, 4000); }
+      if (st) { st.textContent = "No hay envíos pendientes de revisar (filtro «Enviados», con nº de seguimiento y sin «llegó»)."; st.style.color = "var(--accent)"; setTimeout(() => { st.textContent = ""; }, 4000); }
       return;
     }
     const btn = $("[data-checktrk]");
     if (btn) btn.disabled = true;
-    if (st) { st.textContent = `Revisando tracking de ${pending.length} pedido(s)...`; st.style.color = "var(--accent)"; }
-    const prox = [
+    if (st) { st.textContent = `Revisando trackings de ${pending.length} pedido(s)...`; st.style.color = "var(--accent)"; }
+    const proxies = [
       { name: "allorigins", fn: async u => { const r = await fetch("https://api.allorigins.win/get?url=" + encodeURIComponent(u)); if (!r.ok) throw 0; const j = await r.json(); return String(j.contents || ""); } },
       { name: "corsproxy", fn: async u => { const r = await fetch("https://corsproxy.io/?url=" + encodeURIComponent(u)); if (!r.ok) throw 0; return await r.text(); } }
     ];
     let done = 0, transit = 0; const fail = [];
     for (const o of pending) {
-      let finished = null;
-      for (const px of prox) {
-        try {
-          const html = await px.fn("https://www.17track.net/en?nums=" + encodeURIComponent(o.tracking));
-          finished = /delivered/i.test(html);
-          break;
-        } catch (err) { }
+      for (const t of (o.tracks || [])) {
+        if (!t.tracking || t.arrived) continue;
+        let finished = null;
+        for (const px of proxies) {
+          try {
+            const html = await px.fn("https://www.17track.net/en?nums=" + encodeURIComponent(t.tracking));
+            finished = /delivered/i.test(html);
+            break;
+          } catch (err) { }
+        }
+        if (finished === null) { fail.push(t.tracking); continue; }
+        if (finished) { t.arrived = true; done++; } else transit++;
       }
-      if (finished === null) { fail.push(o); continue; }
-      if (finished) {
+    }
+    pending.forEach(o => {
+      const ts = (o.tracks || []).filter(x => x.tracking);
+      if (ts.length && ts.every(x => x.arrived)) {
         o.status = "entregado";
         (o.items || []).forEach(it => it.arrived = true);
-        done++;
-      } else transit++;
-    }
+      }
+    });
     ordSave();
     if (btn) btn.disabled = false;
     if (st) {
       st.style.color = "var(--green)";
-      const links = fail.map(f => "https://www.17track.net/en?nums=" + encodeURIComponent(f.tracking));
-      let msg = done ? `✅ ${done} pedido(s) marcado(s) como Entregado.` : "Sin novedades: ninguno muestra «Entregado/Delivered».";
+      const links = fail.map(f => "https://www.17track.net/en?nums=" + encodeURIComponent(f));
+      let msg = done ? `✅ ${done} envío(s) marcado(s) como llegado.` : "Sin novedades: ninguno muestra «Entregado/Delivered».";
       if (transit) msg += ` ${transit} en tránsito.`;
       if (fail.length) msg += ` ⚠️ ${fail.length} sin comprobar (17track bloquea la consulta automática): ${links.join(" ")}`;
       st.textContent = msg;
@@ -960,11 +1033,55 @@
     return out.join("\n");
   }
 
+  function ordStepBar(o, v) {
+    if (o.cancelled) {
+      return `<div style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:8px 12px;font-size:12px;color:var(--muted);margin:8px 0">🚫 <b>Pedido ANULADO</b> — no se ha encargado ni se encargará. Queda archivado para tu registro (filtro «Anulados»); elimínalo solo si no lo necesitas.<br><button class="btn btn-ghost" data-unanul="${ordEsc(o.id)}" style="flex:0;padding:4px 10px;margin-top:6px">Desanular</button></div>`;
+    }
+    const names = ["Enlazar", "Encargar", "Pagar", "Tracking", "Entregado"];
+    const unmatched = o.items.some(it => !it.productId);
+    const stIdx = { recibido: 0, encargado: 1, pagado: 2, tracking: 3, entregado: 4 }[o.status];
+    let cur = unmatched ? 0 : (stIdx == null ? 1 : 1 + Math.min(stIdx, 3));
+    if (o.status === "entregado") cur = 5;
+    const hints = [
+      "Enlaza cada artículo (elige abajo su producto) para poder abrir Hipobuy.",
+      "Abre «Hipobuy» de cada artículo, pega la ficha de envío y encarga. Luego elige «Encargado».",
+      "Paga al proveedor y elige «Pagado al proveedor».",
+      "Escribe el nº de seguimiento del/de los envío(s) y pulsa «Enviar tracking» al cliente.",
+      "Revisa que ha llegado (botón «Revisar tracking» o este pedido ya indica llegado) y cambia a «Entregado».",
+      "Pedido entregado. Si el cliente reclama, usa «Registrar incidencia»."
+    ];
+    const hint = v.ok === 0 ? "🚫 Este pedido NO es válido: no se encarga ni se abre Hipobuy. Copia o envía el aviso al cliente y anúlelo." : (hints[cur] || "");
+    const mk = (i) => {
+      if (i < cur) return `<span style="padding:3px 9px;border-radius:999px;background:var(--green);color:#0f1115;font-weight:700">✓ ${names[i]}</span>`;
+      if (i === cur && cur < 5) return `<span style="padding:3px 9px;border-radius:999px;background:var(--accent);color:#0f1115;font-weight:800;box-shadow:0 0 0 1px var(--accent)">${names[i]}</span>`;
+      return `<span style="padding:3px 9px;border-radius:999px;background:var(--bg2);color:var(--muted)">${names[i]}</span>`;
+    };
+    return `<div style="display:flex;gap:2px;flex-wrap:wrap;font-size:11px;margin:8px 0 4px">${names.map((_, i) => mk(i)).join("")}</div>
+      <p style="font-size:12px;color:${v.ok === 0 ? "var(--accent2)" : "var(--muted)"};margin:2px 0 8px;font-weight:${v.ok === 0 ? "700" : "400"}">${hint}</p>`;
+  }
+
+  function ordTracksHtml(o) {
+    const envs = o.tracks || [];
+    return `<div style="display:flex;gap:3px;flex-wrap:wrap;margin-top:8px;align-items:center">
+        ${envs.length ? envs.map((t, ti) => `
+        <div style="flex:1 1 100%;display:flex;gap:6px;align-items:center;flex-wrap:wrap">
+          <b style="font-size:11px;color:var(--muted);min-width:70px">Envío ${ti + 1}/${envs.length}</b>
+          <input data-trkn="${ordEsc(o.id)}" data-ti="${ti}" value="${ordEsc(t.tracking || "")}" placeholder="Nº de seguimiento..." style="flex:1 1 180px;min-width:0">
+          <label style="font-size:11px;display:inline-flex;gap:4px;align-items:center;cursor:pointer"><input type="checkbox" data-arrtrack="${ordEsc(o.id)}" data-ti="${ti}" ${t.arrived ? "checked" : ""} style="accent-color:var(--green);width:14px;height:14px"> llegó</label>
+          <button class="btn btn-ghost" data-deltrack="${ordEsc(o.id)}" data-ti="${ti}" style="flex:0;padding:3px 8px" title="Quitar este envío">x</button>
+        </div>`).join("") : `<span style="font-size:12px;color:var(--muted);flex:1 1 100%">Sin envíos todavía: escríbelos aquí en cuanto el agente te los dé.</span>`}
+      </div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;margin:6px 0 0;align-items:center">
+        <button class="btn btn-ghost" data-addtrack="${ordEsc(o.id)}" style="flex:0;padding:5px 10px">+ otro envío</button>
+        <button class="btn btn-primary" data-sendtrk="${ordEsc(o.id)}" style="${envs.some(t => t.tracking) ? "" : "opacity:.6"}">Enviar tracking</button>
+      </div>`;
+  }
+
   function renderOrders() {
     const wrap = $("#ordList");
     if (!wrap) return;
     const fwrap = $("#ordFilter");
-    const cnt = f => orders.filter(o => f === "todos" ? true : String(o.status || "recibido") === f).length;
+    const cnt = f => orders.filter(o => f === "todos" ? true : ordState(o) === f).length;
     if (fwrap) {
       const sumPaid = orders.reduce((a, o) => a + (Number(o.paid) || 0), 0);
       const sumCost = orders.reduce((a, o) => a + (Number(o.cost) || 0), 0);
@@ -1018,7 +1135,7 @@
       return;
     }
     const filtName = (ORD_FILTERS.find(f => f.id === ordFilter) || ORD_FILTERS[0]).label;
-    const vis = orders.filter(o => ordFilter === "todos" ? true : String(o.status || "recibido") === ordFilter);
+    const vis = orders.filter(o => ordFilter === "todos" ? true : ordState(o) === ordFilter);
     if (!vis.length) {
       wrap.innerHTML = `<p style="font-size:13px;color:var(--muted)">No hay pedidos en «${filtName}».</p>`;
       return;
@@ -1048,6 +1165,9 @@
              ${pool.map(c => `<option value="${ordEsc(c.id)}">${ordEsc(c.title)}${c._src === "catálogo" ? " (catálogo)" : ""}${c.price != null ? " · " + fmt(c.price) : ""}</option>`).join("")}
            </select>`;
         const supSelect = `<select data-sup="${i}" style="flex:1 1 120px;min-width:0"><option value="">— proveedor —</option>${ORD_SUPPLIERS.map(s => `<option value="${ordEsc(s)}" ${it.sup === s ? "selected" : ""}>${ordEsc(s)}</option>`).join("")}</select>`;
+        const blockedMsg = o.cancelled ? "🚫 Pedido anulado: no se encarga ni se abre Hipobuy." : "🔒 Pedido no válido: no se puede encargar ni abrir Hipobuy.";
+        const blocked = v.ok === 0 || o.cancelled;
+        const actionsRow = blocked ? `<span style="font-size:11px;color:${o.cancelled ? "var(--muted)" : "var(--accent2)"}">${blockedMsg}</span>` : `${link}${pick}${supSelect}`;
         return `<div class="ord-item" style="border:1px solid var(--border);border-radius:8px;padding:8px;margin-bottom:6px">
           <div style="display:flex;gap:8px;align-items:flex-start;flex-wrap:wrap">
             <label style="display:flex;gap:10px;flex:1 1 100%;cursor:pointer">
@@ -1066,7 +1186,7 @@
               <input type="number" min="1" value="${it.qty}" data-qty="${i}" style="width:52px;text-align:center">
             </span>
           </div>
-          <div style="display:flex;gap:6px;flex-wrap:wrap">${link}${pick}${supSelect}</div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap">${actionsRow}</div>
         </div>`;
       }).join("");
       return `<div class="ord-card" data-oid="${o.id}" style="border:1px solid var(--border);border-radius:10px;padding:10px;margin-bottom:12px;border-left:3px solid ${o.status === "recibido" ? "var(--accent)" : o.status === "entregado" ? "var(--green)" : "var(--border)"}">
@@ -1080,36 +1200,40 @@
         ${v.ok === 0 ? `<div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:6px;align-items:center">
           <button class="btn" data-invalidmsg="${o.id}" style="flex:0;padding:5px 12px">📋 Copiar aviso al cliente</button>
           <button class="btn btn-green" data-invalwa="${o.id}" style="flex:0;padding:5px 12px">🚨 WhatsApp: pedido no válido</button>
+          <button class="btn" data-anul="${o.id}" style="flex:0;padding:5px 12px">🚫 Anular pedido</button>
         </div>` : ""}
         <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:6px;align-items:center">
           <label style="font-size:12px;color:var(--muted)">Estado:</label>
-          <select data-status="${o.id}" style="flex:1 1 170px">
+          <select data-status="${o.id}" style="flex:1 1 170px" ${o.cancelled ? "disabled" : ""}>
             ${ORDER_STATES.map(s => `<option value="${s.id}" ${o.status === s.id ? "selected" : ""}>${s.label}</option>`).join("")}
           </select>
         </div>
+        ${ordStepBar(o, v)}
         ${o.shipMode === "SIN CAJA" ? `<p style="font-size:12px;color:var(--accent2);margin:6px 0 0">📦 SIN CAJA: recuerda pedir a los agentes que quiten las cajas.</p>` : ""}
         ${o.cust.name || o.cust.cpCity ? `<p style="font-size:12px;color:var(--muted);margin:6px 0 0">${ordEsc(o.cust.name)}${o.cust.cpCity ? " · " + ordEsc(o.cust.cpCity) : ""}${o.cust.phone ? " · " + ordEsc(o.cust.phone) : ""}</p>` : ""}
         ${o.items.length ? `<p style="font-size:12px;color:var(--muted);margin:6px 0 0">📦 ${o.items.filter(it => it.arrived).length}/${o.items.length} artículos llegados${o.items.some(it => !it.arrived) ? " · algunos aún por llegar: el pedido se queda como Enviado" : ""}</p>` : ""}
-        ${o.items.length && o.items.every(it => it.arrived) && String(o.status || "recibido") !== "entregado" ? `<button class="btn btn-green" data-finished="${o.id}" style="flex:0;margin-top:6px">Todas las piezas llegadas → marcar Entregado</button>` : ""}
+        ${(o.tracks || []).length ? `<p style="font-size:12px;color:var(--muted);margin:2px 0 0">🚚 Envíos: ${o.tracks.filter(t => t.arrived).length}/${o.tracks.length} llegaron${o.tracks.some(t => t.tracking && !t.arrived) ? " · alguno en camino: espera a que llegue TODO antes de dar por entregado" : ""}</p>` : ""}
+        ${o.items.length && o.items.every(it => it.arrived) && String(o.status || "recibido") !== "entregado" && v.ok !== 0 && !o.cancelled ? `<button class="btn btn-green" data-finished="${o.id}" style="flex:0;margin-top:6px">Todas las piezas llegadas → marcar Entregado</button>` : ""}
         ${itemsHtml}
-        ${unMatched ? `<p style="font-size:12px;color:var(--accent2);margin:6px 0 0">⚠️ Algún artículo no está enlazado (no coincide con tus productos). Elige uno abajo o créalo en «Mis productos» para que aparezca el botón de Hipobuy.</p>` : ""}
-        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px">
+        ${unMatched && !o.cancelled ? `<p style="font-size:12px;color:var(--accent2);margin:6px 0 0">⚠️ Algún artículo no está enlazado (no coincide con tus productos). Elige uno abajo o créalo en «Mis productos» para que aparezca el botón de Hipobuy.</p>` : ""}
+        ${v.ok !== 0 && !o.cancelled ? `<div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px">
           <button class="btn btn-green" data-ship="${o.id}">Copiar ficha de envío</button>
           <button class="btn btn-primary" data-group="${o.id}">📦 Agrupar por proveedor</button>
-        </div>
-        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;align-items:center">
-          <input data-trk="${o.id}" value="${ordEsc(o.tracking || "")}" placeholder="Nº de seguimiento (p. ej. LP00123456789)..." style="flex:1 1 180px;min-width:0">
-          <button class="btn btn-primary" data-sendtrk="${o.id}" style="${o.tracking ? "" : "opacity:.6"}">Enviar tracking</button>
-        </div>
+        </div>` : ""}
+        ${v.ok !== 0 && !o.cancelled ? ordTracksHtml(o) : ""}
         <div style="display:flex;gap:6px;flex-wrap:wrap;margin:6px 0 0;align-items:center">
           <input data-ph="${o.id}" value="${ordEsc(o.waPhone || waNumber(o.cust.phone) || "")}" placeholder="Móvil WhatsApp del cliente (ej. 34666666666)..." style="flex:1 1 180px;min-width:0">
-          <button class="btn btn-green" data-wa="${o.id}" style="${o.tracking && waNumber(o.cust.phone) ? "" : "opacity:.6"}">Enviar por WhatsApp</button>
+          <button class="btn btn-green" data-wa="${o.id}" style="${(o.tracks || []).some(t => t.tracking) && waNumber(o.cust.phone) ? "" : "opacity:.6"}">Enviar por WhatsApp</button>
         </div>
         <div style="display:flex;gap:6px;flex-wrap:wrap;margin:6px 0 0;align-items:center">
           <input data-paid="${o.id}" value="${ordAmt(o.paid)}" placeholder="Bizum recibido (€)..." inputmode="decimal" style="flex:1 1 150px;min-width:0">
           <input data-cost="${o.id}" value="${ordAmt(o.cost)}" placeholder="Coste encargo (€)..." inputmode="decimal" style="flex:1 1 150px;min-width:0">
           <b style="font-size:12px;color:${margin >= 0 ? "var(--green)" : "var(--accent2)"}">💰 Margen real: ${o.paid != null && o.cost != null ? fmt(margin) : "rellena Bizum y coste"}</b>
         </div>
+        ${o.inc ? `<div style="display:flex;gap:6px;flex-wrap:wrap;margin:6px 0 0;align-items:center;background:var(--bg2);border:1px solid var(--accent2);border-radius:8px;padding:6px 10px">
+          <span style="font-size:12px;color:var(--accent2)">⚠️ <b>Incidencia:</b> ${ordEsc(o.inc.note)}${o.inc.ts ? " · " + new Date(o.inc.ts).toLocaleString("es-ES", { day: "2-digit", month: "2-digit" }) : ""}</span>
+          <button class="btn btn-ghost" data-closeinc="${o.id}" style="flex:0;padding:4px 10px">Cerrar incidencia</button>
+        </div>` : `<button class="btn" data-inc="${o.id}" style="flex:0;padding:5px 12px;margin-top:6px">⚠️ Registrar incidencia</button>`}
         <p style="font-size:11px;color:var(--muted);margin:6px 0 0">«Enviar tracking» copia el mensaje (WhatsApp, correo...). «Enviar por WhatsApp» abre la conversación del cliente con el mensaje ya escrito: solo te queda pulsar Enviar. El teléfono se rellena solo con el prefijo 34 si el cliente puso 9 dígitos; corrígelo si hace falta.</p>
       </div>`;
     }).join("");
@@ -1209,10 +1333,69 @@
       st.style.color = "var(--green)";
       setTimeout(() => { st.textContent = ""; }, 4000);
     });
-    $$("[data-trk]", wrap).forEach(inp => inp.onchange = (e) => {
-      const o = orders.find(x => x.id === e.target.dataset.trk); if (!o) return;
-      o.tracking = e.target.value.trim();
+    $$("[data-trkn]", wrap).forEach(inp => inp.onchange = (e) => {
+      const o = orders.find(x => x.id === e.target.dataset.trkn); if (!o) return;
+      const ti = Number(e.target.dataset.ti);
+      if (o.tracks[ti] && !o.tracks[ti].arrived) o.tracks[ti].tracking = e.target.value.trim();
+      const tr = o.tracks.find(t => t.tracking);
+      o.tracking = (tr && tr.tracking) || "";
       ordSave();
+    });
+    $$("[data-arrtrack]", wrap).forEach(cb => cb.onchange = (e) => {
+      const o = orders.find(x => x.id === e.target.dataset.arrtrack); if (!o) return;
+      o.tracks[Number(e.target.dataset.ti)].arrived = e.target.checked;
+      const ts = (o.tracks || []).filter(t => t.tracking);
+      if (ts.length && ts.every(t => t.arrived) && !o.cancelled) {
+        o.status = "entregado";
+        (o.items || []).forEach(it => it.arrived = true);
+        const st = $("#ordStatus");
+        if (st) { st.textContent = "Todos los envíos llegados: pedido marcado como Entregado. ✅"; st.style.color = "var(--green)"; setTimeout(() => { st.textContent = ""; }, 4000); }
+      }
+      ordSave();
+      renderOrders();
+    });
+    $$("[data-deltrack]", wrap).forEach(b => b.onclick = (e) => {
+      const o = orders.find(x => x.id === e.target.dataset.deltrack); if (!o) return;
+      const ti = Number(e.target.dataset.ti);
+      o.tracks.splice(ti, 1);
+      const tr = o.tracks.find(t => t.tracking);
+      o.tracking = (tr && tr.tracking) || "";
+      ordSave();
+      renderOrders();
+    });
+    $$("[data-addtrack]", wrap).forEach(b => b.onclick = (e) => {
+      const o = orders.find(x => x.id === e.target.dataset.addtrack); if (!o) return;
+      o.tracks.push({ tracking: "", arrived: false });
+      ordSave();
+      renderOrders();
+    });
+    $$("[data-anul]", wrap).forEach(b => b.onclick = (e) => {
+      const o = orders.find(x => x.id === e.target.dataset.anul); if (!o) return;
+      if (!confirm("¿Anular este pedido? Quedará archivado (no se encargará ni se abrirá Hipobuy).")) return;
+      o.cancelled = true;
+      ordSave();
+      renderOrders();
+    });
+    $$("[data-unanul]", wrap).forEach(b => b.onclick = (e) => {
+      const o = orders.find(x => x.id === e.target.dataset.unanul); if (!o) return;
+      o.cancelled = false;
+      ordSave();
+      renderOrders();
+    });
+    $$("[data-inc]", wrap).forEach(b => b.onclick = (e) => {
+      const o = orders.find(x => x.id === e.target.dataset.inc); if (!o) return;
+      const note = prompt("Nota de la incidencia (p. ej. «Cliente dice que no le ha llegado», «Artículo defectuoso»):");
+      if (note && note.trim()) {
+        o.inc = { note: note.trim(), ts: Date.now() };
+        ordSave();
+        renderOrders();
+      }
+    });
+    $$("[data-closeinc]", wrap).forEach(b => b.onclick = (e) => {
+      const o = orders.find(x => x.id === e.target.dataset.closeinc); if (!o) return;
+      o.inc = null;
+      ordSave();
+      renderOrders();
     });
     $$("[data-ph]", wrap).forEach(inp => inp.onchange = (e) => {
       const o = orders.find(x => x.id === e.target.dataset.ph); if (!o) return;
@@ -1223,8 +1406,8 @@
     $$("[data-sendtrk]", wrap).forEach(b => b.onclick = (e) => {
       const o = orders.find(x => x.id === e.target.dataset.sendtrk); if (!o) return;
       const st = $("#ordStatus");
-      if (!o.tracking) {
-        st.textContent = "Escribe primero el nº de seguimiento en el campo de arriba.";
+      if (!(o.tracks || []).some(t => t.tracking)) {
+        st.textContent = "Escribe primero el nº de seguimiento del envío 1 (arriba).";
         st.style.color = "var(--accent2)";
         return;
       }
@@ -1237,7 +1420,7 @@
     $$("[data-wa]", wrap).forEach(b => b.onclick = (e) => {
       const o = orders.find(x => x.id === e.target.dataset.wa); if (!o) return;
       const st = $("#ordStatus");
-      if (!o.tracking) {
+      if (!(o.tracks || []).some(t => t.tracking)) {
         st.textContent = "Escribe primero el nº de seguimiento.";
         st.style.color = "var(--accent2)";
         return;
@@ -1282,7 +1465,9 @@
     $("#ordRaw").value = "";
     $("#ordStatus").textContent = "";
   };
+  applyGuide();
   renderOrders();
+  renderGuide();
 
   function loadPubProducts() {
     const tryFetch = u => fetch(u, { cache: "no-store" }).then(r => r.ok ? r.json() : null).catch(() => null);
