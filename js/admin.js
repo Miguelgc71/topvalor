@@ -699,6 +699,32 @@
   function ordNorm(s) {
     return String(s || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, "");
   }
+  function refOf(s) {
+    let h = 5381;
+    for (let i = 0; i < s.length; i++) h = ((h << 5) + h + s.charCodeAt(i)) >>> 0;
+    return h.toString(36).toUpperCase();
+  }
+  function ordCents(x) {
+    return Math.round(Number((+x || 0).toFixed(2)) * 100);
+  }
+  function orderVerdict(o) {
+    o.items.forEach(it => {
+      if (it.code && it.productId) {
+        const exp = refOf(it.productId + "|" + (it.size || "") + "|" + (it.color || "") + "|" + ordCents(it.unit)).slice(0, 3);
+        it._ok = it.code === exp ? 1 : 0;
+      } else {
+        it._ok = 2;
+      }
+    });
+    if (!o.msgRef) return { ok: 2, badLines: (o.items || []).filter(it => it._ok === 0) };
+    const can = [];
+    (o.items || []).forEach(it => {
+      const seg = (it.productId || "") + "|" + (it.size || "") + "|" + (it.color || "") + "|" + ordCents(it.unit);
+      for (let k = 0; k < (it.qty || 1); k++) can.push(seg);
+    });
+    const exp = refOf(can.join("\n") + "\n" + (o.shipMode === "SIN CAJA" ? "SIN" : "CON") + "|" + ordCents(o.subAmt) + "|" + ordCents(o.shipAmt) + "|" + ordCents(o.total)).slice(0, 6);
+    return { ok: exp === o.msgRef ? 1 : 0, badLines: (o.items || []).filter(it => it._ok === 0) };
+  }
   function ordFind(title, unit, modelo) {
     const t = ordNorm(title);
     const mm = modelo ? ordNorm(modelo) : "";
@@ -743,7 +769,7 @@
   function parseOrderText(raw) {
     const items = [];
     const cust = { name: "", street: "", cpCity: "", phone: "", email: "", note: "" };
-    let shipMode = "CON CAJA", shipAmt = null, total = null;
+    let shipMode = "CON CAJA", shipAmt = null, total = null, msgRef = null, subAmt = null;
     let inShip = false;
     for (const rl of String(raw || "").split("\n")) {
       const line = rl.replace(/\s+/g, " ").trim();
@@ -766,12 +792,17 @@
       if (m) { shipMode = m[1]; shipAmt = m[2] != null ? ordMon(m[2]) : null; continue; }
       m = line.match(/^TOTAL\b/);
       if (m) { const t = line.match(/([\d.,]+)\s*€/u); total = t ? ordMon(t[1]) : null; continue; }
+      m = line.match(/^Subtotal\b/);
+      if (m) { const t = line.match(/([\d.,]+)\s*€/u); subAmt = t ? ordMon(t[1]) : null; continue; }
+      m = line.match(/^REF\b\s*:\s*([A-Za-z0-9]+)/);
+      if (m) { msgRef = m[1].toUpperCase(); continue; }
       m = line.match(/^(\d+)\.\s+(.+)$/);
       if (m) {
         const seg = m[2];
         let price = null, rest = seg;
-        const pm = seg.match(/^(.*?)\s*·\s*([\d.,]+)\s*€\s*$/u);
+        const pm = seg.match(/^(.*?)\s*·\s*([\d.,]+)\s*€\s*(?:\[([A-Za-z0-9]{2,6})\])?\s*$/u);
         if (pm) { rest = pm[1].trim(); price = ordMon(pm[2]); }
+        const code = pm && pm[3] ? pm[3].toUpperCase() : null;
         let size = null;
         const ts = " · talla ";
         const tIdx = rest.indexOf(ts);
@@ -796,11 +827,12 @@
         const found = ordFind(title, price, modelo);
         const last = items[items.length - 1];
         if (last && last.title === title && last.size === size && last.color === color &&
-            last.modelo === modelo && last.unit === price && last.productId === (found ? found.id : null)) last.qty++;
-        else items.push({ title, size, color, modelo, unit: price, qty: 1, done: false, productId: found ? found.id : null });
+            last.modelo === modelo && last.unit === price && last.code === code &&
+            last.productId === (found ? found.id : null)) last.qty++;
+        else items.push({ title, size, color, modelo, code, unit: price, qty: 1, done: false, productId: found ? found.id : null });
       }
     }
-    return { items, cust, shipMode, shipAmt, total };
+    return { items, cust, shipMode, shipAmt, total, subAmt, msgRef };
   }
 
   function orderTrackMsg(o) {
@@ -838,6 +870,7 @@
       return;
     }
     wrap.innerHTML = orders.slice().reverse().map(o => {
+      const v = orderVerdict(o);
       const unMatched = o.items.some(it => !it.productId);
       const st = (ORDER_STATES.find(s => s.id === o.status) || ORDER_STATES[0]).label;
       const pool = [];
@@ -868,6 +901,7 @@
                 <br><span style="font-size:12px;color:var(--muted)">${it.size ? "talla " + ordEsc(it.size) : "sin talla"}${it.color ? " · " + ordEsc(it.color) : ""}${it.unit != null ? " · " + fmt(it.unit) : ""}${p ? " · ✅ " + (custom.some(c => c.id === p.id) ? "enlazado" : "enlazado (catálogo)") : ""}</span>
                 ${variants.length ? `<br><span style="font-size:11px;color:var(--green)">📷 variantes ${ordEsc(it.modelo)}: ${variants.map(v => ordEsc((v.img || "").split("/").pop().replace(/\.[^.]+$/, ""))).join(" · ")}</span>` : ""}
                 ${exactPick ? `<br><b style="color:var(--green)">✔ Pedir exactamente: ${ordEsc(it.color)}</b>` : ""}
+                ${it._ok === 0 ? `<br><span style="font-size:11px;color:var(--accent2)">⚠️ esta línea fue editada (código de integridad no coincide)</span>` : ""}
               </span>
             </label>
             <span style="display:flex;gap:6px;align-items:center;padding-top:2px">
@@ -883,6 +917,9 @@
           <b style="font-size:13px">${o.ts ? new Date(o.ts).toLocaleString("es-ES", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" }) : ""} · ${o.total != null ? fmt(o.total) : "—"}</b>
           <button class="btn btn-ghost" data-del="${o.id}" style="flex:0;padding:4px 10px">Eliminar</button>
         </div>
+        ${v.ok === 1 ? `<p style="font-size:12px;color:var(--green);margin:6px 0 0">✅ Integridad OK · el cliente no ha tocado cantidades ni precios (REF ${ordEsc(o.msgRef)})</p>`
+          : v.ok === 0 ? `<p style="font-size:12px;color:var(--accent2);font-weight:700;margin:6px 0 0">⚠️ El REF no cuadra: este mensaje ha sido editado (cantidades, precios o envío). Confírmalo con el cliente antes de encargar.</p>${v.badLines.length ? `<p style="font-size:12px;color:var(--accent2);margin:2px 0 0">Líneas afectadas: ${v.badLines.map(b => ordEsc(b.title)).join(" · ")}</p>` : ""}`
+          : `<p style="font-size:12px;color:var(--muted);margin:6px 0 0">Sin REF en el mensaje (versión anterior): revisa tú mismo que cuadren cantidades y precios.</p>`}
         <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:6px;align-items:center">
           <label style="font-size:12px;color:var(--muted)">Estado:</label>
           <select data-status="${o.id}" style="flex:1 1 170px">

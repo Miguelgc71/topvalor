@@ -755,7 +755,15 @@
     const ship = groupedShip();
     const total = sub + ship;
     const items = STORE.cart;
-    const lines = items.map((i, idx) => `${idx + 1}. ${i.title}${i.size ? " · talla " + i.size : ""}${(i.color || i.cimg) ? " · " + (i.cimg || i.color) : ""} · ${fmt(i.unit)}`).join("\n");
+    const refOf = s => { let h = 5381; for (let i = 0; i < s.length; i++) h = ((h << 5) + h + s.charCodeAt(i)) >>> 0; return h.toString(36).toUpperCase(); };
+    const cents = x => Math.round(Number((x || 0).toFixed(2)) * 100);
+    const lineTxt = i => `${i.title}${i.size ? " · talla " + i.size : ""}${(i.color || i.cimg) ? " · " + (i.cimg || i.color) : ""}`;
+    const lines = items.map((i, idx) => {
+      const code = refOf((i.id || "") + "|" + (i.size || "") + "|" + (i.cimg || i.color || "") + "|" + cents(i.unit)).slice(0, 3);
+      return `${idx + 1}. ${lineTxt(i)} · ${fmt(i.unit)} [${code}]`;
+    }).join("\n");
+    const refTotal = refOf(items.map(i => (i.id || "") + "|" + (i.size || "") + "|" + (i.cimg || i.color || "") + "|" + cents(i.unit)).join("\n") +
+      "\n" + (STORE.noBox ? "SIN" : "CON") + "|" + cents(sub) + "|" + cents(ship) + "|" + cents(total)).slice(0, 6);
 
     function buildSummary() {
       const g = v => { const el = document.getElementById(v); return el ? el.value.trim() : ""; };
@@ -767,7 +775,7 @@
         "  Teléfono: " + (g("fPhone") || "(tu móvil)"),
         "  Correo (para el tracking): " + (g("fEmail") || "(tu email)")
       ].concat(g("fNote") ? ["  Nota: " + g("fNote")] : []).join("\n");
-      return `TOP VALOR - PEDIDO\n\n${lines}\n\nSubtotal: ${fmt(sub)}\nEnv\u00edo (${STORE.noBox ? "SIN CAJA" : "CON CAJA"}): ${fmt(ship)}\nTOTAL (IVA incl.): ${fmt(total)}\n\n${shipBlock}\n\nMe pagas por Bizum ${BIZUM}\nGracias!`;
+      return `TOP VALOR - PEDIDO\n\n${lines}\n\nSubtotal: ${fmt(sub)}\nEnv\u00edo (${STORE.noBox ? "SIN CAJA" : "CON CAJA"}): ${fmt(ship)}\nTOTAL (IVA incl.): ${fmt(total)}\nREF: ${refTotal}\n\n${shipBlock}\n\nMe pagas por Bizum ${BIZUM}\nGracias!`;
     }
 
     function shipErrors() {
