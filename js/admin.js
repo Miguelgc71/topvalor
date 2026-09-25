@@ -725,14 +725,33 @@
         it._ok = 2;
       }
     });
-    if (!o.msgRef) return { ok: 2, badLines: (o.items || []).filter(it => it._ok === 0) };
+    const totInco = (o.subAmt != null && o.shipAmt != null && o.total != null && Math.abs(o.subAmt + o.shipAmt - o.total) > 0.011);
+    if (!o.msgRef) return { ok: 2, badLines: (o.items || []).filter(it => it._ok === 0), totInco };
     const can = [];
     (o.items || []).forEach(it => {
       const seg = (it.productId || "") + "|" + (it.size || "") + "|" + (it.color || "") + "|" + ordCents(it.unit);
       for (let k = 0; k < (it.qty || 1); k++) can.push(seg);
     });
     const exp = refOf(can.join("\n") + "\n" + (o.shipMode === "SIN CAJA" ? "SIN" : "CON") + "|" + ordCents(o.subAmt) + "|" + ordCents(o.shipAmt) + "|" + ordCents(o.total)).slice(0, 6);
-    return { ok: exp === o.msgRef ? 1 : 0, badLines: (o.items || []).filter(it => it._ok === 0) };
+    return { ok: exp === o.msgRef ? 1 : 0, badLines: (o.items || []).filter(it => it._ok === 0), totInco };
+  }
+  function orderVerdictText(o, v) {
+    const b = [];
+    if (v.ok !== 1) {
+      if (v.badLines && v.badLines.length) {
+        b.push("- Se modificaron estas líneas respecto al pedido original: " + v.badLines.map(x => "«" + x.title + (x.size ? " talla " + x.size : "") + (x.color ? " " + x.color : "") + "»").join(", ") + ".");
+      }
+      b.push("- El subtotal, el envío (CON/SIN caja) o el TOTAL no cuadran con lo que genera la página web.");
+    }
+    if ((o.items || []).some(it => it.code && !it.productId)) {
+      b.push("- Hay artículos que no corresponden a ningún producto de la tienda.");
+    }
+    return b;
+  }
+  function orderInvalidMsg(o, v) {
+    const name = (o.cust && o.cust.name) || "cliente";
+    const det = orderVerdictText(o, v).map(x => x).join("\n");
+    return "⚠️ PEDIDO NO VÁLIDO\n\nHola " + name + ",\n\nHe recibido tu pedido, pero el texto llegó modificado respecto a lo que genera la página web: se alteraron datos internos de la app (precios, cantidades o envío).\n\nPor eso este pedido NO es válido y NO se va a realizar.\n\nQué se ha detectado:\n" + det + "\n\nSi ya me hiciste el Bizum de este pedido, escríbeme y te lo devuelvo, o lo aplicamos al pedido correcto cuando lo hagas de nuevo.\n\nSolución: vuelve a hacer el pedido desde la página web y envíamelo tal cual sale (sin tocar nada). Con ese mensaje sí te hago el encargo y el seguimiento normal.\n\nGracias";
   }
   function ordFind(title, unit, modelo) {
     const t = ordNorm(title);
@@ -1007,6 +1026,10 @@
         ${v.ok === 1 ? `<p style="font-size:12px;color:var(--green);margin:6px 0 0">✅ Integridad OK · el cliente no ha tocado cantidades ni precios (REF ${ordEsc(o.msgRef)})</p>`
           : v.ok === 0 ? `<p style="font-size:12px;color:var(--accent2);font-weight:700;margin:6px 0 0">⚠️ El REF no cuadra: este mensaje ha sido editado (cantidades, precios o envío). Confírmalo con el cliente antes de encargar.</p>${v.badLines.length ? `<p style="font-size:12px;color:var(--accent2);margin:2px 0 0">Líneas afectadas: ${v.badLines.map(b => ordEsc(b.title)).join(" · ")}</p>` : ""}`
           : `<p style="font-size:12px;color:var(--muted);margin:6px 0 0">Sin REF en el mensaje (versión anterior): revisa tú mismo que cuadren cantidades y precios.</p>`}
+        ${v.ok === 0 ? `<div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:6px;align-items:center">
+          <button class="btn" data-invalidmsg="${o.id}" style="flex:0;padding:5px 12px">📋 Copiar aviso al cliente</button>
+          <button class="btn btn-green" data-invalwa="${o.id}" style="flex:0;padding:5px 12px">🚨 WhatsApp: pedido no válido</button>
+        </div>` : ""}
         <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:6px;align-items:center">
           <label style="font-size:12px;color:var(--muted)">Estado:</label>
           <select data-status="${o.id}" style="flex:1 1 170px">
@@ -1073,6 +1096,22 @@
       o.status = "entregado";
       ordSave();
       renderOrders();
+    });
+    $$("[data-invalidmsg]", wrap).forEach(b => b.onclick = (e) => {
+      const o = orders.find(x => x.id === e.target.dataset.invalidmsg); if (!o) return;
+      ordCopy(orderInvalidMsg(o, orderVerdict(o)));
+      const st = $("#ordStatus");
+      if (st) { st.textContent = "Aviso de pedido no válido copiado: pégaselo al cliente por correo o WhatsApp."; st.style.color = "var(--accent2)"; setTimeout(() => { st.textContent = ""; }, 5000); }
+    });
+    $$("[data-invalwa]", wrap).forEach(b => b.onclick = (e) => {
+      const o = orders.find(x => x.id === e.target.dataset.invalwa); if (!o) return;
+      const ph = o.waPhone || waNumber(o.cust.phone);
+      const st = $("#ordStatus");
+      if (!ph) {
+        if (st) { st.textContent = "No hay móvil del cliente en este pedido. Edítalo e introduce su número (p. ej. 34666666666)."; st.style.color = "var(--accent2)"; setTimeout(() => { st.textContent = ""; }, 5000); }
+        return;
+      }
+      window.open("https://wa.me/" + ph + "?text=" + encodeURIComponent(orderInvalidMsg(o, orderVerdict(o))), "_blank");
     });
     $$("[data-ship]", wrap).forEach(b => b.onclick = (e) => {
       const o = orders.find(x => x.id === e.target.dataset.ship); if (!o) return;
