@@ -1,5 +1,42 @@
 [
   {
+    "id": "cmuig4jr3",
+    "title": "cazadora moncler",
+    "brand": "moncler",
+    "cat": "outer",
+    "supplierId": "hipobuy",
+    "rating": 4.8,
+    "reviews": 0,
+    "price": 21.11,
+    "cost": 15.17,
+    "orig": null,
+    "grams": 900,
+    "mono": "CM",
+    "grad": [
+      "#1e293b",
+      "#0f172a"
+    ],
+    "deal": "none",
+    "complaints": 0,
+    "fit": "top",
+    "note": "",
+    "imgData": "imagenes/cazadora/moncler/Black.jpg",
+    "colors": [
+      {
+        "label": "Black",
+        "img": "imagenes/cazadora/moncler/Black.jpg"
+      },
+      {
+        "label": "Bright red",
+        "img": "imagenes/cazadora/moncler/Bright_red.jpg"
+      }
+    ],
+    "shipOverride": null,
+    "supLink": "https://hipobuy.com/product/0/743672917006?inviteCode=1212",
+    "isCustom": true,
+    "dateAdded": 1790430557440
+  },
+  {
     "id": "cmui7mht1",
     "title": "camiseta off white",
     "brand": "off white",
