@@ -1,5 +1,46 @@
 [
   {
+    "id": "cmuigjrxu",
+    "title": "cazadora stone island",
+    "brand": "stone island",
+    "cat": "outer",
+    "supplierId": "hipobuy",
+    "rating": 4.8,
+    "reviews": 0,
+    "price": 69.63,
+    "cost": 50.04,
+    "orig": null,
+    "grams": 1000,
+    "mono": "CS",
+    "grad": [
+      "#1e293b",
+      "#0f172a"
+    ],
+    "deal": "none",
+    "complaints": 0,
+    "fit": "top",
+    "note": "",
+    "imgData": "imagenes/cazadora/stone island/14.jpg",
+    "colors": [
+      {
+        "label": "9",
+        "img": "imagenes/cazadora/stone island/9.jpg"
+      },
+      {
+        "label": "13",
+        "img": "imagenes/cazadora/stone island/13.jpg"
+      },
+      {
+        "label": "14",
+        "img": "imagenes/cazadora/stone island/14.jpg"
+      }
+    ],
+    "shipOverride": null,
+    "supLink": "https://hipobuy.com/product/2/7444428548?inviteCode=1212",
+    "isCustom": true,
+    "dateAdded": 1790431267890
+  },
+  {
     "id": "cmuig4jr3",
     "title": "cazadora moncler",
     "brand": "moncler",
