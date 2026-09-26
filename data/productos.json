@@ -1,5 +1,70 @@
 [
   {
+    "id": "cmui6dho5",
+    "title": "camiseta tommy hilfiger",
+    "brand": "TOMMY HILFIGER",
+    "cat": "top",
+    "supplierId": "hipobuy",
+    "rating": 4.8,
+    "reviews": 0,
+    "price": 22.38,
+    "cost": 16.08,
+    "orig": null,
+    "grams": 350,
+    "mono": "CT",
+    "grad": [
+      "#1e293b",
+      "#0f172a"
+    ],
+    "deal": "none",
+    "complaints": 0,
+    "fit": "top",
+    "note": "",
+    "imgData": "imagenes/camisetas/tommy hilfiger/3302_black.jpg",
+    "colors": [
+      {
+        "label": "3302",
+        "img": "imagenes/camisetas/tommy hilfiger/3302_black.jpg"
+      },
+      {
+        "label": "3302",
+        "img": "imagenes/camisetas/tommy hilfiger/3302_gray.jpg"
+      },
+      {
+        "label": "3302",
+        "img": "imagenes/camisetas/tommy hilfiger/3302_Royal_Blue.jpg"
+      },
+      {
+        "label": "3302",
+        "img": "imagenes/camisetas/tommy hilfiger/3302_white.jpg"
+      },
+      {
+        "label": "3303",
+        "img": "imagenes/camisetas/tommy hilfiger/3303_black.jpg"
+      },
+      {
+        "label": "3303",
+        "img": "imagenes/camisetas/tommy hilfiger/3303_gray.jpg"
+      },
+      {
+        "label": "3303",
+        "img": "imagenes/camisetas/tommy hilfiger/3303_Royal_Blue.jpg"
+      },
+      {
+        "label": "3303",
+        "img": "imagenes/camisetas/tommy hilfiger/3303_sky_blue.jpg"
+      },
+      {
+        "label": "3303",
+        "img": "imagenes/camisetas/tommy hilfiger/3303_white.jpg"
+      }
+    ],
+    "shipOverride": null,
+    "supLink": "https://hipobuy.com/product/2/7442566449?inviteCode=1212",
+    "isCustom": true,
+    "dateAdded": 1790414178486
+  },
+  {
     "id": "cmui1dnrj",
     "title": "bolsa de mano",
     "brand": "nike",
