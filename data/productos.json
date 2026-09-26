@@ -1,5 +1,55 @@
 [
   {
+    "id": "cmui1dnrj",
+    "title": "bolsa de mano",
+    "brand": "nike",
+    "cat": "acc",
+    "supplierId": "hipobuy",
+    "rating": 4.8,
+    "reviews": 0,
+    "price": 14.57,
+    "cost": 10.47,
+    "orig": null,
+    "grams": 250,
+    "mono": "BD",
+    "grad": [
+      "#1e293b",
+      "#0f172a"
+    ],
+    "deal": "none",
+    "complaints": 0,
+    "fit": "none",
+    "subcat": "travelbags",
+    "note": "",
+    "imgData": "imagenes/Accesorios  y Relojes/Accesorios/bolsa de mano/1012-2_BLACK.png",
+    "colors": [
+      {
+        "label": "1012",
+        "img": "imagenes/Accesorios  y Relojes/Accesorios/bolsa de mano/1012-1_White.png"
+      },
+      {
+        "label": "1012",
+        "img": "imagenes/Accesorios  y Relojes/Accesorios/bolsa de mano/1012-2_BLACK.png"
+      },
+      {
+        "label": "1012",
+        "img": "imagenes/Accesorios  y Relojes/Accesorios/bolsa de mano/1012-3_Pink.png"
+      },
+      {
+        "label": "1012",
+        "img": "imagenes/Accesorios  y Relojes/Accesorios/bolsa de mano/1012-4_Green.png"
+      },
+      {
+        "label": "1012",
+        "img": "imagenes/Accesorios  y Relojes/Accesorios/bolsa de mano/1012-5_Blue.png"
+      }
+    ],
+    "shipOverride": null,
+    "supLink": "https://hipobuy.com/product/2/7442526903?inviteCode=1212",
+    "isCustom": true,
+    "dateAdded": 1790405788303
+  },
+  {
     "id": "cmuhc5spb",
     "title": "JORDA 1",
     "brand": "NIKE",
