@@ -277,6 +277,15 @@
     }
     const p = currentProduct();
 
+    const dup = [...custom, ...pubs].find(x => x && x.id !== editingId && ordNorm(String(x.title || "")) === ordNorm(p.title) && ordNorm(String(x.brand || "")) === ordNorm(String(p.brand || "")));
+    if (dup) {
+      const st = $("#formStatus");
+      if (!confirm("«" + p.title + "» ya existe en tu lista o en el catálogo publicado. Es un duplicado: si lo guardas, el cliente verá dos productos iguales y en los pedidos no sabrás cuál eligió. ¿Guardarlo de todas formas?")) {
+        if (st) { st.textContent = "No guardado: ya tienes ese producto. Edítalo en «Mis productos» en vez de duplicarlo."; st.style.color = "var(--accent2)"; }
+        return;
+      }
+    }
+
     if (editingId) {
       const i = custom.findIndex(x => x.id === editingId);
       if (i >= 0) custom[i] = p;
@@ -660,8 +669,8 @@
     if (uploaded.length) {
       uploaded.forEach(pth => {
         const base = pth.split("/").pop().replace(/\.[^.]+$/, "");
-        const num = (base.match(/\d+/) || [base])[0];
-        if (!colors.some(c => c.img === pth)) colors.push({ label: num, img: pth });
+        const label = base.replace(/_+/g, " ").trim() || "color";
+        if (!colors.some(c => c.img === pth)) colors.push({ label, img: pth });
       });
       renderColors();
       if (!$("#fImgUrl").value.trim()) {
