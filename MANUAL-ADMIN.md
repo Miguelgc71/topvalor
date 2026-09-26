@@ -2,7 +2,7 @@
 
 Este panel (admin.html) es **solo para ti**. El cliente nunca ve Hipobuy, ni los enlaces de encargo, ni este panel.
 
-> Actualización 25/09/2026: incluye **modo guía** (atendrás cada tarea paso a paso sin distracciones), **pedidos anulados**, **varios envíos/trackings por pedido** e **incidencias**. Fase 5 (margen real y agrupar por proveedor), filtros, revisión automática de tracking y aviso de pedido no válido ya incluidos desde las versiones anteriores.
+> Actualización 26/09/2026: incluye **modo guía** (atendrás cada tarea paso a paso sin distracciones), **pedidos anulados**, **varios envíos/trackings por pedido** e **incidencias con gestión completa** (estado Pendiente → En gestión → Resuelta, devolución €/Bizum, reposición, fotos de prueba y WhatsApp al cliente). Fase 5 (margen real y agrupar por proveedor), filtros, revisión automática de tracking y aviso de pedido no válido ya incluidos desde las versiones anteriores.
 
 ---
 
@@ -128,10 +128,17 @@ Botón **"🔎 Revisar tracking (auto)"**:
 - 17track a veces bloquea la consulta automática: en ese caso **no falla en silencio**, te dice cuáles no pudo comprobar y te da el enlace directo. Compruébalos tú.
 
 ### 4.6 Incidencias
-Si el cliente reclama (no llegó, defectuoso, ...):
-- En la tarjeta del pedido pulsa **"⚠️ Registrar incidencia"** y anota el motivo. Queda marcada en el pedido en rojo.
-- Cuando se resuelva, **"Cerrar incidencia"** la quita.
-- La gestión completa (con importe, quién paga, estado) está en valoración para versiones futuras: por ahora se anota como nota.
+Si el cliente reclama (no llegó, defectuoso, talla, ...):
+- En la tarjeta del pedido pulsa **"⚠️ Registrar incidencia"** y rellena el formulario:
+  - **Motivo** (no llega / defectuoso / talla / falta un artículo / no es el modelo / retraso / otro).
+  - **Nota**: qué pasó y qué le dices al proveedor.
+  - **Devolver (€)**: importe que devuelves al cliente, con la casilla **"Bizum devuelto"** para marcarlo cuando lo hagas.
+  - **Reposición**: si reencargas el artículo al cliente.
+  - **Fotos de prueba** (hasta 2): se suben solas al repo en `imagenes/incidencias/...`.
+- Cada incidencia tiene un **estado**: **Pendiente → En gestión → Resuelta** (avanzas con los botones de la tarjeta; "Reabrir" la vuelve atrás). En abierto se ve en rojo.
+- Botón **"WhatsApp al cliente"**: abre wa.me con el mensaje de la incidencia ya escrito.
+- **"Eliminar"** borra la incidencia del pedido (las fotos subidas al repo se quedan).
+- El atajo **"⚠️ Incidencias"** muestra solo los pedidos con incidencia; el **Resumen** cuenta las **Incidencias abiertas**.
 
 ### 4.7 Filtros y limpieza
 Chips con contador: **Todos / Pendientes de encargar (Recibido) / Encargados / Pagados / Enviados / Entregados / Anulados**.
@@ -160,7 +167,7 @@ Arriba, junto a los filtros, verás los **totales** de todos los pedidos: Total 
 
 - **¿Cómo sé que se lo han entregado?** Por el tracking (17track pone "Delivered") o por confirmación del cliente. Como no hay aviso automático gratis, usa el botón "🔎 Revisar tracking" o ábrelo tú y marca Entregado.
 - **El pedido llegó por partes (2+ envíos).** Usa "+ otro envío" para crear Envío 1/2, 2/2... El pedido solo pasa a Entregado cuando TODOS los envíos tienen "llegó" marcado.
-- **El cliente reclama que no le llegó.** En "Enviados" o "Entregados" del pedido usa "⚠️ Registrar incidencia" y déjalo anotado; cierra la incidencia cuando se resuelva.
+- **El cliente reclama que no le llegó.** Usa "⚠️ Registrar incidencia", elige el motivo, anota el € si devuelves y avanza el estado hasta "Resuelta". Si pagas, marca "Bizum devuelto" para no perder el hilo.
 - **Pedido inválido que no se encargará.** Usa "🚫 Anular pedido": queda archivado en el filtro "Anulados" sin riesgo de encargarlo por error.
 - **Lo mandó editado + ya hizo Bizum.** No encargues. Envía el aviso de pedido no válido (tiene la instrucción de devolver/aplicar el Bizum) y pide un pedido nuevo correcto.
 - **Antes de tocar nada nuevo, actualiza con Ctrl+F5** para cargar la última versión del panel.

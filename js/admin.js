@@ -19,6 +19,7 @@
   const PRODUCTS_KEY = "tv_custom_products";
 
   let custom = [];
+  let orders = [];
   try { custom = JSON.parse(localStorage.getItem(PRODUCTS_KEY) || "[]"); } catch (e) { custom = []; }
   let editingId = null;
   let selectedSup = localStorage.getItem("tv_last_sup") || SUPPLIERS[0].id;
@@ -401,7 +402,8 @@
     $("#statsBox").innerHTML = `
       <div>Productos en catálogo: <b>${totalProducts}</b> (${PRODUCTS.length} base + ${custom.length} tuyos)</div>
       <div>Margen estimado de los tuyos: <b>${fmt(marginTotal)}</b> por venta completa del stock</div>
-      <div>Proveedores: <b>${SUPPLIERS.length}</b></div>`;
+      <div>Proveedores: <b>${SUPPLIERS.length}</b></div>
+      <div>Incidencias abiertas: <b style="color:${orders.some(o => o.inc && (o.inc.estado || "pendiente") !== "resuelta") ? "var(--accent2)" : "var(--green)"}">${orders.filter(o => o.inc && (o.inc.estado || "pendiente") !== "resuelta").length}</b>${orders.filter(o => o.inc && (o.inc.estado || "pendiente") !== "resuelta").length ? " · revisa el atajo «⚠️ Incidencias»" : " · ninguna pendiente"}</div>`;
   }
 
   // ---------- EXPORT / IMPORT / PUBLISH ----------
@@ -616,6 +618,32 @@
   $("#checkPubBtn").onclick = () => $("#publishBtn").click();
 
   // ---------- SUBIR FOTOS AL REPO ----------
+  const readB64 = f => new Promise((ok, no) => { const r = new FileReader(); r.onload = () => ok(String(r.result).split(",")[1] || ""); r.onerror = no; r.readAsDataURL(f); });
+  const ghCfg = () => { try { return JSON.parse(localStorage.getItem(GH_KEY) || "{}"); } catch (err) { return {}; } };
+  const encPath = p => p.split("/").map(encodeURIComponent).join("/");
+  const putFile = async (path, b64) => {
+    const cfg = ghCfg();
+    const token = cfg.token || "", user = cfg.user || "", repo = cfg.repo || "";
+    if (!token || !user || !repo) return { ok: false, status: 0 };
+    const apiBase = "https://api.github.com/repos/" + encodeURIComponent(user) + "/" + encodeURIComponent(repo) + "/contents/";
+    const hdr = { "Authorization": "token " + token, "Accept": "application/vnd.github.v3+json" };
+    const getSha = async p => {
+      try {
+        const r = await fetch(apiBase + encPath(p), { headers: hdr, cache: "no-store" });
+        if (r.ok) { const j = await r.json(); return j.sha || null; }
+      } catch (e) {}
+      return null;
+    };
+    let sha = await getSha(path);
+    const body = { message: "Subir foto: " + path, content: b64, branch: "main" };
+    if (sha) body.sha = sha;
+    let res = await fetch(apiBase + encPath(path), { method: "PUT", headers: hdr, body: JSON.stringify(body), cache: "no-store" });
+    if (res.status === 409 || res.status === 422) {
+      sha = await getSha(path);
+      if (sha) { body.sha = sha; res = await fetch(apiBase + encPath(path), { method: "PUT", headers: hdr, body: JSON.stringify(body), cache: "no-store" }); }
+    }
+    return res;
+  };
   $("#upBtn").onclick = async () => {
     const st = $("#upStatus");
     const token = $("#ghToken").value.trim(), user = $("#ghUser").value.trim(), repo = $("#ghRepo").value.trim();
@@ -631,28 +659,6 @@
     if (!folder) { st.textContent = "Escribe la carpeta destino, ej. imagenes/zapatillas/Marca/Modelo"; return; }
     if (!files.length) { st.textContent = "Selecciona al menos una foto."; return; }
     ghSave();
-    const apiBase = "https://api.github.com/repos/" + encodeURIComponent(user) + "/" + encodeURIComponent(repo) + "/contents/";
-    const hdr = { "Authorization": "token " + token, "Accept": "application/vnd.github.v3+json" };
-    const encPath = p => p.split("/").map(encodeURIComponent).join("/");
-    const readB64 = f => new Promise((ok, no) => { const r = new FileReader(); r.onload = () => ok(String(r.result).split(",")[1] || ""); r.onerror = no; r.readAsDataURL(f); });
-    const getSha = async path => {
-      try {
-        const r = await fetch(apiBase + encPath(path), { headers: hdr, cache: "no-store" });
-        if (r.ok) { const j = await r.json(); return j.sha || null; }
-      } catch (e) {}
-      return null;
-    };
-    const putFile = async (path, b64) => {
-      let sha = await getSha(path);
-      const body = { message: "Subir foto: " + path, content: b64, branch: "main" };
-      if (sha) body.sha = sha;
-      let res = await fetch(apiBase + encPath(path), { method: "PUT", headers: hdr, body: JSON.stringify(body), cache: "no-store" });
-      if (res.status === 409 || res.status === 422) {
-        sha = await getSha(path);
-        if (sha) { body.sha = sha; res = await fetch(apiBase + encPath(path), { method: "PUT", headers: hdr, body: JSON.stringify(body), cache: "no-store" }); }
-      }
-      return res;
-    };
     let done = 0, fail = 0;
     const uploaded = [];
     for (let i = 0; i < files.length; i++) {
@@ -684,7 +690,6 @@
 
   // ---------- PEDIDOS DE CLIENTES ----------
   const ORDERS_KEY = "tv_orders";
-  let orders = [];
   try { orders = JSON.parse(localStorage.getItem(ORDERS_KEY) || "[]"); } catch (e) { orders = []; }
   (orders || []).forEach(o => {
     o.items = Array.isArray(o.items) ? o.items : [];
@@ -712,13 +717,162 @@
     { id: "entregado", label: "Entregados" },
     { id: "anulado", label: "Anulados" }
   ];
+  const INC_TYPES = [
+    { id: "no_llega", label: "No le llega (dice Entregado)" },
+    { id: "defecto", label: "Defectuoso: roto, manchado, mal cosido" },
+    { id: "talla", label: "Talla incorrecta" },
+    { id: "falta", label: "Falta un artículo (varios envíos)" },
+    { id: "modelo", label: "No es el modelo que pidió" },
+    { id: "retraso", label: "Retraso grande" },
+    { id: "otro", label: "Otro" }
+  ];
+  const INC_STATES = [
+    { id: "pendiente", label: "Pendiente", color: "var(--accent2)" },
+    { id: "gestion", label: "En gestión", color: "var(--accent)" },
+    { id: "resuelta", label: "Resuelta", color: "var(--green)" }
+  ];
+  const incType = id => (INC_TYPES.find(t => t.id === id) || INC_TYPES[INC_TYPES.length - 1]).label;
+  const incState = o => (INC_STATES.find(s => s.id === ((o.inc && o.inc.estado) || "pendiente")) || INC_STATES[0]);
+  let incOnly = false;
+  let incEditId = null;
+  let incDraft = { oid: null, fotos: [] };
+  function incMsg(o) {
+    const i = o.inc || {};
+    let m = "TOP VALOR - INCIDENCIA\n\nHola " + (o.cust && o.cust.name ? o.cust.name : "") + ",\n\nEstamos gestionando: " + incType(i.tipo);
+    if (i.nota) m += "\n» " + i.nota;
+    if (i.reembolso) m += "\n\nTe devolvemos por Bizum " + fmt(i.reembolso) + ".";
+    if (i.reposicion) m += "\n\nReencargamos el artículo y te enviamos su seguimiento.";
+    m += "\n\nNo tienes que hacer nada. Te escribo por aquí cuando esté resuelto.\n\nGracias por la paciencia.";
+    return m;
+  }
+  function incBlock(o, v) {
+    if (!o.inc) return `<button class="btn" data-inc="${o.id}" style="flex:0;padding:5px 12px;margin-top:6px">⚠️ Registrar incidencia</button>`;
+    const i = o.inc;
+    const st = incState(o);
+    const fecha = new Date(i.ts || o.ts).toLocaleString("es-ES", { day: "2-digit", month: "2-digit" });
+    return `<div style="margin:8px 0 0;background:rgba(255,255,255,.03);border:1px solid ${st.color};border-radius:10px;padding:10px 12px">
+      <div style="display:flex;flex-wrap:wrap;gap:6px;align-items:center">
+        <b style="font-size:12px;color:${st.color}">⚠️ Incidencia · ${st.label}</b>
+        <span style="font-size:11px;color:var(--muted)">del ${fecha}</span>
+        <span style="font-size:11px;color:var(--muted)">REF ${ordEsc(o.msgRef || o.id)}</span>
+      </div>
+      <p style="font-size:12px;margin:6px 0 0">📌 ${incType(i.tipo)}${i.nota ? ": «" + ordEsc(i.nota) + "»" : ""}</p>
+      <div style="display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 0">
+        ${i.reembolso ? `<span style="font-size:12px;background:var(--bg2);border:1px solid var(--line);border-radius:8px;padding:4px 9px">💶 Devolver <b>${fmt(i.reembolso)}</b>${i.bizumDevuelto ? " · 📲 <b style=\"color:var(--green)\">Bizum devuelto ✓</b>" : ` · <button class="btn btn-ghost" data-incbiz="${o.id}" style="padding:2px 8px;flex:0">Marcar Bizum devuelto</button>`}</span>` : ""}
+        ${i.reposicion ? `<span style="font-size:12px;background:var(--bg2);border:1px solid var(--line);border-radius:8px;padding:4px 9px">📦 <b>Reposición</b> del artículo</span>` : ""}
+      </div>
+      ${(i.fotos || []).length ? `<div style="display:flex;gap:6px;margin:6px 0 0">${i.fotos.map(f => `<img src="${ordEsc(f)}" alt="prueba" style="width:56px;height:56px;object-fit:cover;border-radius:8px;border:1px solid var(--line);cursor:pointer" onclick="window.open('${ordEsc(f)}','_blank')">`).join("")}</div>` : ""}
+      <div style="display:flex;gap:6px;flex-wrap:wrap;margin:8px 0 0">
+        <button class="btn btn-primary" data-incwa="${o.id}" style="flex:0">WhatsApp al cliente</button>
+        ${st.id === "pendiente" ? `<button class="btn" data-incgest="${o.id}" style="flex:0">Pasar a En gestión</button>` : ""}
+        ${st.id === "gestion" ? `<button class="btn btn-green" data-incres="${o.id}" style="flex:0">Marcar Resuelta</button>` : ""}
+        ${st.id === "resuelta" ? `<button class="btn btn-ghost" data-incopen="${o.id}" style="flex:0">Reabrir</button>` : ""}
+        <button class="btn" data-inedit="${o.id}" style="flex:0">Editar</button>
+        <button class="btn btn-ghost" data-closeinc="${o.id}" style="flex:0;color:var(--accent2)">Eliminar</button>
+      </div>
+    </div>`;
+  }
+  function incOpen(o) {
+    incEditId = o.id;
+    incDraft = { oid: o.id, fotos: (o.inc && o.inc.fotos) ? o.inc.fotos.slice() : [] };
+    const i = o.inc || {};
+    $("#incModal").innerHTML =
+      `<button class="modal-close" data-incclose="1">&times;</button>
+      <div style="padding:20px 22px">
+        <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1px">Pedido ${ordEsc(o.msgRef || o.id)} · ${o.cust && o.cust.name ? ordEsc(o.cust.name) : ""}</div>
+        <div style="font-size:18px;font-weight:800;margin-top:2px">⚠️ Incidencia</div>
+        <div class="field" style="margin-top:12px"><label>Motivo</label>
+          <select id="incTipo">${INC_TYPES.map(t => `<option value="${t.id}" ${(i.tipo || "otro") === t.id ? "selected" : ""}>${t.label}</option>`).join("")}</select>
+        </div>
+        <div class="field"><label>Nota (qué pasó, qué le dices al proveedor...)</label>
+          <textarea id="incNota" placeholder="Ej. cliente dice que no le llegó el paquete; el envío 2 se quedó en aduana. Reclamo a Hipobuy comprobando el nº de seguimiento.">${ordEsc(i.nota || "")}</textarea>
+        </div>
+        <div class="field-row">
+          <div class="field"><label>Devolver al cliente (€, opcional)</label><input id="incReembolso" inputmode="decimal" placeholder="Ej. 32,50" value="${i.reembolso != null ? String(i.reembolso).replace(".", ",") : ""}"></div>
+          <div class="field"><label>Opciones</label>
+            <div style="display:flex;gap:10px;flex-wrap:wrap">
+              <label style="font-size:12px;display:flex;gap:5px;align-items:center"><input type="checkbox" id="incBizum" ${i.bizumDevuelto ? "checked" : ""}> Bizum devuelto</label>
+              <label style="font-size:12px;display:flex;gap:5px;align-items:center"><input type="checkbox" id="incRepo" ${i.reposicion ? "checked" : ""}> Reposición</label>
+            </div>
+          </div>
+        </div>
+        <div class="field"><label>Fotos de prueba (hasta 2, se suben al repo)</label>
+          <input type="file" id="incPhoto" accept="image/*" ${incDraft.fotos.length >= 2 ? "disabled" : ""} style="color:var(--muted);font-size:12px;width:100%">
+          <div id="incPhotos" style="display:flex;gap:6px;flex-wrap:wrap;margin-top:6px">${incDraft.fotos.map((f, idx) => `<div style="position:relative"><img src="${ordEsc(f)}" alt="prueba" style="width:64px;height:64px;object-fit:cover;border-radius:8px;border:1px solid var(--line)"><button type="button" data-incrphoto="${idx}" style="position:absolute;top:-7px;right:-7px;width:19px;height:19px;border-radius:50%;border:1px solid var(--line);background:var(--bg2);color:var(--accent2);font-size:11px;line-height:1;cursor:pointer">✕</button></div>`).join("")}</div>
+          <div id="incPhotoStatus" style="font-size:12px;color:var(--muted);min-height:14px;margin-top:4px"></div>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:6px">
+          <button class="btn btn-primary" id="incSaveBtn">Guardar incidencia</button>
+          <button class="btn btn-ghost" data-incclose="1">Cancelar</button>
+        </div>
+      </div>`;
+    incBind(o);
+    $("#incBackdrop").hidden = false;
+  }
+  function incBind(o) {
+    const bd = $("#incBackdrop");
+    if (!bd) return;
+    $$("[data-incclose]", bd).forEach(b => b.onclick = () => { bd.hidden = true; });
+    bd.onclick = (e) => { if (e.target === bd) bd.hidden = true; };
+    const save = $("#incSaveBtn");
+    if (save) save.onclick = () => {
+      const i = o.inc || {};
+      o.inc = {
+        ts: i.ts || Date.now(),
+        estado: i.estado || "pendiente",
+        tipo: $("#incTipo").value,
+        nota: ($("#incNota").value || "").trim(),
+        reembolso: parseFloat(String($("#incReembolso").value || "").replace(",", ".")) || null,
+        bizumDevuelto: !!(i.bizumDevuelto || $("#incBizum").checked),
+        reposicion: !!($("#incRepo").checked),
+        fotos: incDraft.fotos.slice()
+      };
+      if (!o.inc.reembolso) o.inc.bizumDevuelto = false;
+      ordSave();
+      bd.hidden = true;
+      renderOrders();
+      const st = $("#ordStatus");
+      if (st) { st.textContent = "✅ Incidencia guardada en el pedido (REF " + (o.msgRef || o.id) + ")."; st.style.color = "var(--green)"; setTimeout(() => { st.textContent = ""; }, 4000); }
+    };
+    const ph = $("#incPhoto");
+    if (ph) ph.onchange = async (e) => {
+      const st = $("#incPhotoStatus");
+      const f = e.target.files && e.target.files[0];
+      if (!f || incDraft.fotos.length >= 2) return;
+      let cfg = {};
+      try { cfg = JSON.parse(localStorage.getItem(GH_KEY) || "{}"); } catch (err) {}
+      const token = cfg.token || "", user = cfg.user || "", repo = cfg.repo || "";
+      if (!token || !user || !repo) { st.textContent = "Falta el token en la tarjeta de subida de fotos para poder subir la prueba."; return; }
+      ph.disabled = true;
+      st.textContent = "Subiendo foto...";
+      try {
+        const b64 = await readB64(f);
+        const name = "inc_" + Date.now().toString(36) + "_" + f.name.replace(/\s+/g, "_");
+        const pth = "imagenes/incidencias/" + o.id + "/" + name;
+        const r = await putFile(pth, b64);
+        if (r.ok) {
+          incDraft.fotos.push(pth);
+          incOpen(o);
+        } else {
+          st.textContent = "No se pudo subir la foto (revisa token).";
+        }
+      } catch (err) {
+        st.textContent = "Error subiendo la foto.";
+      }
+      ph.disabled = false;
+    };
+    $$("[data-incrphoto]", bd).forEach(b => b.onclick = () => {
+      incDraft.fotos.splice(Number(b.dataset.incrphoto), 1);
+      incOpen(o);
+    });
+  }
   function ordState(o) { return o.cancelled ? "anulado" : (String(o.status || "recibido")); }
   const SECS = ["formCard", "secList", "secOrders", "secPrices", "secPub", "secUp", "secStats"];
   const GUIDE = {
     home: { title: "👋 ¿Qué quieres hacer hoy?", hints: [], show: [] },
     order: { title: "🛒 Hacer un pedido", hints: ["Pega el mensaje del cliente (WhatsApp) y pulsa «Parsear pedido»."], show: ["secOrders"] },
     track: { title: "📦 Pedidos en curso", hints: ["Filtro «Enviados»: envíales el tracking que falte y pulsa «Revisar tracking (auto)» para pasar a Entregado. Nada se queda pendiente."], show: ["secOrders"] },
-    incid: { title: "⚠️ Incidencias", hints: ["Filtro «Entregados»: si el cliente reclama, pulsa «Registrar incidencia» y anótala."], show: ["secOrders"] },
+    incid: { title: "⚠️ Incidencias", hints: ["Esto muestra solo los pedidos con incidencia. En la ficha de cada cliente: anota el motivo, marca estado Pendiente → En gestión → Resuelta, apunta el € devuelto/Bizum o la reposición, adjunta hasta 2 fotos de prueba y manda el WhatsApp al cliente."], show: ["secOrders"] },
     products: { title: "👜 Productos y publicar", hints: ["1) Crea el producto (nombre, marca, enlace Hipobuy, precio) y guárdalo con «Publicar producto»: se queda en Mis productos sin salir a la web todavía. 2) Sube sus fotos: Carpeta destino + fotos + «Subir fotos al repo». 3) Cuando tengas varios listos, una sola vez: «Exportar JSON» → «Sincronizar con repo» → «Publicar en GitHub ahora»."], show: ["formCard", "secList", "secUp", "secPub"] },
     prices: { title: "💰 Revisar precios", hints: ["Abre el enlace del proveedor, anota el coste nuevo y guarda: el precio de venta se recalcula solo."], show: ["secPrices"] },
     all: { title: "📄 Ver todo", hints: [], show: ["formCard", "secList", "secOrders", "secPrices", "secPub", "secUp", "secStats"] }
@@ -729,8 +883,10 @@
     SECS.forEach(id => { const el = document.getElementById(id); if (el) el.style.display = (g.show.includes(id) ? "" : "none"); });
     if (guideSel === "order") ordFilter = "recibido";
     if (guideSel === "track") ordFilter = "tracking";
+    incOnly = guideSel === "incid";
     if (guideSel === "incid") ordFilter = "entregado";
     try { localStorage.setItem("tv_guide_sel", guideSel); } catch (err) { }
+    if (typeof renderOrders === "function") renderOrders();
   }
   function renderGuide() {
     const bar = $("#guideBar");
@@ -1142,9 +1298,9 @@
       return;
     }
     const filtName = (ORD_FILTERS.find(f => f.id === ordFilter) || ORD_FILTERS[0]).label;
-    const vis = orders.filter(o => ordFilter === "todos" ? true : ordState(o) === ordFilter);
+    const vis = orders.filter(o => incOnly ? !!o.inc : (ordFilter === "todos" ? true : ordState(o) === ordFilter));
     if (!vis.length) {
-      wrap.innerHTML = `<p style="font-size:13px;color:var(--muted)">No hay pedidos en «${filtName}».</p>`;
+      wrap.innerHTML = `<p style="font-size:13px;color:var(--muted)">${incOnly ? "No hay incidencias. Cuando un cliente reclame, pulsa «⚠️ Registrar incidencia» en su pedido entregado." : "No hay pedidos en «" + filtName + "»."}</p>`;
       return;
     }
     wrap.innerHTML = vis.slice().reverse().map(o => {
@@ -1237,10 +1393,7 @@
           <input data-cost="${o.id}" value="${ordAmt(o.cost)}" placeholder="Coste encargo (€)..." inputmode="decimal" style="flex:1 1 150px;min-width:0">
           <b style="font-size:12px;color:${margin >= 0 ? "var(--green)" : "var(--accent2)"}">💰 Margen real: ${o.paid != null && o.cost != null ? fmt(margin) : "rellena Bizum y coste"}</b>
         </div>
-        ${o.inc ? `<div style="display:flex;gap:6px;flex-wrap:wrap;margin:6px 0 0;align-items:center;background:var(--bg2);border:1px solid var(--accent2);border-radius:8px;padding:6px 10px">
-          <span style="font-size:12px;color:var(--accent2)">⚠️ <b>Incidencia:</b> ${ordEsc(o.inc.note)}${o.inc.ts ? " · " + new Date(o.inc.ts).toLocaleString("es-ES", { day: "2-digit", month: "2-digit" }) : ""}</span>
-          <button class="btn btn-ghost" data-closeinc="${o.id}" style="flex:0;padding:4px 10px">Cerrar incidencia</button>
-        </div>` : `<button class="btn" data-inc="${o.id}" style="flex:0;padding:5px 12px;margin-top:6px">⚠️ Registrar incidencia</button>`}
+        ${incBlock(o, v)}
         <p style="font-size:11px;color:var(--muted);margin:6px 0 0">«Enviar tracking» copia el mensaje (WhatsApp, correo...). «Enviar por WhatsApp» abre la conversación del cliente con el mensaje ya escrito: solo te queda pulsar Enviar. El teléfono se rellena solo con el prefijo 34 si el cliente puso 9 dígitos; corrígelo si hace falta.</p>
       </div>`;
     }).join("");
@@ -1391,15 +1544,49 @@
     });
     $$("[data-inc]", wrap).forEach(b => b.onclick = (e) => {
       const o = orders.find(x => x.id === e.target.dataset.inc); if (!o) return;
-      const note = prompt("Nota de la incidencia (p. ej. «Cliente dice que no le ha llegado», «Artículo defectuoso»):");
-      if (note && note.trim()) {
-        o.inc = { note: note.trim(), ts: Date.now() };
-        ordSave();
-        renderOrders();
+      incOpen(o);
+    });
+    $$("[data-inedit]", wrap).forEach(b => b.onclick = (e) => {
+      const o = orders.find(x => x.id === e.target.dataset.inedit); if (!o) return;
+      incOpen(o);
+    });
+    $$("[data-incgest]", wrap).forEach(b => b.onclick = (e) => {
+      const o = orders.find(x => x.id === e.target.dataset.incgest); if (!o) return;
+      if (o.inc) o.inc.estado = "gestion";
+      ordSave();
+      renderOrders();
+    });
+    $$("[data-incres]", wrap).forEach(b => b.onclick = (e) => {
+      const o = orders.find(x => x.id === e.target.dataset.incres); if (!o) return;
+      if (o.inc) o.inc.estado = "resuelta";
+      ordSave();
+      renderOrders();
+    });
+    $$("[data-incopen]", wrap).forEach(b => b.onclick = (e) => {
+      const o = orders.find(x => x.id === e.target.dataset.incopen); if (!o) return;
+      if (o.inc) o.inc.estado = "pendiente";
+      ordSave();
+      renderOrders();
+    });
+    $$("[data-incbiz]", wrap).forEach(b => b.onclick = (e) => {
+      const o = orders.find(x => x.id === e.target.dataset.incbiz); if (!o) return;
+      if (o.inc) o.inc.bizumDevuelto = true;
+      ordSave();
+      renderOrders();
+    });
+    $$("[data-incwa]", wrap).forEach(b => b.onclick = (e) => {
+      const o = orders.find(x => x.id === e.target.dataset.incwa); if (!o) return;
+      const ph = o.waPhone || waNumber(o.cust.phone);
+      const st = $("#ordStatus");
+      if (!ph) {
+        if (st) { st.textContent = "No hay móvil del cliente en este pedido. Escribelo en el campo de WhatsApp del pedido (p. ej. 34666666666)."; st.style.color = "var(--accent2)"; setTimeout(() => { st.textContent = ""; }, 5000); }
+        return;
       }
+      window.open("https://wa.me/" + ph + "?text=" + encodeURIComponent(incMsg(o)), "_blank");
     });
     $$("[data-closeinc]", wrap).forEach(b => b.onclick = (e) => {
       const o = orders.find(x => x.id === e.target.dataset.closeinc); if (!o) return;
+      if (!confirm("¿Eliminar la incidencia del pedido? La nota, importe y fotos (estas quedan en el repo) se pierden.")) return;
       o.inc = null;
       ordSave();
       renderOrders();
