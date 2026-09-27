@@ -118,7 +118,10 @@ Botones por pedido:
 
 ### 4.4 Estados del pedido
 Recibido → Encargado → Pagado al proveedor → **Tracking enviado** → **Entregado**.
-- El **tracking se introduce justo al hacer el envío** (no se queda pendiente). Rellena el nº de seguimiento y pulsa **"Enviar tracking"**: se copia el mensaje (17track) y el pedido pasa a **"Tracking enviado"** automáticamente. El teléfono es la app del cliente con el prefijo +34.
+- El **tracking se introduce justo al hacer el envío** (no se queda pendiente). En la tarjeta ves siempre el campo **"Nº de seguimiento que te dé el proveedor..."** (Envío 1/1): pega/teclea ahí el nº que te manda el agente cuando escanea su paquete. Después:
+  - **"Enviar tracking"** copia el mensaje con el enlace de 17track → pégaselo al cliente (WhatsApp, correo...).
+  - **"Enviar por WhatsApp"** abre la conversación del cliente con ese mensaje ya escrito → solo le das a Enviar. El pedido pasa a **"Tracking enviado"** automáticamente.
+  - El campo de teléfono se rellena solo con el prefijo +34 si el cliente puso 9 dígitos; corrígelo si hiciera falta.
 - **Varios envíos por pedido**: si el agente envía por partes, pulsa **"+ otro envío"** y se crea **Envío 1/2**, **Envío 2/2**, etc. Cada envío tiene su nº de seguimiento y su checkbox **"llegó"**.
 - **El pedido pasa a Entregado solo cuando han llegado TODOS los envíos.** Si alguno está en camino, se queda como Enviado y verás "🚚 Envíos: X/Y llegaron".
 - **Entrega parcial de artículos**: el checkbox **"llegó"** de cada artículo también marca piezas. Cuando marcas la última aparece **"Todas las piezas llegadas → marcar Entregado"**.

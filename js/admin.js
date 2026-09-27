@@ -1275,14 +1275,15 @@
 
   function ordTracksHtml(o) {
     const envs = o.tracks || [];
+    const list = envs.length ? envs : [null];
     return `<div style="display:flex;gap:3px;flex-wrap:wrap;margin-top:8px;align-items:center">
-        ${envs.length ? envs.map((t, ti) => `
+        ${list.map((t, ti) => `
         <div style="flex:1 1 100%;display:flex;gap:6px;align-items:center;flex-wrap:wrap">
-          <b style="font-size:11px;color:var(--muted);min-width:70px">Envío ${ti + 1}/${envs.length}</b>
-          <input data-trkn="${ordEsc(o.id)}" data-ti="${ti}" value="${ordEsc(t.tracking || "")}" placeholder="Nº de seguimiento..." style="flex:1 1 180px;min-width:0">
-          <label style="font-size:11px;display:inline-flex;gap:4px;align-items:center;cursor:pointer"><input type="checkbox" data-arrtrack="${ordEsc(o.id)}" data-ti="${ti}" ${t.arrived ? "checked" : ""} style="accent-color:var(--green);width:14px;height:14px"> llegó</label>
-          <button class="btn btn-ghost" data-deltrack="${ordEsc(o.id)}" data-ti="${ti}" style="flex:0;padding:3px 8px" title="Quitar este envío">x</button>
-        </div>`).join("") : `<span style="font-size:12px;color:var(--muted);flex:1 1 100%">Sin envíos todavía: escríbelos aquí en cuanto el agente te los dé.</span>`}
+          <b style="font-size:11px;color:var(--muted);min-width:70px">Envío ${ti + 1}/${list.length}</b>
+          <input data-trkn="${ordEsc(o.id)}" data-ti="${ti}" value="${t && t.tracking ? ordEsc(t.tracking) : ""}" placeholder="Nº de seguimiento que te dé el proveedor..." style="flex:1 1 180px;min-width:0">
+          <label style="font-size:11px;display:inline-flex;gap:4px;align-items:center;cursor:pointer"><input type="checkbox" data-arrtrack="${ordEsc(o.id)}" data-ti="${ti}" ${t && t.arrived ? "checked" : ""} ${t ? "" : "disabled"} style="accent-color:var(--green);width:14px;height:14px"> llegó</label>
+          <button class="btn btn-ghost" data-deltrack="${ordEsc(o.id)}" data-ti="${ti}" style="flex:0;padding:3px 8px" ${t ? "" : "disabled"} title="Quitar este envío">x</button>
+        </div>`).join("")}
       </div>
       <div style="display:flex;gap:6px;flex-wrap:wrap;margin:6px 0 0;align-items:center">
         <button class="btn btn-ghost" data-addtrack="${ordEsc(o.id)}" style="flex:0;padding:5px 10px">+ otro envío</button>
@@ -1619,15 +1620,20 @@
     $$("[data-trkn]", wrap).forEach(inp => inp.onchange = (e) => {
       const o = orders.find(x => x.id === e.target.dataset.trkn); if (!o) return;
       const ti = Number(e.target.dataset.ti);
-      if (o.tracks[ti] && !o.tracks[ti].arrived) o.tracks[ti].tracking = e.target.value.trim();
-      const tr = o.tracks.find(t => t.tracking);
+      o.tracks = o.tracks || [];
+      if (!o.tracks[ti]) o.tracks[ti] = { tracking: "", arrived: false };
+      if (!o.tracks[ti].arrived) o.tracks[ti].tracking = e.target.value.trim();
+      const tr = o.tracks.filter(t => t && t.tracking).find(t => t.tracking);
       o.tracking = (tr && tr.tracking) || "";
       ordSave();
     });
     $$("[data-arrtrack]", wrap).forEach(cb => cb.onchange = (e) => {
       const o = orders.find(x => x.id === e.target.dataset.arrtrack); if (!o) return;
-      o.tracks[Number(e.target.dataset.ti)].arrived = e.target.checked;
-      const ts = (o.tracks || []).filter(t => t.tracking);
+      const ti = Number(e.target.dataset.ti);
+      o.tracks = o.tracks || [];
+      if (!o.tracks[ti]) o.tracks[ti] = { tracking: "", arrived: false };
+      o.tracks[ti].arrived = e.target.checked;
+      const ts = (o.tracks || []).filter(t => t && t.tracking);
       if (ts.length && ts.every(t => t.arrived) && !o.cancelled) {
         o.status = "entregado";
         (o.items || []).forEach(it => it.arrived = true);
@@ -1640,8 +1646,8 @@
     $$("[data-deltrack]", wrap).forEach(b => b.onclick = (e) => {
       const o = orders.find(x => x.id === e.target.dataset.deltrack); if (!o) return;
       const ti = Number(e.target.dataset.ti);
-      o.tracks.splice(ti, 1);
-      const tr = o.tracks.find(t => t.tracking);
+      (o.tracks || []).splice(ti, 1);
+      const tr = (o.tracks || []).filter(t => t && t.tracking).find(t => t.tracking);
       o.tracking = (tr && tr.tracking) || "";
       ordSave();
       renderOrders();
