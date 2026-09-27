@@ -1060,9 +1060,22 @@
     document.body.removeChild(ta);
   }
   function ordPayMsg(o) {
-    const amt = o.paid != null ? ordAmt(o.paid) : (o.total != null ? ordAmt(o.total) : (o.subAmt != null ? ordAmt((Number(o.subAmt) || 0) + (Number(o.shipAmt) || 0)) : ""));
     const ph = (localStorage.getItem("tv_admin_bizum") || "").trim();
-    return "Hola " + (o.cust && o.cust.name ? o.cust.name : "") + ",\n\nEl pedido (REF " + (o.msgRef || o.id) + ") asciende a " + amt + " (IVA incluido).\n\nPuedes pagármelo por Bizum" + (ph ? " al " + ph : "") + ". En cuanto lo reciba te confirmo el encargo y te paso su seguimiento.\n\n¡Gracias!";
+    const name = (o.cust && o.cust.name) || "cliente";
+    const lineTxt = (o.items || []).map((it, i) => {
+      const col = [it.color, it.modelo].filter(Boolean).join(" · ");
+      const det = [it.title, it.size ? "talla " + it.size : "", col ? "(" + col + ")" : ""].filter(Boolean).join(" · ");
+      return (i + 1) + ". " + det + " · " + fmt(Number(it.unit) || (Number(o.total) || 0)) + " €" + (Number(it.qty) > 1 ? " ×" + it.qty : "");
+    }).join("\n");
+    const sub = o.subAmt != null ? o.subAmt : (o.total != null ? (Number(o.total) || 0) - (Number(o.shipAmt) || 0) : null);
+    const shipTxt = o.shipAmt != null ? "\nEnvío (" + (o.shipMode || "CON CAJA") + "): " + fmt(o.shipAmt) : "";
+    const totalTxt = o.total != null ? "TOTAL (IVA incl.): " + fmt(o.total) : "";
+    const c = o.cust || {};
+    const addr = [c.street, c.cpCity].filter(Boolean).join(", ");
+    return "Hola " + name + ",\n\nREVISA TU PEDIDO 👀\n\n" + (lineTxt || "(sin artículos)") + "\n\n" +
+      (sub != null ? "Subtotal: " + fmt(sub) + "\n" : "") + shipTxt + "\n" + totalTxt + "\n\nREF: " + (o.msgRef || o.id) +
+      (addr ? "\n\nEnvío a:\n" + [c.name, addr].filter(Boolean).join("\n") : "") +
+      "\n\nSi todo es correcto, págamelo por Bizum" + (ph ? " al " + ph : "") + " y enseguida lo encargo.\nSi algo está mal, haz un NUEVO pedido desde la web (no edites este mensaje) y envíamelo.\n\n¡Gracias!";
   }
   function ordDownload() {
     const blob = new Blob([JSON.stringify(orders, null, 2)], { type: "application/json" });

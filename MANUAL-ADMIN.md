@@ -160,9 +160,10 @@ Arriba, junto a los filtros, verás los **totales** de todos los pedidos: Total 
 
 ### 4.9 Cobro y copia de seguridad
 En cada tarjeta de pedido tienes:
-- **"💶 WhatsApp: pedir pago"**: abre la conversación del cliente con el mensaje ya escrito (importe + tu nº Bizum) — solo le das a Enviar.
+- **"💶 WhatsApp: pedir pago"**: abre la conversación del cliente con el mensaje ya escrito que incluye **todo el detalle de su pedido para que lo revise** (artículos, tallas, colores, subtotal, envío, TOTAL con IVA, REF y la dirección de envío). El mensaje le pide: si está bien, pagar por Bizum; **si algo falla, hacer un NUEVO pedido desde la web** (nunca editar el mensaje, porque el REF dejaría de cuadrar). Solo le das a Enviar.
 - **"📋 Copiar aviso de pago"**: copia ese mismo mensaje por si prefieres pegarlo en otro canal (correo, otra app...).
 - Cuando te llegue el Bizum, escribe el importe en **"Bizum recibido (€)"** y pulsa **"Confirmar pago ✓"**: queda registrado con la fecha (`✓ Pago confirmado el ...`). Puedes desmarcarlo con **"Desmarcar"** si te equivocas.
+- Si el cliente reporta un fallo **después de pagar**: pídele que haga el pedido nuevo, anula el antiguo (queda archivado) y anota el Bizum en el nuevo.
 
 Para el mensaje anterior necesitas tu número: en la fila de proveedores, escribe tu **número Bizum** (ej. 612345678) y se guarda.
 
@@ -171,10 +172,12 @@ Para el mensaje anterior necesitas tu número: en la fila de proveedores, escrib
 - **"📥 Restaurar copia"**: recoge ese archivo y restaura los pedidos (sustituye los actuales; pregunta antes). Útil si cambias de equipo o algo falla.
 
 ## 4.10 Flujo completo: cómo se atiende un pedido (paso a paso)
+> Versión extensa paso a paso en el archivo **`PASO-A-PASO.md`** (flujo de principio a fin + resumen exprés).
+
 Cuándo te llega un "TOP VALOR - PEDIDO":
 1. **Pégalo en el panel y pulsa "Parsear"** → el pedido entra como *Recibido*.
 2. **Comprueba la integridad** en la tarjeta: ✅ verde = ok. ⚠️ rojo "El REF no cuadra" = mensaje editado: **no encargues**. Copia el aviso ("📋 Copiar aviso") o mándalo ("🚨 WhatsApp: pedido no válido") y **anula** ("🚫 Anular pedido").
-3. **Cobra:** "💶 WhatsApp: pedir pago" abre la conversación del cliente con el aviso ya escrito (o "📋 Copiar aviso de pago" si prefieres pegarlo tú). Cuando te llegue el Bizum, escribe el importe en **"Bizum recibido (€)"** y pulsa **"Confirmar pago ✓"**.
+3. **Cobra:** "💶 WhatsApp: pedir pago" abre la conversación del cliente con **todo el detalle de su pedido para que lo revise** (artículos, tallas, colores, subtotal, envío, TOTAL, REF y dirección). Si está bien, paga; si algo falla, hace **un NUEVO pedido desde la web** (nunca editar el mensaje). Cuando te llegue el Bizum: "Bizum recibido (€)" + "Confirmar pago ✓".
 4. **Reparte encargos:** "📦 Agrupar por proveedor" copia qué artículo va a cada agente y su subtotal.
 5. **Encarga en cada agente:** pulsa "Abrir en Hipobuy" en cada artículo (fíjate en "✔ Pedir exactamente"), añádelo al carrito del agente y en su formulario de envío pega la **"📋 Copiar ficha de envío"** del recuadro 📮 de la tarjeta. Paga el encargo del agente.
 6. **Marca «✓» cada artículo** cuando esté encargado (el pedido pasa a *Encargado*).
