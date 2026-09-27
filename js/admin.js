@@ -1476,7 +1476,8 @@
           <b style="font-size:12px;color:${margin >= 0 ? "var(--green)" : "var(--accent2)"}">💰 Margen real: ${o.paid != null && o.cost != null ? fmt(margin) : "rellena Bizum y coste"}</b>
         </div>
         <div style="display:flex;gap:6px;flex-wrap:wrap;margin:6px 0 0;align-items:center">
-          <button class="btn" data-payreq="${o.id}" style="flex:0">💶 Aviso de pago</button>
+          <button class="btn" data-payreq="${o.id}" style="flex:0">📋 Copiar aviso de pago</button>
+          <button class="btn btn-green" data-paywa="${o.id}" style="flex:0">💶 WhatsApp: pedir pago</button>
           ${o.paidTs ? `<span style="font-size:12px;color:var(--green);background:var(--bg2);border:1px solid var(--line);border-radius:8px;padding:4px 9px">✓ Pago confirmado el ${new Date(o.paidTs).toLocaleString("es-ES", { day: "2-digit", month: "2-digit", year: "numeric" })} <button class="btn btn-ghost" data-payunconf="${o.id}" style="padding:2px 8px;flex:0">Desmarcar</button></span>` : (o.paid != null ? `<button class="btn btn-ghost" data-payconf="${o.id}" style="flex:0">Confirmar pago ✓</button>` : `<span style="font-size:11px;color:var(--muted)">Escribe «Bizum recibido» arriba y marca aquí cuándo te llega</span>`)}
         </div>
         ${incBlock(o, v)}
@@ -1546,6 +1547,21 @@
       ordCopy(ordPayMsg(o));
       const st = $("#ordStatus");
       st.textContent = "Aviso de pago copiado: pégaselo al cliente por WhatsApp.";
+      st.style.color = "var(--green)";
+      setTimeout(() => { st.textContent = ""; }, 6000);
+    });
+    $$("[data-paywa]", wrap).forEach(b => b.onclick = (e) => {
+      const o = orders.find(x => x.id === e.target.dataset.paywa); if (!o) return;
+      const ph = o.waPhone || waNumber(o.cust.phone);
+      const st = $("#ordStatus");
+      if (!ph) {
+        st.textContent = "Falta el móvil del cliente: rellena «Móvil WhatsApp» en la tarjeta antes de pedir el pago.";
+        st.style.color = "var(--accent2)";
+        setTimeout(() => { st.textContent = ""; }, 6000);
+        return;
+      }
+      window.open("https://wa.me/" + ph + "?text=" + encodeURIComponent(ordPayMsg(o)), "_blank");
+      st.textContent = "WhatsApp abierto con el aviso de pago ya escrito: solo pulsa Enviar.";
       st.style.color = "var(--green)";
       setTimeout(() => { st.textContent = ""; }, 6000);
     });
