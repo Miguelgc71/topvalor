@@ -2,7 +2,7 @@
 
 Este panel (admin.html) es **solo para ti**. El cliente nunca ve Hipobuy, ni los enlaces de encargo, ni este panel.
 
-> Actualización 26/09/2026: incluye **modo guía** (atendrás cada tarea paso a paso sin distracciones), **pedidos anulados**, **varios envíos/trackings por pedido** e **incidencias con gestión completa** (estado Pendiente → En gestión → Resuelta, devolución €/Bizum, reposición, fotos de prueba y WhatsApp al cliente). Fase 5 (margen real y agrupar por proveedor), filtros, revisión automática de tracking y aviso de pedido no válido ya incluidos desde las versiones anteriores.
+> Actualización 26/09/2026: incluye **modo guía** (atendrás cada tarea paso a paso sin distracciones), **pedidos anulados**, **varios envíos/trackings por pedido**, **incidencias con gestión completa** (estado Pendiente → En gestión → Resuelta, devolución €/Bizum, reposición, fotos de prueba y WhatsApp al cliente) y **copia de seguridad de pedidos + aviso de pago con confirmación** (sección 4.9). Fase 5 (margen real y agrupar por proveedor), filtros, revisión automática de tracking y aviso de pedido no válido ya incluidos desde las versiones anteriores.
 
 ---
 
@@ -153,6 +153,17 @@ En la parte inferior de cada pedido:
 - **💰 Margen real** = Bizum − Coste (verde si es positivo, rojo si negativo). **Margen = Bizum recibido − coste del encargo** (tu beneficio final de ese pedido; los precios que cobras ya incluyen tu margen + IVA).
 
 Arriba, junto a los filtros, verás los **totales** de todos los pedidos: Total Bizum · Coste encargos · **Margen total**.
+
+### 4.9 Cobro y copia de seguridad
+En cada tarjeta de pedido tienes:
+- **"💶 Aviso de pago"**: copia un mensaje ya escrito para pedirle el pago al cliente (importe del pedido + tu número Bizum) y pegarlo en WhatsApp.
+- Cuando te llegue el Bizum, escribe el importe en **"Bizum recibido (€)"** y pulsa **"Confirmar pago ✓"**: queda registrado con la fecha (`✓ Pago confirmado el ...`). Puedes desmarcarlo con **"Desmarcar"** si te equivocas.
+
+Para el mensaje anterior necesitas tu número: en la fila de proveedores, escribe tu **número Bizum** (ej. 612345678) y se guarda.
+
+**Copia de seguridad (importante):** el historial de pedidos vive solo en el navegador del panel.
+- **"💾 Descargar copia de pedidos"**: descarga un archivo .json con todos los pedidos. Guárdalo en un sitio seguro (Drive, tu correo, USB) — hazlo al menos una vez a la semana.
+- **"📥 Restaurar copia"**: recoge ese archivo y restaura los pedidos (sustituye los actuales; pregunta antes). Útil si cambias de equipo o algo falla.
 
 ---
 

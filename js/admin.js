@@ -700,6 +700,40 @@
       if (!o.tracks.length) delete o.tracking;
     }
   });
+  const rbFile = $("#ordBackupFile");
+  if (rbFile) rbFile.onchange = (e) => {
+    const f = e.target && e.target.files && e.target.files[0];
+    if (rbFile.value) rbFile.value = "";
+    if (!f) return;
+    const st = $("#ordStatus");
+    const r = new FileReader();
+    r.onload = () => {
+      try {
+        const data = JSON.parse(String(r.result));
+        if (!Array.isArray(data)) throw new Error("no-array");
+        const migrated = data.map(o => {
+          o = o || {};
+          o.items = Array.isArray(o.items) ? o.items : [];
+          if (!Array.isArray(o.tracks)) {
+            o.tracks = [];
+            if (o.tracking) o.tracks.push({ tracking: String(o.tracking).trim(), arrived: false });
+            o.tracking = (o.tracks[0] && o.tracks[0].tracking) || "";
+            if (!o.tracks.length) delete o.tracking;
+          }
+          return o;
+        });
+        if (!confirm("Restaurar la copia sustituye los " + orders.length + " pedidos actuales por " + migrated.length + " de la copia. ¿Continuar?")) return;
+        orders = migrated;
+        ordSave();
+        renderOrders();
+        if (st) { st.textContent = "Copia restaurada: " + orders.length + " pedidos."; st.style.color = "var(--green)"; setTimeout(() => { st.textContent = ""; }, 6000); }
+      } catch (err) {
+        if (st) { st.textContent = "Ese archivo no es una copia válida de pedidos."; st.style.color = "var(--accent2)"; setTimeout(() => { st.textContent = ""; }, 6000); }
+      }
+    };
+    r.onerror = () => { if (st) { st.textContent = "No se pudo leer el archivo."; st.style.color = "var(--accent2)"; setTimeout(() => { st.textContent = ""; }, 6000); } };
+    r.readAsText(f);
+  };
   let pubs = [];
   const ORDER_STATES = [
     { id: "recibido", label: "Recibido" },
@@ -885,6 +919,7 @@
     if (guideSel === "track") ordFilter = "tracking";
     incOnly = guideSel === "incid";
     if (guideSel === "incid") ordFilter = "entregado";
+    if (guideSel === "home" || guideSel === "todo" || guideSel === "product" || guideSel === "stats") ordFilter = "todos";
     try { localStorage.setItem("tv_guide_sel", guideSel); } catch (err) { }
     if (typeof renderOrders === "function") renderOrders();
   }
@@ -1023,6 +1058,21 @@
     ta.select();
     try { document.execCommand("copy"); } catch (e) { }
     document.body.removeChild(ta);
+  }
+  function ordPayMsg(o) {
+    const amt = o.paid != null ? ordAmt(o.paid) : (o.total != null ? ordAmt(o.total) : (o.subAmt != null ? ordAmt((Number(o.subAmt) || 0) + (Number(o.shipAmt) || 0)) : ""));
+    const ph = (localStorage.getItem("tv_admin_bizum") || "").trim();
+    return "Hola " + (o.cust && o.cust.name ? o.cust.name : "") + ",\n\nEl pedido (REF " + (o.msgRef || o.id) + ") asciende a " + amt + " (IVA incluido).\n\nPuedes pagármelo por Bizum" + (ph ? " al " + ph : "") + ". En cuanto lo reciba te confirmo el encargo y te paso su seguimiento.\n\n¡Gracias!";
+  }
+  function ordDownload() {
+    const blob = new Blob([JSON.stringify(orders, null, 2)], { type: "application/json" });
+    const a = document.createElement("a");
+    a.href = (typeof URL !== "undefined" && URL.createObjectURL) ? URL.createObjectURL(blob) : "#";
+    a.download = "topvalor-pedidos-" + new Date().toISOString().slice(0, 10) + ".json";
+    document.body.appendChild(a);
+    if (typeof a.click === "function") a.click();
+    document.body.removeChild(a);
+    if (a.href && a.href !== "#" && URL.revokeObjectURL) setTimeout(() => URL.revokeObjectURL(a.href), 1000);
   }
 
   function parseOrderText(raw) {
@@ -1254,7 +1304,12 @@
         (cnt("tracking") ? `<button class="btn btn-green" data-checktrk="1" style="flex:0;padding:5px 12px">🔎 Revisar tracking (auto)</button>` : "") +
         (cnt("entregado") ? `<button class="btn btn-ghost" data-vac="1" style="flex:0;padding:5px 12px">Vaciar entregados</button>` : "") +
         `<span style="flex:1 1 100%;font-size:12px;color:var(--muted)">💰 Total Bizum: <b>${fmt(sumPaid)}</b> · Coste encargos: <b>${fmt(sumCost)}</b> · Margen: <b style="color:${sumPaid - sumCost >= 0 ? "var(--green)" : "var(--accent2)"}">${fmt(sumPaid - sumCost)}</b></span>` +
-        `<span style="flex:1 1 100%;display:flex;gap:6px;align-items:center"><input id="supInput" value="${ordEsc(ORD_SUPPLIERS.join(", "))}" style="flex:1 1 220px;min-width:0" placeholder="Proveedores, separados por coma (p. ej. Hipobuy, Kakobuy, Taobao)"><button class="btn btn-ghost" data-supsave="1" style="flex:0">Guardar proveedores</button></span>`;
+        `<span style="flex:1 1 100%;display:flex;gap:6px;align-items:center"><input id="supInput" value="${ordEsc(ORD_SUPPLIERS.join(", "))}" style="flex:1 1 220px;min-width:0" placeholder="Proveedores, separados por coma (p. ej. Hipobuy, Kakobuy, Taobao)"><button class="btn btn-ghost" data-supsave="1" style="flex:0">Guardar proveedores</button></span>` +
+        `<span style="flex:1 1 100%;display:flex;gap:6px;align-items:center">
+          <button class="btn btn-ghost" data-ordbackup="1" style="flex:0;padding:5px 12px">💾 Descargar copia de pedidos</button>
+          <button class="btn btn-ghost" data-ordrestore="1" style="flex:0;padding:5px 12px">📥 Restaurar copia</button>
+          <input id="bizumPh" value="${ordEsc(localStorage.getItem("tv_admin_bizum") || "")}" placeholder="Tu nº Bizum para cobrar (ej. 612345678)" style="flex:1 1 220px;min-width:0" title="Se usa en el aviso de pago que mandas al cliente">
+        </span>`;
       $$("[data-filt]", fwrap).forEach(b => b.onclick = (e) => {
         ordFilter = e.target.dataset.filt;
         try { localStorage.setItem("tv_ord_filter", ordFilter); } catch (err) { }
@@ -1291,6 +1346,25 @@
         const st = $("#ordStatus");
         if (st) { st.textContent = "Proveedores guardados: " + ORD_SUPPLIERS.join(", "); st.style.color = "var(--green)"; setTimeout(() => { st.textContent = ""; }, 4000); }
         renderOrders();
+      };
+      $$("[data-ordbackup]", wrap).forEach(backBtn => backBtn.onclick = () => {
+        const st = $("#ordStatus");
+        if (!orders.length) {
+          if (st) { st.textContent = "No hay pedidos que guardar."; st.style.color = "var(--accent2)"; setTimeout(() => { st.textContent = ""; }, 4000); }
+          return;
+        }
+        ordDownload();
+        if (st) { st.textContent = "Copia descargada: guarda ese archivo en un sitio seguro (Drive, tu correo) por si pasa algo con este navegador."; st.style.color = "var(--green)"; setTimeout(() => { st.textContent = ""; }, 7000); }
+      });
+      $$("[data-ordrestore]", wrap).forEach(restBtn => restBtn.onclick = () => {
+        const f = $("#ordBackupFile");
+        if (f) f.click();
+      });
+      const bizPh = $("#bizumPh");
+      if (bizPh) bizPh.onchange = () => {
+        try { localStorage.setItem("tv_admin_bizum", bizPh.value.trim()); } catch (err) { }
+        const st = $("#ordStatus");
+        if (st) { st.textContent = "Número Bizum guardado: aparece en el «aviso de pago» que mandas al cliente."; st.style.color = "var(--green)"; setTimeout(() => { st.textContent = ""; }, 5000); }
       };
     }
     if (!orders.length) {
@@ -1393,6 +1467,10 @@
           <input data-cost="${o.id}" value="${ordAmt(o.cost)}" placeholder="Coste encargo (€)..." inputmode="decimal" style="flex:1 1 150px;min-width:0">
           <b style="font-size:12px;color:${margin >= 0 ? "var(--green)" : "var(--accent2)"}">💰 Margen real: ${o.paid != null && o.cost != null ? fmt(margin) : "rellena Bizum y coste"}</b>
         </div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;margin:6px 0 0;align-items:center">
+          <button class="btn" data-payreq="${o.id}" style="flex:0">💶 Aviso de pago</button>
+          ${o.paidTs ? `<span style="font-size:12px;color:var(--green);background:var(--bg2);border:1px solid var(--line);border-radius:8px;padding:4px 9px">✓ Pago confirmado el ${new Date(o.paidTs).toLocaleString("es-ES", { day: "2-digit", month: "2-digit", year: "numeric" })} <button class="btn btn-ghost" data-payunconf="${o.id}" style="padding:2px 8px;flex:0">Desmarcar</button></span>` : (o.paid != null ? `<button class="btn btn-ghost" data-payconf="${o.id}" style="flex:0">Confirmar pago ✓</button>` : `<span style="font-size:11px;color:var(--muted)">Escribe «Bizum recibido» arriba y marca aquí cuándo te llega</span>`)}
+        </div>
         ${incBlock(o, v)}
         <p style="font-size:11px;color:var(--muted);margin:6px 0 0">«Enviar tracking» copia el mensaje (WhatsApp, correo...). «Enviar por WhatsApp» abre la conversación del cliente con el mensaje ya escrito: solo te queda pulsar Enviar. El teléfono se rellena solo con el prefijo 34 si el cliente puso 9 dígitos; corrígelo si hace falta.</p>
       </div>`;
@@ -1452,6 +1530,27 @@
     $$("[data-cost]", wrap).forEach(inp => inp.onchange = (e) => {
       const o = orders.find(x => x.id === e.target.dataset.cost); if (!o) return;
       o.cost = (e.target.value.trim() === "") ? null : ordMon(e.target.value);
+      ordSave();
+      renderOrders();
+    });
+    $$("[data-payreq]", wrap).forEach(b => b.onclick = (e) => {
+      const o = orders.find(x => x.id === e.target.dataset.payreq); if (!o) return;
+      ordCopy(ordPayMsg(o));
+      const st = $("#ordStatus");
+      st.textContent = "Aviso de pago copiado: pégaselo al cliente por WhatsApp.";
+      st.style.color = "var(--green)";
+      setTimeout(() => { st.textContent = ""; }, 6000);
+    });
+    $$("[data-payconf]", wrap).forEach(b => b.onclick = (e) => {
+      const o = orders.find(x => x.id === e.target.dataset.payconf); if (!o) return;
+      if (o.paid == null) o.paid = o.total != null ? o.total : 0;
+      o.paidTs = Date.now();
+      ordSave();
+      renderOrders();
+    });
+    $$("[data-payunconf]", wrap).forEach(b => b.onclick = (e) => {
+      const o = orders.find(x => x.id === e.target.dataset.payunconf); if (!o) return;
+      delete o.paidTs;
       ordSave();
       renderOrders();
     });
