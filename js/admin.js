@@ -1447,14 +1447,22 @@
         </div>
         ${ordStepBar(o, v)}
         ${o.shipMode === "SIN CAJA" ? `<p style="font-size:12px;color:var(--accent2);margin:6px 0 0">📦 SIN CAJA: recuerda pedir a los agentes que quiten las cajas.</p>` : ""}
-        ${o.cust.name || o.cust.cpCity ? `<p style="font-size:12px;color:var(--muted);margin:6px 0 0">${ordEsc(o.cust.name)}${o.cust.cpCity ? " · " + ordEsc(o.cust.cpCity) : ""}${o.cust.phone ? " · " + ordEsc(o.cust.phone) : ""}</p>` : ""}
+        ${o.cust && (o.cust.name || o.cust.street || o.cust.cpCity || o.cust.phone || o.cust.email || o.cust.note) ? `<div style="font-size:12px;margin:6px 0 0;background:var(--bg2);border:1px solid var(--line);border-radius:8px;padding:6px 9px;color:var(--muted)">
+          <div style="font-weight:700;color:var(--text)">📮 Envío del cliente</div>
+          ${o.cust.name ? `<div style="margin-top:2px">Nombre: <b style="color:var(--text)">${ordEsc(o.cust.name)}</b></div>` : ""}
+          ${o.cust.street ? `<div>Dirección: <b style="color:var(--text)">${ordEsc(o.cust.street)}</b></div>` : ""}
+          ${o.cust.cpCity ? `<div>CP y ciudad: <b style="color:var(--text)">${ordEsc(o.cust.cpCity)}</b></div>` : ""}
+          ${o.cust.phone ? `<div>Teléfono: <b style="color:var(--text)">${ordEsc(o.cust.phone)}</b></div>` : ""}
+          ${o.cust.email ? `<div>Correo (para el tracking): <b style="color:var(--text)">${ordEsc(o.cust.email)}</b></div>` : ""}
+          ${o.cust.note ? `<div>Nota: <b style="color:var(--text)">${ordEsc(o.cust.note)}</b></div>` : ""}
+          <div style="margin-top:5px"><button class="btn btn-ghost" data-ship="${o.id}" style="padding:3px 10px;flex:0">📋 Copiar ficha de envío</button></div>
+        </div>` : ""}
         ${o.items.length ? `<p style="font-size:12px;color:var(--muted);margin:6px 0 0">📦 ${o.items.filter(it => it.arrived).length}/${o.items.length} artículos llegados${o.items.some(it => !it.arrived) ? " · algunos aún por llegar: el pedido se queda como Enviado" : ""}</p>` : ""}
         ${(o.tracks || []).length ? `<p style="font-size:12px;color:var(--muted);margin:2px 0 0">🚚 Envíos: ${o.tracks.filter(t => t.arrived).length}/${o.tracks.length} llegaron${o.tracks.some(t => t.tracking && !t.arrived) ? " · alguno en camino: espera a que llegue TODO antes de dar por entregado" : ""}</p>` : ""}
         ${o.items.length && o.items.every(it => it.arrived) && String(o.status || "recibido") !== "entregado" && v.ok !== 0 && !o.cancelled ? `<button class="btn btn-green" data-finished="${o.id}" style="flex:0;margin-top:6px">Todas las piezas llegadas → marcar Entregado</button>` : ""}
         ${itemsHtml}
         ${unMatched && !o.cancelled ? `<p style="font-size:12px;color:var(--accent2);margin:6px 0 0">⚠️ Algún artículo no está enlazado (no coincide con tus productos). Elige uno abajo o créalo en «Mis productos» para que aparezca el botón de Hipobuy.</p>` : ""}
         ${v.ok !== 0 && !o.cancelled ? `<div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px">
-          <button class="btn btn-green" data-ship="${o.id}">Copiar ficha de envío</button>
           <button class="btn btn-primary" data-group="${o.id}">📦 Agrupar por proveedor</button>
         </div>` : ""}
         ${v.ok !== 0 && !o.cancelled ? ordTracksHtml(o) : ""}

@@ -113,6 +113,7 @@ Cada artículo aparece con:
 
 Botones por pedido:
 - **"Copiar ficha de envío"**: pega la ficha ENVÍO A en el encargo del agente (CON/SIN CAJA + datos del cliente).
+- En la parte superior de la tarjeta verás la **ficha de envío del cliente** en un recuadro: Nombre · Dirección · CP y ciudad · Teléfono · Correo · Nota. Es lo que pegas en el formulario de envío del agente (**"📋 Copiar ficha de envío"** copia ese bloque ya ordenado).
 - **"📦 Agrupar por proveedor"**: copia un resumen del pedido **agrupado por proveedor**, con subtotal por agente, para repartir los encargos.
 
 ### 4.4 Estados del pedido
